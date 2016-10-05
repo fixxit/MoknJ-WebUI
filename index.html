@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en" ng-app="assetApp" ng-controller="AssetController">
+    <head>
+        <meta charset="utf-8">
+        <title>FixxIT Asset Tracker</title>
+        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css" />
+        <script src="node_modules/angular/angular.js"></script>
+        <script src="js/assetApp.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <noscript>
+        <div class="nojs">Javascript is either disabled or not supported in your browser. Please enable it or use a Javascript enabled browser.</div>
+        </noscript>
+
+        <div id="related-results" ng-include="'partials/assetList.html'"></div>
+    </body>
+</html>
