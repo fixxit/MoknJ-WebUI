@@ -1,14 +1,14 @@
 
 'use strict';
 
-angular.module('assetApp', [])
+angular.module('assetGet', [])
   .controller('AssetController', function($scope, $http){
     $scope.$watch('search', function() {
       fetch();
     });
 
     function fetch(){
-      $http.get("http://localhost:8080/showassets")
+      $http.get("http://localhost:8080/getAllAssets")
       .then(function(response){ $scope.assetDetails = response.data; });
     }
 
