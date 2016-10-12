@@ -14,7 +14,7 @@ angular.module('addAsset', [])
             $http({
                 method: 'POST',
                 url: 'http://localhost:8080/addAsset',
-                data: JSON.stringify($scope.asset), //forms user info
+                data: JSON.stringify($scope.asset), 
                 dataType: 'json',
                 headers: {
                     'Content-Type': 'application/json'

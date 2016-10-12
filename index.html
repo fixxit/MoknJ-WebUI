@@ -1,25 +1,25 @@
-<!doctype html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8">
-    <title>FixxIT Asset Tracker</title>
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css"/>
-    <script src="node_modules/angular/angular.js"></script>
-    <script src="js/assetGet.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="utf-8">
+    <script type="text/javascript" src="/webjars/angularjs/angular.min.js"></script>
+    <script type="text/javascript">
+        angular.module("app", []).controller("home", function ($http) {
+            var self = this;
+            $http.get("/user").success(function (data) {
+                self.user = data.userAuthentication.details.name;
+                self.authenticated = true;
+            }).error(function () {
+                self.user = "N/A";
+                self.authenticated = false;
+            });
+        });
+    </script>
 </head>
-<body>
-<noscript>
-    <div class="nojs">Javascript is either disabled or not supported in your browser. Please enable it or use a
-        Javascript enabled browser.
-    </div>
-</noscript>
-
-    <h3>FixxIT Asset Tracker</h3>
-
-    <a href="view/assetList.html">List Assets</a>
-    <br/>
-    <a href="view/addAsset.html">Add Asset</a>
-</body>
+    <body ng-app="app" ng-controller="home as home">
+        <div class="container" ng-show="!home.authenticated">
+            Login with: <a href="/login">Facebook</a>
+        </div>
+        <div class="container" ng-show="home.authenticated">
+            Logged in as: <span ng-bind="home.user"></span>
+        </div>
+    </body>
 </html>
