@@ -1,59 +1,40 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html ng-app="BasicHttpAuthExample">
+
     <head>
-        <title>FixxIT Asset Tracker</title>
+        <meta charset="utf-8" />
+        <title>AngularJS Basic HTTP Authentication Example</title>
         <link href="node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css"/>
-        <script src="node_modules/angular/angular.js" type="text/javascript"></script>
-        <script src="node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.js" type="text/javascript"></script>
-        <script src="js/boot.js" type="text/javascript"></script>
     </head>
+
     <body>
-        <noscript>
-        <div class="nojs">Javascript is either disabled or not supported in your browser. Please enable it or use a
-            Javascript enabled browser.
-        </div>
-        </noscript>
-        <nav class="navbar navbar-default" ng-controller="NavbarController" ng-app="myBoot">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed" aria-expanded="true">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">{{name}}</a>
-                </div>
 
-                <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
-                    <ul class="nav navbar-nav">
-                        <li class="dropdown" dropdown>
-                            <a href="#" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">Assets <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Action</a>
-                                </li>
-                                <li><a href="view/assetList.html?access_token=">View all Assets</a>
-                                </li>
-                                <li><a href="#">Something else here</a>
-                                </li>
-                                <li class="divider"></li>
-                                <li><a href="#">Separated link</a>
-                                </li>
-                                <li class="divider"></li>
-                                <li><a href="#">One more separated link</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="active"><a href="#">Types <span class="sr-only">(current)</span></a></li>
-                        <li><a href="#">Resources</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#">User</a>
-                        </li>
-                    </ul>
+        <div class="jumbotron">
+            <div class="container">
+                <div class="col-xs-offset-2 col-xs-8">
+                    <div ng-view></div>
                 </div>
             </div>
-        </nav>
+        </div>
+
+        <div class="credits text-center">
+            <p>
+                <a href="http://jasonwatmore.com/post/2014/05/26/AngularJS-Basic-HTTP-Authentication-Example.aspx">AngularJS Basic HTTP Authentication Example</a>
+            </p>
+            <p>
+                <a href="http://jasonwatmore.com">JasonWatmore.com</a>
+            </p>
+        </div>
+
+
+        <script src="node_modules/angular/angular.js" type="text/javascript"></script>
+        <script src="node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.js" type="text/javascript"></script>
+        <script src="node_modules/angular-cookies/angular-cookies.js" type="text/javascript"></script>
+        <script src="node_modules/angular-route/angular-route.js" type="text/javascript"></script>
+        <script src="scripts/app.js"></script>
+        <script src="modules/authentication/services.js"></script>
+        <script src="modules/authentication/controllers.js"></script>
+        <script src="modules/home/controllers.js"></script>
     </body>
+
 </html>

@@ -1,0 +1,47 @@
+<noscript>
+<div class="nojs">Javascript is either disabled or not supported in your browser. Please enable it or use a
+    Javascript enabled browser.
+</div>
+</noscript>
+<nav class="navbar navbar-default" ng-controller="NavbarController" ng-app="myBoot">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed" aria-expanded="true">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">{{name}}</a>
+        </div>
+
+        <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
+            <ul class="nav navbar-nav">
+                <li class="dropdown" dropdown>
+                    <a href="#" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">Assets <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Action</a>
+                        </li>
+                        <li><a href="view/assetList.html?access_token=">View all Assets</a>
+                        </li>
+                        <li><a href="#">Something else here</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="#">Separated link</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="#">One more separated link</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="active"><a href="#">Types <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">Resources</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">User</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
