@@ -24,15 +24,25 @@ angular.module('Authentication')
                             });
                         };
 
-                        service.SetCredentials = function (username, password) {
+                        service.SetCredentials = function (username, password, access_token,
+                                refresh_token, expires_in) {
+                            var now = new Date();
+                            var expiresValue = new Date(now);
+                            expiresValue.setSeconds(now.getSeconds() + expires_in);
+
+                            console.log("setting date : " + expiresValue);
+
                             $rootScope.globals = {
                                 currentUser: {
                                     username: username,
                                     password: password,
+                                    access_token: access_token,
+                                    refresh_token: refresh_token,
+                                    expires_in: expires_in,
                                     authdata: authdata
                                 }
                             };
-                            $cookieStore.put('globals', $rootScope.globals);
+                            $cookieStore.put('globals', $rootScope.globals, {'expires': expiresValue});
                             $http.defaults.headers.common['Authorization'] = 'Basic ' + authdata;
                         };
 

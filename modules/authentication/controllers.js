@@ -12,9 +12,19 @@ angular.module('Authentication')
                                 if (response.error_description) {
                                     $scope.error = response.error_description;
                                 } else {
-                                    AuthenticationService.SetCredentials($scope.username, $scope.password);
-                                    console.log("location is set to home");
-                                    $location.path('/home');
+                                    if (response.access_token) {
+                                        AuthenticationService.SetCredentials(
+                                                $scope.username,
+                                                $scope.password,
+                                                response.access_token,
+                                                response.refresh_token,
+                                                response.expires_in);
+                                        console.log("location is set to home");
+                                        $location.path('/home');
+                                    } else {
+                                        $scope.error = "Invalid server response [102]";
+                                        console.log("no access token recieved ");
+                                    }
                                 }
 
                                 $scope.dataLoading = false;

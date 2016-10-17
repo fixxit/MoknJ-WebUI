@@ -2,9 +2,9 @@
 
 // declare modules
 angular.module('Authentication', []);
-angular.module('Home', []);
+angular.module('Home', ['ui.bootstrap']);
 // new modles copme here
-angular.module('BasicHttpAuthExample', [
+angular.module('FixxitAssetTrackerUI', [
     'Authentication',
     'Home',
     'ngRoute',
