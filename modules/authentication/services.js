@@ -6,7 +6,7 @@ angular.module('Authentication')
                     function (Base64, $http, $cookieStore, $rootScope, $timeout) {
                         var service = {};
                         var authdata = Base64.encode("fixx-trusted-client" + ':' + "fixx_secret");
-                         
+
                         service.Login = function (username, password, callback) {
                             $http({
                                 method: 'POST',
@@ -17,15 +17,14 @@ angular.module('Authentication')
                                     'Authorization': 'Basic ' + authdata
                                 }
                             }).success(function (response) {
-                                console.log("success response : " + JSON.stringify(response));
+                                callback(response);
                             }).error(function (response) {
                                 console.log("fail response : " + JSON.stringify(response));
+                                callback(response);
                             });
                         };
 
                         service.SetCredentials = function (username, password) {
-                           
-                            $http.defaults.headers.common['Authorization'] = 'Basic ' + authdata; // jshint ignore:line
                             $rootScope.globals = {
                                 currentUser: {
                                     username: username,
@@ -34,6 +33,7 @@ angular.module('Authentication')
                                 }
                             };
                             $cookieStore.put('globals', $rootScope.globals);
+                            $http.defaults.headers.common['Authorization'] = 'Basic ' + authdata;
                         };
 
                         service.ClearCredentials = function () {
@@ -46,8 +46,6 @@ angular.module('Authentication')
                     }])
 
         .factory('Base64', function () {
-            /* jshint ignore:start */
-
             var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
             return {
@@ -126,6 +124,4 @@ angular.module('Authentication')
                     return output;
                 }
             };
-
-            /* jshint ignore:end */
         });

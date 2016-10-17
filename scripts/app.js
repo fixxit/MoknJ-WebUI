@@ -3,7 +3,7 @@
 // declare modules
 angular.module('Authentication', []);
 angular.module('Home', []);
-
+// new modles copme here
 angular.module('BasicHttpAuthExample', [
     'Authentication',
     'Home',
@@ -12,7 +12,7 @@ angular.module('BasicHttpAuthExample', [
 ])
  
 .config(['$routeProvider', function ($routeProvider) {
-
+// new controllers are instantiated here to the include!
     $routeProvider
         .when('/login', {
             controller: 'LoginController',
@@ -20,7 +20,7 @@ angular.module('BasicHttpAuthExample', [
             hideMenus: true
         })
  
-        .when('/', {
+        .when('/home', {
             controller: 'HomeController',
             templateUrl: 'modules/home/views/home.html'
         })
