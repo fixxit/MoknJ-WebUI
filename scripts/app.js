@@ -1,12 +1,14 @@
 'use strict';
 
 // declare modules
-angular.module('Authentication', []);
+angular.module('Authentication', ['ui.bootstrap']);
 angular.module('Home', ['ui.bootstrap']);
+angular.module('Type', ['ui.bootstrap']);
 // new modles copme here
 angular.module('FixxitAssetTrackerUI', [
     'Authentication',
     'Home',
+    'Type',
     'ngRoute',
     'ngCookies'
 ])
@@ -23,6 +25,11 @@ angular.module('FixxitAssetTrackerUI', [
         .when('/home', {
             controller: 'HomeController',
             templateUrl: 'modules/home/views/home.html'
+        })
+        
+        .when('/type', {
+            controller: 'TypeController',
+            templateUrl: 'modules/type/views/type.html'
         })
  
         .otherwise({ redirectTo: '/login' });
