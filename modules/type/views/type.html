@@ -1,16 +1,93 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
-</html>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed" aria-expanded="true">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">New Asset Type</a>
+        </div>
+
+        <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#/home">back</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="">
+    <div class="">
+        <div ng-show="error" class="alert alert-danger">{{error}}</div>
+        <div ng-show="success" class="alert alert-success">{{success}}</div>
+        <form name="form" ng-submit="submit()" role="form">
+            <div class="form-group">
+                <label for="typename">Asset Type Name</label>
+                <i class="fa fa-key"></i>
+                <input type="text" name="typename" id="typename" class="form-control" ng-model="typename" required />
+                <span ng-show="form.typename.$dirty && form.typename.$error.required" class="help-block">Asset Type is required</span>
+            </div>
+
+            <div class="alert alert-info">
+                <div class="form-group">
+                    <label for="dispname">Field Display Name</label>
+                    <i class="fa fa-key"></i>
+                    <input type="text" name="field" id="dispname" class="form-control" ng-model="dispname" required />
+                    <span ng-show="dispname && form.dispname.$error.required" class="help-block">Field Display value is required</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="datatype">Data Type</label>
+                    <i class="fa fa-key"></i>
+                    <div class="dropdown" ng-class='{open: open}'>
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" ng-click='open = !open'>
+                            {{selectedItem.type}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="t in types" ng-click="$parent.open = !$parent.open">
+                                <a ng-click="dropboxitemselected(t)" >{{t.type}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">add</button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th></th>               
+                                <th>Field Name</th>
+                                <th>Data Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>                
+                            <tr class="danger text-center" ng-show="!items.length"><td colspan="3">No items to display</td></tr>        
+                            <tr ng-repeat="item in items" class="active">
+                                <td><span ng-click="remove($index)" class="glyphicon glyphicon-remove"></span></td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.type.type}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" ng-disabled="dataLoading" class="btn btn-danger">Submit</button>
+                <button type="button" ng-click="reset()" ng-disabled="dataLoading" class="btn btn-primary">reset</button>
+                <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+            </div>
+        </form>
+    </div>
+</div>
