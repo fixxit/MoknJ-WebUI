@@ -21,7 +21,7 @@
     </div>
 </nav>
 
-<div class="">
+<div class="container">
     <div class="">
         <div ng-show="error" class="alert alert-danger">{{error}}</div>
         <div ng-show="success" class="alert alert-success">{{success}}</div>
@@ -37,8 +37,7 @@
                 <div class="form-group">
                     <label for="dispname">Field Display Name</label>
                     <i class="fa fa-key"></i>
-                    <input type="text" name="field" id="dispname" class="form-control" ng-model="dispname" required />
-                    <span ng-show="dispname && form.dispname.$error.required" class="help-block">Field Display value is required</span>
+                    <input type="text" name="field" id="dispname" class="form-control" ng-model="dispname"  />
                 </div>
 
                 <div class="form-group">
@@ -50,7 +49,7 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li ng-repeat="t in types" ng-click="$parent.open = !$parent.open">
+                            <li ng-repeat="t in types" ng-click="$parent.open = !$parent.open" style="cursor: pointer;">
                                 <a ng-click="dropboxitemselected(t)" >{{t.type}}</a>
                             </li>
                         </ul>
@@ -65,15 +64,17 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th></th>               
+                                <th></th>
+                                <th></th>
                                 <th>Field Name</th>
                                 <th>Data Type</th>
                             </tr>
                         </thead>
                         <tbody>                
-                            <tr class="danger text-center" ng-show="!items.length"><td colspan="3">No items to display</td></tr>        
-                            <tr ng-repeat="item in items" class="active">
-                                <td><span ng-click="remove($index)" class="glyphicon glyphicon-remove"></span></td>
+                            <tr class="danger text-center" ng-show="!items.length"><td colspan="5">No items to display</td></tr>        
+                            <tr ng-repeat="item in items" ng-class="isEven($index)">
+                                <td style="width: 25px; cursor: pointer;"><span ng-click="remove($index)" class="glyphicon glyphicon-remove"></span></td> 
+                                <td style="width: 25px; cursor: pointer;"><span ng-show="$index != 0" ng-click="move($index, ($index - 1))" class="glyphicon glyphicon-arrow-up"></span></td>
                                 <td>{{item.name}}</td>
                                 <td>{{item.type.type}}</td>
                             </tr>
@@ -85,7 +86,7 @@
 
             <div class="form-actions">
                 <button type="submit" ng-disabled="dataLoading" class="btn btn-danger">Submit</button>
-                <button type="button" ng-click="reset()" ng-disabled="dataLoading" class="btn btn-primary">reset</button>
+                <button type="button" ng-click="reset(true)" ng-disabled="dataLoading" class="btn btn-primary">reset</button>
                 <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
             </div>
         </form>
