@@ -2,9 +2,11 @@
 
 angular.module('Home')
         .controller('HomeController',
-                ['$cookieStore', '$scope', '$rootScope', '$location',
-                    function ($cookieStore, $scope, $rootScope, $location) {
-                        $rootScope.globals = $cookieStore.get('globals') || {};
+                ['$cookieStore', '$scope', '$rootScope', '$location', 'TypeService',
+                    function ($cookieStore, $scope, $rootScope, $location, TypeService) {
+                        if (!$rootScope.globals) {
+                            $rootScope.globals = $cookieStore.get('globals') || {};
+                        }
 
                         // test code
 
@@ -12,5 +14,5 @@ angular.module('Home')
 
                         console.log("name  : " + $rootScope.globals.currentUser.username);
                         $scope.username = $rootScope.globals.currentUser.username;
-
+                        
                     }]);

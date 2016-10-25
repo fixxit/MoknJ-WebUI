@@ -20,6 +20,8 @@ angular.module('Type')
                                         $scope.error = "Invalid server response";
                                     }
                                 }
+                            } else {
+                                $scope.error = "Invalid server response";
                             }
                         }
                         );
