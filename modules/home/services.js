@@ -5,12 +5,12 @@ angular.module('Home')
                 ['$http',
                     function ($http) {
                         var service = {};
-                        var url = 'http://localhost:8080/asset/type/';
-                        
+                        var url = 'http://localhost:8080/asset/';
+
                         service.getAllTypes = function (token, callback) {
                             $http({
                                 method: 'POST',
-                                url: url + 'all' + '?access_token=' + token,
+                                url: url + 'type/all' + '?access_token=' + token,
                                 data: {},
                                 headers: {
                                     'Content-Type': 'application/json'
@@ -20,6 +20,19 @@ angular.module('Home')
                             }).error(function (response) {
                                 callback(response);
                             });
+                        };
+
+                        service.getAllAssetForType = function (token, id, callback) {
+                            $http.post(url + 'get/all/' + id + '?access_token=' + token)
+                                    .success(
+                                            function (response) {
+                                                callback(response);
+                                            })
+                                    .error(
+                                            function (response) {
+                                                callback(response);
+                                            }
+                                    );
                         };
 
                         return service;
