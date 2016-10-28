@@ -2,17 +2,30 @@
 
 angular.module('Home')
         .controller('HomeController',
-                ['$cookieStore', '$scope', '$rootScope', '$location', 'TypeService',
-                    function ($cookieStore, $scope, $rootScope, $location, TypeService) {
-                        if (!$rootScope.globals) {
-                            $rootScope.globals = $cookieStore.get('globals') || {};
-                        }
+                ['$scope', '$rootScope', '$location', 'HomeService',
+                    function ($scope, $rootScope, $location, HomeService) {
 
-                        // test code
+                        $scope.types = {};
 
-                        console.log("$rootScope.globals : " + $rootScope.globals);
+                        HomeService.getAllTypes($rootScope.globals.currentUser.access_token,
+                                function (response) {
+                                    console.log(" response : " + JSON.stringify(response.types));
+                                    if (response) {
+                                        if (response.error_description) {
+                                            $scope.error = response.error_description + ". Please logout!";
+                                        } else {
+                                            if (response.types) {
+                                                $scope.types = response.types;
+                                                $scope.dataLoading = false;
+                                            } else {
+                                                $scope.error = "Invalid server response";
+                                            }
+                                        }
+                                    } else {
+                                        $scope.error = "Invalid server response";
+                                    }
+                                }
+                        );
 
-                        console.log("name  : " + $rootScope.globals.currentUser.username);
-                        $scope.username = $rootScope.globals.currentUser.username;
-                        
+
                     }]);

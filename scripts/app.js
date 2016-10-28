@@ -4,11 +4,13 @@
 angular.module('Authentication', ['ui.bootstrap']);
 angular.module('Home', ['ui.bootstrap']);
 angular.module('Type', ['ui.bootstrap']);
+angular.module('Asset', ['ui.bootstrap']);
 // new modles copme here
 angular.module('FixxitAssetTrackerUI', [
     'Authentication',
     'Home',
     'Type',
+    'Asset',
     'ngRoute',
     'ngCookies'
 ])
@@ -30,6 +32,11 @@ angular.module('FixxitAssetTrackerUI', [
                         .when('/type', {
                             controller: 'TypeController',
                             templateUrl: 'modules/type/views/type.html'
+                        })
+
+                        .when('/asset', {
+                            controller: 'AssetController',
+                            templateUrl: 'modules/asset/views/asset.html'
                         })
 
                         .otherwise({redirectTo: '/login'});
@@ -107,6 +114,7 @@ angular.module('FixxitAssetTrackerUI', [
 
                     if ($rootScope.globals.currentUser) {
                         // refresh token
+                        // needs to calculate the date by getting the cookies date and then
                         if (!$rootScope.interval) {
                             var expiry = $rootScope.globals.currentUser.expires_in;
                             $rootScope.interval = setInterval(

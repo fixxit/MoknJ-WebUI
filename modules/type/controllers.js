@@ -94,7 +94,6 @@ angular.module('Type')
                         // type array
                         $scope.type = {};
                         $scope.submit = function () {
-
                             if ($scope.items.length > 0) {
                                 // define type array with details
                                 $scope.type = {'name': $scope.typename, 'details': []};
