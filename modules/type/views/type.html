@@ -57,7 +57,15 @@
                 </div>
 
                 <div class="form-group">
-                    <button type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">add</button>
+                    <label for="datatype">Field Options</label>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="unique">Is a unique field?</label>
+                    </div>
+                </div>  
+
+                <div class="form-group">
+                    <button ng-if="selectIndex == null"  type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Add</button>
+                    <button ng-if="selectIndex != null"  type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Update</button>
                 </div>
 
                 <div class="table-responsive">
@@ -66,27 +74,33 @@
                             <tr>
                                 <th></th>
                                 <th></th>
+                                <th></th>
                                 <th>Field Name</th>
                                 <th>Data Type</th>
+                                <th>Unique</th>
                             </tr>
                         </thead>
                         <tbody>                
-                            <tr class="danger text-center" ng-show="!items.length"><td colspan="5">No items to display</td></tr>        
+                            <tr class="danger text-center" ng-show="!items.length"><td colspan="6">No items to display</td></tr>        
                             <tr ng-repeat="item in items" ng-class="isEven($index)">
-                                <td style="width: 25px; cursor: pointer;"><span ng-click="remove($index)" class="glyphicon glyphicon-remove"></span></td> 
+                                <td style="width: 25px; cursor: pointer;"><span ng-click="remove($index)" class="glyphicon glyphicon-remove-circle"></span></td> 
                                 <td style="width: 25px; cursor: pointer;"><span ng-show="$index != 0" ng-click="move($index, ($index - 1))" class="glyphicon glyphicon-arrow-up"></span></td>
+                                <td style="width: 25px; cursor: pointer;"><span ng-click="edit($index)" class="glyphicon glyphicon-wrench"></span></td>
                                 <td>{{item.name}}</td>
                                 <td>{{item.type.type}}</td>
+                                <td ng-if="item.unique"><span class="glyphicon glyphicon-ok"></span></td>
+                                <td ng-if="!item.unique"><span class="glyphicon glyphicon-remove"></span></td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table>  
                 </div>
 
             </div>
 
             <div class="form-actions">
-                <button type="submit" ng-disabled="dataLoading" class="btn btn-danger">Submit</button>
-                <button type="button" ng-click="reset(true)" ng-disabled="dataLoading" class="btn btn-primary">reset</button>
+                <button type="submit" ng-if="!id" class="btn btn-primary">Submit</button>
+                <button type="submit" ng-if="id" class="btn btn-primary">Update</button>
+                <button type="button" ng-if="!id" ng-click="reset(true)" ng-disabled="dataLoading" class="btn btn-danger">reset</button>     
                 <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
             </div>
         </form>

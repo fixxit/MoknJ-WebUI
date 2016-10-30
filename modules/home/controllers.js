@@ -7,7 +7,7 @@ angular.module('Home')
                         $scope.types = {};
                         HomeService.getAllTypes($rootScope.globals.currentUser.access_token,
                                 function (response) {
-                                    console.log(" response : " + JSON.stringify(response.types));
+                                   
                                     if (response) {
                                         if (response.error_description) {
                                             $scope.error = response.error_description + ". Please logout!";
@@ -18,11 +18,24 @@ angular.module('Home')
                                                     HomeService.getAllAssetForType(
                                                             $rootScope.globals.currentUser.access_token,
                                                             type.id,
-                                                            function (response) {
-                                                                console.log("asset response : " + JSON.stringify(response));
+                                                            function (response) {                                                           
                                                                 if (response) {
                                                                     if (response.assets) {
-                                                                        type.assets = response.assets;
+                                                                        type.assets = [];  
+                                                                        angular.forEach(response.assets, function (asset) {
+                                                                            var fields = [];
+                                                                            angular.forEach(type.details, function (detail) {   
+                                                                                angular.forEach(asset.details, function (field) {
+                                                                                    if (detail.id === field.id) {
+                                                                                        field.type = detail.type;
+                                                                                        fields.push(field);
+                                                                                    }
+                                                                                });                                                                              
+                                                                            });
+                                                                            asset.details = fields;
+                                                                            type.assets.push(asset);
+                                                                        });
+                                                                        
                                                                         type.assets.viewby = 5;
                                                                         type.assets.totalItems = response.assets.length;
                                                                         type.assets.currentPage = 1;
@@ -44,15 +57,21 @@ angular.module('Home')
                                 }
                         );
 
-                        
-
                         // check if even for row odd and even colors
                         $scope.isEven = function (value) {
-                            if (value % 2 == 0) {
+                            if (value % 2 === 0) {
                                 return "success";
                             } else {
                                 return "active";
                             }
+                        };
+
+                        $scope.edit = function (id, assetID) {
+                            $location.path('/asset').search({id: id, assetId: assetID});
+                        };
+
+                        $scope.editType = function (id) {
+                            $location.path('/type').search({id: id});
                         };
 
                     }]);

@@ -20,6 +20,22 @@ angular.module('Type')
                                 callback(response);
                             });
                         };
+                        
+                        
+                        service.getType = function (token, id, callback) {
+                            $http({
+                                method: 'POST',
+                                url: url + 'get/' + id + '?access_token=' + token,
+                                data: {},
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            }).success(function (response) {
+                                callback(response);
+                            }).error(function (response) {
+                                callback(response);
+                            });
+                        };
 
 
                         service.save = function (item, token, callback) {

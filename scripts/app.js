@@ -13,10 +13,8 @@ angular.module('FixxitAssetTrackerUI', [
     'Asset',
     'ngRoute',
     'ngCookies'
-])
-
-        .config(['$routeProvider', function ($routeProvider) {
-// new controllers are instantiated here to the include!
+]).config(['$routeProvider', function ($routeProvider) {
+                // new controllers are instantiated here to the include!
                 $routeProvider
                         .when('/login', {
                             controller: 'LoginController',

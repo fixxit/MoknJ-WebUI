@@ -2,29 +2,76 @@
 
 angular.module('Type')
         .controller('TypeController',
-                ['$scope', '$rootScope', 'TypeService',
-                    function ($scope, $rootScope, TypeService) {
+                ['$scope', '$rootScope', '$location', 'TypeService',
+                    function ($scope, $rootScope, $location, TypeService) {
                         // Retrieve all field detail data types via type service
                         // REST controller method types /fields
+                        $scope.id = $location.search().id;
+
                         $scope.dataLoading = true;
                         $scope.selectedItem = {'name': 'nosec', 'type': 'no selection'};
-                        TypeService.getFieldTypes($rootScope.globals.currentUser.access_token, function (response) {
-                            if (response) {
-                                if (response.error_description) {
-                                    $scope.error = response.error_description + ". Please logout!";
-                                } else {
-                                    if (response.fieldTypes) {
-                                        $scope.types = response.fieldTypes;
-                                        $scope.dataLoading = false;
+                        TypeService.getFieldTypes($rootScope.globals.currentUser.access_token,
+                                function (response) {
+                                    if (response) {
+                                        if (response.error_description) {
+                                            $scope.error = response.error_description + ". Please logout!";
+                                        } else {
+                                            if (response.fieldTypes) {
+                                                $scope.types = response.fieldTypes;
+
+                                                TypeService.getType($rootScope.globals.currentUser.access_token, $scope.id,
+                                                        function (response) {
+                                                            console.log(" get type response : " + JSON.stringify(response.type));
+                                                            console.log(" get types : " + JSON.stringify($scope.types));
+                                                            if (response) {
+                                                                if (response.error_description) {
+                                                                    $scope.error = response.error_description + ". Please logout!";
+                                                                } else {
+                                                                    if (response.type) {
+                                                                        $scope.type = response.type;
+                                                                        $scope.typename = $scope.type.name;
+                                                                        angular.forEach($scope.type.details, function (detail) {
+                                                                            angular.forEach($scope.types, function (type) {
+                                                                                if (detail.type == type.name) {
+                                                                                    $scope.items.push(
+                                                                                            {
+                                                                                                'id': detail.id,
+                                                                                                'type': type,
+                                                                                                'name': detail.name,
+                                                                                                'unique': detail.unique
+                                                                                            }
+                                                                                    );
+                                                                                }
+                                                                            });
+                                                                        });
+                                                                        $scope.dataLoading = false;
+                                                                    } else {
+                                                                        $scope.error = "Invalid server response";
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                $scope.error = "Invalid server response";
+                                                            }
+                                                        }
+                                                );
+
+                                                $scope.dataLoading = false;
+                                            } else {
+                                                $scope.error = "Invalid server response";
+                                            }
+                                        }
                                     } else {
                                         $scope.error = "Invalid server response";
                                     }
                                 }
-                            } else {
-                                $scope.error = "Invalid server response";
-                            }
-                        }
                         );
+
+                        $scope.edit = function (index) {
+                            $scope.selectedItem = $scope.items[index].type;
+                            $scope.dispname = $scope.items[index].name;
+                            $scope.unique = $scope.items[index].unique;
+                            $scope.selectIndex = index;
+                        };
 
                         // items in the field detail list
                         $scope.items = [];
@@ -37,8 +84,22 @@ angular.module('Type')
                             // input check
                             if ($scope.selectedItem.name !== 'nosec'
                                     && ($scope.dispname && $scope.dispname.trim() !== '')) {
-                                $scope.items.push({'type': $scope.selectedItem, 'name': $scope.dispname});
+                                if ($scope.selectIndex != null) {
+                                    $scope.items[$scope.selectIndex].type = $scope.selectedItem;
+                                    $scope.items[$scope.selectIndex].name = $scope.dispname;
+                                    $scope.items[$scope.selectIndex].unique = $scope.unique;
+                                } else {
+                                    $scope.items.push(
+                                            {
+                                                'type': $scope.selectedItem,
+                                                'name': $scope.dispname,
+                                                'unique': $scope.unique
+                                            }
+                                    );
+                                }
                                 $scope.dispname = '';
+                                $scope.selectIndex = null;
+                                $scope.unique = false;
                                 $scope.selectedItem = {'name': 'nosec', 'type': 'no selection'};
                             } else {
                                 // to do !
@@ -69,7 +130,7 @@ angular.module('Type')
 
                         // check if even for row odd and even colors
                         $scope.isEven = function (value) {
-                            if (value % 2 == 0) {
+                            if (value % 2 === 0) {
                                 return "success";
                             } else {
                                 return "active";
@@ -83,6 +144,7 @@ angular.module('Type')
                             $scope.items = [];
                             $scope.typename = '';
                             $scope.dispname = '';
+                            $scope.unique = false;
                             // include messages
                             if (messages) {
                                 $scope.success = null;
@@ -96,11 +158,34 @@ angular.module('Type')
                         $scope.submit = function () {
                             if ($scope.items.length > 0) {
                                 // define type array with details
-                                $scope.type = {'name': $scope.typename, 'details': []};
+                                if ($scope.type) {
+                                    $scope.type.details = [];
+                                    $scope.type.name = $scope.typename;
+                                } else {
+                                    $scope.type = {'name': $scope.typename, 'details': []};
+                                }
                                 // loop items and add items to type.details array
                                 angular.forEach($scope.items, function (value) {
-                                    $scope.type.details.push({'type': value.type.name, 'name': value.name});
+                                    if (value.id) {
+                                        $scope.type.details.push(
+                                                {
+                                                    'id': value.id,
+                                                    'type': value.type.name,
+                                                    'name': value.name,
+                                                    'unique': value.unique
+                                                }
+                                        );
+                                    } else {
+                                        $scope.type.details.push(
+                                                {
+                                                    'type': value.type.name,
+                                                    'name': value.name,
+                                                    'unique': value.unique
+                                                }
+                                        );
+                                    }
                                 });
+
                                 // send type data to ajax call.
                                 // rest controller method add url /add
                                 TypeService.save(
@@ -113,7 +198,12 @@ angular.module('Type')
                                                 // asset type success or error
                                                 if (response.success === true) {
                                                     //success
-                                                    $scope.success = 'Successfully saved a new asset type, create new type ?';
+                                                    if (!$scope.id) {
+                                                        $scope.success = 'Successfully saved a new asset type, create new type ?';
+                                                    } else {
+                                                        $location.path('/home')
+                                                    }
+
                                                     $scope.error = null;
                                                     $scope.dataLoading = false;
                                                     // Reset all data

@@ -4,18 +4,46 @@ angular.module('Asset')
         .controller('AssetController',
                 ['$scope', '$rootScope', '$location', 'AssetService',
                     function ($scope, $rootScope, $location, AssetService) {
-
+                        $scope.assetId = $location.search().assetId;
                         var id = $location.search().id;
                         if (id) {
                             AssetService.getDetail($rootScope.globals.currentUser.access_token, id,
                                     function (response) {
-                                        console.log("reset response : " + JSON.stringify(response.type));
                                         if (response) {
                                             if (response.error_description) {
                                                 $scope.error = response.error_description + ". Please logout!";
                                             } else {
                                                 if (response.type) {
                                                     $scope.type = response.type;
+                                                    if ($scope.assetId) {
+                                                        AssetService.get($rootScope.globals.currentUser.access_token, $scope.assetId,
+                                                                function (response) {
+                                                                    if (response) {
+                                                                        if (response.error_description) {
+                                                                            $scope.error = response.error_description + ". Please logout!";
+                                                                        } else {
+                                                                            if (response.asset) {
+                                                                                $scope.asset = response.asset;
+                                                                                angular.forEach($scope.asset.details, function (asset) {
+                                                                                    angular.forEach($scope.type.details, function (detail) {
+                                                                                        if (detail.id === asset.id) {
+                                                                                            detail.value = asset.value;
+                                                                                        }
+                                                                                    });
+                                                                                });
+
+                                                                                $scope.dataLoading = false;
+                                                                            } else {
+                                                                                $scope.error = "Invalid server response";
+                                                                            }
+                                                                        }
+                                                                    } else {
+                                                                        $scope.error = "Invalid server response";
+                                                                    }
+                                                                }
+                                                        );
+                                                    }
+
                                                     $scope.dataLoading = false;
                                                 } else {
                                                     $scope.error = "Invalid server response";
@@ -27,6 +55,7 @@ angular.module('Asset')
                                     }
                             );
                         }
+
 
                         $scope.openDatePickers = [];
 
@@ -52,7 +81,12 @@ angular.module('Asset')
 
                         $scope.save = function () {
                             if (id) {
-                                $scope.type.id = null;
+                                if (!$scope.assetId) {
+                                    $scope.type.id = null;
+                                } else {
+                                    $scope.type.id = $scope.assetId;
+                                }
+
                                 AssetService.save(
                                         $rootScope.globals.currentUser.access_token,
                                         id,
@@ -66,7 +100,12 @@ angular.module('Asset')
                                                 // asset type success or error
                                                 if (response.success === true) {
                                                     //success
-                                                    $scope.success = 'Successfully saved a new asset, save new asset ?';
+                                                    if (!$scope.assetId) {
+                                                        $scope.success = 'Successfully saved a new asset, save new asset ?';
+                                                    } else {
+                                                        $location.path('/home')
+                                                    }
+
                                                     $scope.error = null;
                                                     $scope.dataLoading = false;
                                                     // Reset all data

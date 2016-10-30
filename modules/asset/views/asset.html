@@ -7,7 +7,8 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand">New Asset</a>
+            <a ng-if="!assetId" class="navbar-brand">New Asset</a>
+            <a ng-if="assetId" class="navbar-brand">Update Asset</a>
         </div>
 
         <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
@@ -41,16 +42,12 @@
                     <span ng-show="form.field_date_{{detail.id}}.$dirty && form.field_date_{{detail.id}}.$error.required" class="help-block">{{detail.name}} is required</span>
                 </div> 
 
-                <div class="form-group" ng-if="detail.type == 'ASSET_INPUT_MON_TYPE'" > 
-                    <p class="input-group">
-                        <span class="input-group-btn">
-                            <span type="button" class="btn btn-default" >$</span>
-                        </span>
-                        <input ng-model="detail.value" type="text" class="form-control" placeholder="Amount" required/>
-                    </p>
+                <div class="input-group" ng-if="detail.type == 'ASSET_INPUT_MON_TYPE'" > 
+                    <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-euro"></span></span>
+                    <input ng-model="detail.value" type="text" class="form-control" placeholder="Amount" required/>
                     <span ng-show="form.field_cur_{{detail.id}}.$dirty && form.field_cur_{{detail.id}}.$error.required" class="help-block">{{detail.name}} is required</span>
                 </div>
-                
+
                 <div class="form-group" ng-if="detail.type == 'ASSET_INPUT_INT_TYPE'" > 
                     <input ng-model="detail.value" name="field_num_{{detail.id}}" id="field_num_{{detail.id}}" type="number" class="form-control" required/>
                     <span ng-show="form.field_date_{{detail.id}}.$dirty && form.field_date_{{detail.id}}.$error.required" class="help-block">{{detail.name}} is required</span>
@@ -58,10 +55,12 @@
             </div>
 
 
+
             <div class="input-group">
                 <div class="form-actions">
-                    <button type="submit"  class="btn btn-primary">Submit</button>
-                    <button type="button" ng-click="reset()" ng-disabled="dataLoading" class="btn btn-danger">reset</button>
+                    <button type="submit" ng-if="!assetId" class="btn btn-primary">Submit</button>
+                    <button type="submit" ng-if="assetId" class="btn btn-primary">Update</button>
+                    <button type="button" ng-if="!assetId" ng-click="reset()" ng-disabled="dataLoading" class="btn btn-danger">reset</button>
                     <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
                 </div>
             </div>
