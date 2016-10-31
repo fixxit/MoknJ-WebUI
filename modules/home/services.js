@@ -35,5 +35,20 @@ angular.module('Home')
                                     );
                         };
 
+
+                        service.deleteAsset = function (token, asset, callback) {
+                            $http.post((url + 'delete/?access_token=' + token),
+                                    JSON.stringify(asset))
+                                    .success(
+                                            function (response) {
+                                                callback(response);
+                                            })
+                                    .error(
+                                            function (response) {
+                                                callback(response);
+                                            }
+                                    );
+                        };
+
                         return service;
                     }]);

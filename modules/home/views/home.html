@@ -51,7 +51,7 @@
         {{message}}
     </div>
     <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="ok()">OK</button>
+    <button class="btn btn-primary" ng-click="ok()">Delete</button>
     <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
     </div>
 </script>
@@ -74,8 +74,9 @@
         <div class="row">
             <div class="table-responsive panel panel-primary">
                 <div class="panel-heading">
-                    <span ng-click="editType(type.id)" class="glyphicon glyphicon-edit" style="cursor: pointer;"></span>
+                    <span data-toggle="tooltip" title="Edit Asset Type" ng-click="editType(type.id)" class="glyphicon glyphicon-edit" style="cursor: pointer;"></span>
                     {{type.name}}
+                    <span data-toggle="tooltip" title="New Asset" ng-click="newAsset(type.id)" class="glyphicon glyphicon-new-window" style="cursor: pointer; float:right;"></span>
                 </div>   
                 <div class="input-group-addon" ng-if="type.assets.length" >      
                     <input type="text" class="form-control" placeholder="Search here" ng-model="type.search">
@@ -97,7 +98,7 @@
                                                         filter:type.search | filter:search)" 
                                 ng-class="isEven($index)">
                                 <td style="width: 25px; cursor: pointer;"><span ng-click="edit(asset.typeId, asset.id)" class="glyphicon glyphicon-edit"></span></td>
-                                <td style="width: 25px; cursor: pointer;"><span ng-click="remove(asset.id, type.name)" class="glyphicon glyphicon-remove"></span></td>
+                                <td style="width: 25px; cursor: pointer;"><span ng-click="remove(asset, type.name)" class="glyphicon glyphicon-remove"></span></td>
                                 <td style="width: 25px; cursor: pointer;"><span class="glyphicon glyphicon-flag"></span></td>
 
                                 <td ng-repeat="value in asset.details">

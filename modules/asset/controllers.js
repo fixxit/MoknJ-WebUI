@@ -43,7 +43,6 @@ angular.module('Asset')
                                                                 }
                                                         );
                                                     }
-
                                                     $scope.dataLoading = false;
                                                 } else {
                                                     $scope.error = "Invalid server response";
@@ -101,9 +100,9 @@ angular.module('Asset')
                                                 if (response.success === true) {
                                                     //success
                                                     if (!$scope.assetId) {
-                                                        $scope.success = 'Successfully saved a new asset, save new asset ?';
+                                                        $scope.success = 'Successfully saved a new asset ['+response.asset.id+'], save new asset ?';
                                                     } else {
-                                                        $location.path('/home')
+                                                        $location.path('/home');
                                                     }
 
                                                     $scope.error = null;
