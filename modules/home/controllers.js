@@ -2,12 +2,11 @@
 
 angular.module('Home')
         .controller('HomeController',
-                ['$scope', '$rootScope', '$location', 'HomeService',
-                    function ($scope, $rootScope, $location, HomeService) {
+                ['$scope', '$rootScope', '$location', 'HomeService', '$modal',
+                    function ($scope, $rootScope, $location, HomeService, $modal) {
                         $scope.types = {};
                         HomeService.getAllTypes($rootScope.globals.currentUser.access_token,
                                 function (response) {
-                                   
                                     if (response) {
                                         if (response.error_description) {
                                             $scope.error = response.error_description + ". Please logout!";
@@ -18,24 +17,32 @@ angular.module('Home')
                                                     HomeService.getAllAssetForType(
                                                             $rootScope.globals.currentUser.access_token,
                                                             type.id,
-                                                            function (response) {                                                           
+                                                            function (response) {
                                                                 if (response) {
                                                                     if (response.assets) {
-                                                                        type.assets = [];  
+                                                                        type.assets = [];
                                                                         angular.forEach(response.assets, function (asset) {
                                                                             var fields = [];
-                                                                            angular.forEach(type.details, function (detail) {   
+                                                                            angular.forEach(type.details, function (detail) {
+                                                                                var noFieldFound = true;
                                                                                 angular.forEach(asset.details, function (field) {
                                                                                     if (detail.id === field.id) {
                                                                                         field.type = detail.type;
                                                                                         fields.push(field);
+                                                                                        noFieldFound = false;
+                                                                                        console.log("field : " + JSON.stringify(field));
                                                                                     }
-                                                                                });                                                                              
+                                                                                });
+                                                                                // add blank value for field which dont exist...
+                                                                                if (noFieldFound) {
+                                                                                    var field = {'value': "N/A", 'type': "ASSET_INPUT_STR_TYPE"};
+                                                                                    fields.push(field);
+                                                                                }
                                                                             });
                                                                             asset.details = fields;
                                                                             type.assets.push(asset);
                                                                         });
-                                                                        
+
                                                                         type.assets.viewby = 5;
                                                                         type.assets.totalItems = response.assets.length;
                                                                         type.assets.currentPage = 1;
@@ -74,4 +81,36 @@ angular.module('Home')
                             $location.path('/type').search({id: id});
                         };
 
+                        $scope.remove = function (id, name) {
+                            $modal.open({
+                                backdrop: true,
+                                templateUrl: 'myModalContent.html',
+                                controller: 'ModalInstanceCtrl',
+                                resolve: {
+                                    id: function () {
+                                        return id;
+                                    },
+                                    name: function () {
+                                        return name;
+                                    }
+                                }
+                            });
+                        };
                     }]);
+
+
+angular.module('Home').controller('ModalInstanceCtrl', function ($scope, $modalInstance, id, name) {
+    $scope.name = name;
+    $scope.message = "Are you sure you want to delete this record ?";
+
+    $scope.ok = function () {
+        $modalInstance.close("yes");
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+});
+
+
+

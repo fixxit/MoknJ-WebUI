@@ -5,6 +5,7 @@ angular.module('Authentication', ['ui.bootstrap']);
 angular.module('Home', ['ui.bootstrap']);
 angular.module('Type', ['ui.bootstrap']);
 angular.module('Asset', ['ui.bootstrap']);
+
 // new modles copme here
 angular.module('FixxitAssetTrackerUI', [
     'Authentication',

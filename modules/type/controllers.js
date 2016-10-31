@@ -18,42 +18,41 @@ angular.module('Type')
                                         } else {
                                             if (response.fieldTypes) {
                                                 $scope.types = response.fieldTypes;
-
-                                                TypeService.getType($rootScope.globals.currentUser.access_token, $scope.id,
-                                                        function (response) {
-                                                            console.log(" get type response : " + JSON.stringify(response.type));
-                                                            console.log(" get types : " + JSON.stringify($scope.types));
-                                                            if (response) {
-                                                                if (response.error_description) {
-                                                                    $scope.error = response.error_description + ". Please logout!";
-                                                                } else {
-                                                                    if (response.type) {
-                                                                        $scope.type = response.type;
-                                                                        $scope.typename = $scope.type.name;
-                                                                        angular.forEach($scope.type.details, function (detail) {
-                                                                            angular.forEach($scope.types, function (type) {
-                                                                                if (detail.type == type.name) {
-                                                                                    $scope.items.push(
-                                                                                            {
-                                                                                                'id': detail.id,
-                                                                                                'type': type,
-                                                                                                'name': detail.name,
-                                                                                                'unique': detail.unique
-                                                                                            }
-                                                                                    );
-                                                                                }
-                                                                            });
-                                                                        });
-                                                                        $scope.dataLoading = false;
+                                                if ($scope.id) {
+                                                    TypeService.getType($rootScope.globals.currentUser.access_token, $scope.id,
+                                                            function (response) {
+                                                                if (response) {
+                                                                    if (response.error_description) {
+                                                                        $scope.error = response.error_description + ". Please logout!";
                                                                     } else {
-                                                                        $scope.error = "Invalid server response";
+                                                                        if (response.type) {
+                                                                            $scope.type = response.type;
+                                                                            $scope.typename = $scope.type.name;
+                                                                            angular.forEach($scope.type.details, function (detail) {
+                                                                                angular.forEach($scope.types, function (type) {
+                                                                                    if (detail.type == type.name) {
+                                                                                        $scope.items.push(
+                                                                                                {
+                                                                                                    'id': detail.id,
+                                                                                                    'type': type,
+                                                                                                    'name': detail.name,
+                                                                                                    'unique': detail.unique
+                                                                                                }
+                                                                                        );
+                                                                                    }
+                                                                                });
+                                                                            });
+                                                                            $scope.dataLoading = false;
+                                                                        } else {
+                                                                            $scope.error = "Invalid server response";
+                                                                        }
                                                                     }
+                                                                } else {
+                                                                    $scope.error = "Invalid server response";
                                                                 }
-                                                            } else {
-                                                                $scope.error = "Invalid server response";
                                                             }
-                                                        }
-                                                );
+                                                    );
+                                                }
 
                                                 $scope.dataLoading = false;
                                             } else {
