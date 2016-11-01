@@ -2,10 +2,10 @@
 
 angular.module('Home')
         .factory('HomeService',
-                ['$http',
-                    function ($http) {
+                ['$http', '$rootScope',
+                    function ($http, $rootScope) {
                         var service = {};
-                        var url = 'http://localhost:8080/asset/';
+                        var url = $rootScope.globalAppUrl + 'asset/';
 
                         service.getAllTypes = function (token, callback) {
                             $http({

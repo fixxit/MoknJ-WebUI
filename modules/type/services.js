@@ -2,10 +2,10 @@
 
 angular.module('Type')
         .factory('TypeService',
-                ['$http',
-                    function ($http) {
+                ['$http', '$rootScope', 
+                    function ($http, $rootScope) {                       
                         var service = {};
-                        var url = 'http://localhost:8080/asset/type/';
+                        var url = $rootScope.globalAppUrl + 'asset/type/';
                         service.getFieldTypes = function (token, callback) {
                             $http({
                                 method: 'POST',

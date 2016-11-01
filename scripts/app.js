@@ -5,6 +5,7 @@ angular.module('Authentication', ['ui.bootstrap']);
 angular.module('Home', ['ui.bootstrap']);
 angular.module('Type', ['ui.bootstrap']);
 angular.module('Asset', ['ui.bootstrap']);
+angular.module('Resource', ['ui.bootstrap']);
 
 // new modles copme here
 angular.module('FixxitAssetTrackerUI', [
@@ -12,6 +13,7 @@ angular.module('FixxitAssetTrackerUI', [
     'Home',
     'Type',
     'Asset',
+    'Resource',
     'ngRoute',
     'ngCookies'
 ]).config(['$routeProvider', function ($routeProvider) {
@@ -37,12 +39,20 @@ angular.module('FixxitAssetTrackerUI', [
                             controller: 'AssetController',
                             templateUrl: 'modules/asset/views/asset.html'
                         })
+                        
+                        .when('/resource', {
+                            controller: 'ResourceController',
+                            templateUrl: 'modules/resource/views/resource.html'
+                        })
 
                         .otherwise({redirectTo: '/login'});
             }])
 
         .run(['$rootScope', '$location', '$cookieStore', '$http', 'AuthenticationService',
             function ($rootScope, $location, $cookieStore, $http, AuthenticationService) {
+                // set default server address.
+                $rootScope.globalAppUrl = "http://localhost:8080/";
+                
                 // keep user logged in after page refresh
                 $rootScope.globals = $cookieStore.get('globals') || {};
                 if ($rootScope.globals.currentUser) {
@@ -51,7 +61,6 @@ angular.module('FixxitAssetTrackerUI', [
 
                 $rootScope.$on('$locationChangeStart', function (event, next, current) {
                     // redirect to login page if not logged in
-
                     if ($location.path() === '/login') {
                         $rootScope.token = {};
                         $cookieStore.remove('token');

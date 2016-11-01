@@ -2,15 +2,16 @@
 
 angular.module('Authentication')
         .factory('AuthenticationService',
-                ['Base64', '$http', '$cookieStore', '$rootScope', '$timeout',
-                    function (Base64, $http, $cookieStore, $rootScope, $timeout) {
+                ['Base64', '$http', '$cookieStore', '$rootScope',
+                    function (Base64, $http, $cookieStore, $rootScope) {
                         var service = {};
+
                         var authdata = Base64.encode("fixx-trusted-client" + ':' + "fixx_secret");
 
                         service.Login = function (username, password, callback) {
                             $http({
                                 method: 'POST',
-                                url: 'http://localhost:8080/oauth/token?grant_type=password&username=' + username + '&password=' + password,
+                                url: $rootScope.globalAppUrl + 'oauth/token?grant_type=password&username=' + username + '&password=' + password,
                                 data: {},
                                 headers: {
                                     'Content-Type': 'application/json',

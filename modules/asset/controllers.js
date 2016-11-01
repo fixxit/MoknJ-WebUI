@@ -6,55 +6,60 @@ angular.module('Asset')
                     function ($scope, $rootScope, $location, AssetService) {
                         $scope.assetId = $location.search().assetId;
                         var id = $location.search().id;
-                        if (id) {
-                            AssetService.getDetail($rootScope.globals.currentUser.access_token, id,
-                                    function (response) {
-                                        if (response) {
-                                            if (response.error_description) {
-                                                $scope.error = response.error_description + ". Please logout!";
-                                            } else {
-                                                if (response.type) {
-                                                    $scope.type = response.type;
-                                                    if ($scope.assetId) {
-                                                        AssetService.get($rootScope.globals.currentUser.access_token, $scope.assetId,
-                                                                function (response) {
-                                                                    if (response) {
-                                                                        if (response.error_description) {
-                                                                            $scope.error = response.error_description + ". Please logout!";
-                                                                        } else {
-                                                                            if (response.asset) {
-                                                                                $scope.asset = response.asset;
-                                                                                angular.forEach($scope.asset.details, function (asset) {
-                                                                                    angular.forEach($scope.type.details, function (detail) {
-                                                                                        if (detail.id === asset.id) {
-                                                                                            detail.value = asset.value;
-                                                                                        }
-                                                                                    });
-                                                                                });
 
-                                                                                $scope.dataLoading = false;
-                                                                            } else {
-                                                                                $scope.error = "Invalid server response";
-                                                                            }
-                                                                        }
-                                                                    } else {
-                                                                        $scope.error = "Invalid server response";
-                                                                    }
-                                                                }
-                                                        );
-                                                    }
-                                                    $scope.dataLoading = false;
+                        $scope.loadPage = function (id) {
+                            if (id) {
+                                AssetService.getDetail($rootScope.globals.currentUser.access_token, id,
+                                        function (response) {
+                                            if (response) {
+                                                if (response.error_description) {
+                                                    $scope.error = response.error_description + ". Please logout!";
                                                 } else {
-                                                    $scope.error = "Invalid server response";
-                                                }
-                                            }
-                                        } else {
-                                            $scope.error = "Invalid server response";
-                                        }
-                                    }
-                            );
-                        }
+                                                    if (response.type) {
+                                                        $scope.type = response.type;
+                                                        if ($scope.assetId) {
+                                                            AssetService.get($rootScope.globals.currentUser.access_token, $scope.assetId,
+                                                                    function (response) {
+                                                                        if (response) {
+                                                                            if (response.error_description) {
+                                                                                $scope.error = response.error_description + ". Please logout!";
+                                                                            } else {
+                                                                                if (response.asset) {
+                                                                                    $scope.asset = response.asset;
+                                                                                    angular.forEach($scope.asset.details, function (asset) {
+                                                                                        angular.forEach($scope.type.details, function (detail) {
+                                                                                            if (detail.id === asset.id) {
+                                                                                                detail.value = asset.value;
+                                                                                            }
+                                                                                        });
+                                                                                    });
 
+                                                                                    $scope.dataLoading = false;
+                                                                                } else {
+                                                                                    $scope.error = "Invalid server response";
+                                                                                }
+                                                                            }
+                                                                        } else {
+                                                                            $scope.error = "Invalid server response";
+                                                                        }
+                                                                    }
+                                                            );
+                                                        }
+                                                        $scope.dataLoading = false;
+                                                    } else {
+                                                        $scope.error = "Invalid server response";
+                                                    }
+                                                }
+                                            } else {
+                                                $scope.error = "Invalid server response";
+                                            }
+                                        }
+                                );
+                            }
+                        };
+
+                        
+                        $scope.loadPage(id);
 
                         $scope.openDatePickers = [];
 
@@ -100,7 +105,7 @@ angular.module('Asset')
                                                 if (response.success === true) {
                                                     //success
                                                     if (!$scope.assetId) {
-                                                        $scope.success = 'Successfully saved a new asset ['+response.asset.id+'], save new asset ?';
+                                                        $scope.success = 'Successfully saved a new asset [' + response.asset.id + '], save new asset ?';
                                                     } else {
                                                         $location.path('/home');
                                                     }
@@ -121,8 +126,6 @@ angular.module('Asset')
                         };
 
                         $scope.reset = function () {
-                            angular.forEach($scope.type.details, function (value) {
-                                console.log(JSON.stringify(value));
-                            });
+                            alert("todo!");
                         };
                     }]);

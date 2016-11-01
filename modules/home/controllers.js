@@ -5,7 +5,7 @@ angular.module('Home')
                 ['$scope', '$rootScope', '$location', 'HomeService', '$modal',
                     function ($scope, $rootScope, $location, HomeService, $modal) {
                         $scope.types = {};
-
+                        
                         $scope.getAllAssetForType = function (type) {
                             HomeService.getAllAssetForType(
                                     $rootScope.globals.currentUser.access_token,
@@ -101,16 +101,16 @@ angular.module('Home')
                         $scope.editType = function (id) {
                             $location.path('/type').search({id: id});
                         };
-                        
+
                         $scope.newAsset = function (id) {
                             $location.path('/asset').search({id: id});
                         };
 
-                        $scope.remove = function (asset, name) {
+                        $scope.removeAsset = function (asset, name) {
                             $modal.open({
                                 backdrop: true,
                                 templateUrl: 'myModalContent.html',
-                                controller: 'ModalInstanceCtrl',
+                                controller: 'ModalDeleteAssetCtrl',
                                 resolve: {
                                     parentScope: function () {
                                         return $scope;
@@ -130,10 +130,60 @@ angular.module('Home')
                                 }
                             });
                         };
+
+
+                        $scope.removeType = function (type) {
+                            $modal.open({
+                                backdrop: true,
+                                templateUrl: 'myModalContent.html',
+                                controller: 'ModalDeleteTypeCtrl',
+                                resolve: {
+                                    parentScope: function () {
+                                        return $scope;
+                                    },
+                                    HomeService: function () {
+                                        return HomeService;
+                                    },
+                                    type: function () {
+                                        return type;
+                                    },
+                                    token: function () {
+                                        return $rootScope.globals.currentUser.access_token;
+                                    }
+                                }
+                            });
+                        };
+
+
+                        $scope.assignAsset = function (asset, name) {
+                            $modal.open({
+                                backdrop: true,
+                                templateUrl: 'myModalContent.html',
+                                controller: 'ModalAssignAssetCtrl',
+                                resolve: {
+                                    parentScope: function () {
+                                        return $scope;
+                                    },
+                                    HomeService: function () {
+                                        return HomeService;
+                                    },
+                                    asset: function () {
+                                        return asset;
+                                    },
+                                    name: function () {
+                                        return name;
+                                    },
+                                    token: function () {
+                                        return $rootScope.globals.currentUser.access_token;
+                                    }
+                                }
+                            });
+                        };
+
                     }]);
 
 
-angular.module('Home').controller('ModalInstanceCtrl',
+angular.module('Home').controller('ModalDeleteAssetCtrl',
         function ($scope, $modalInstance, parentScope, HomeService, asset, name, token) {
             $scope.name = name;
             $scope.message = "Are you sure you want to delete asset id[" + asset.id + "] this record ?";
@@ -158,12 +208,40 @@ angular.module('Home').controller('ModalInstanceCtrl',
                 );
                 $modalInstance.close();
             };
-            
+
 
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
             };
         });
 
+angular.module('Home').controller('ModalDeleteTypeCtrl',
+        function ($scope, $modalInstance, parentScope, HomeService, type, token) {
+            $scope.name = type.name;
+            $scope.message = "blah blah! delete stuff!";
 
+            $scope.ok = function () {
+                $modalInstance.close();
+            };
+
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
+        });
+
+angular.module('Home').controller('ModalAssignAssetCtrl',
+        function ($scope, $modalInstance, parentScope, HomeService, asset, name, token) {
+            $scope.name = name + " - Check Asset Out";
+            $scope.message = "blah blah! Assign some stuff";
+
+            $scope.ok = function () {
+                $modalInstance.close();
+            };
+
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
+        });
 

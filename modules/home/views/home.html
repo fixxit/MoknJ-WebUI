@@ -26,7 +26,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#">Resources</a>
+                    <a href="#/resource">Resources</a>
                 </li>
                 <li >
                     <a href="#/type">New Types<span class="sr-only">(current)</span>
@@ -48,7 +48,7 @@
     <h3 class="modal-title">{{name}}</h3>
     </div>
     <div class="modal-body">
-        {{message}}
+    {{message}}
     </div>
     <div class="modal-footer">
     <button class="btn btn-primary" ng-click="ok()">Delete</button>
@@ -62,7 +62,7 @@
     <div class="panel panel-primary">
         <div class="panel-heading">
             <span class="glyphicon glyphicon-search"></span>
-            Global Search
+            &nbsp;&nbsp;Global Search
         </div> 
         <div class="input-group-addon">
             <input type="text" class="form-control" placeholder="Search" ng-model="search">   
@@ -74,52 +74,60 @@
         <div class="row">
             <div class="table-responsive panel panel-primary">
                 <div class="panel-heading">
-                    <span data-toggle="tooltip" title="Edit Asset Type" ng-click="editType(type.id)" class="glyphicon glyphicon-edit" style="cursor: pointer;"></span>
-                    {{type.name}}
-                    <span data-toggle="tooltip" title="New Asset" ng-click="newAsset(type.id)" class="glyphicon glyphicon-new-window" style="cursor: pointer; float:right;"></span>
-                </div>   
-                <div class="input-group-addon" ng-if="type.assets.length" >      
-                    <input type="text" class="form-control" placeholder="Search here" ng-model="type.search">
+                    <span data-toggle="tooltip" title="Expand {{type.name}}" style="cursor: pointer;" ng-show="type.newCollapse" class="glyphicon glyphicon-collapse-down" ng-click="type.newCollapse = !type.newCollapse"></span>
+                    <span data-toggle="tooltip" title="Collapse {{type.name}}" style="cursor: pointer;" ng-show="!type.newCollapse"  class="glyphicon glyphicon-collapse-up" ng-click="type.newCollapse = !type.newCollapse"></span>
+                    <span>&nbsp;</span>
+                    <span data-toggle="tooltip" title="New {{type.name}}" ng-click="newAsset(type.id)" class="glyphicon glyphicon-new-window" style="cursor: pointer;"></span>
+                    <span>&nbsp;</span>
+                    {{type.name}}                  
+                    <span data-toggle="tooltip" title="Remove {{type.name}}" ng-click="removeType(type)" class="glyphicon glyphicon-remove-sign" style="cursor: pointer; float:right;"></span>                   	
+                    <span style="float:right;">&nbsp;&nbsp;</span>
+                    <span data-toggle="tooltip" title="Edit {{type.name}} Layout" ng-click="editType(type.id)" class="glyphicon glyphicon-edit" style="cursor: pointer; float:right;"></span>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>&nbsp;</th>
-                                <th>&nbsp;</th>
-                                <th>&nbsp;</th>
-                                <th ng-repeat="detail in type.details">{{detail.name}}</th>
-                            </tr>
-                        </thead>
-                        <tbody>       
-                            <tr ng-repeat="asset in type.filterData = (type.assets.slice(
-                                                    ((type.assets.currentPage - 1) * type.assets.itemsPerPage)
-                                                    , ((type.assets.currentPage) * type.assets.itemsPerPage))|
+                <div collapse="type.newCollapse">
+                    <div class="input-group-addon" ng-if="type.assets.length" >      
+                        <input type="text" class="form-control" placeholder="Search here" ng-model="type.search">
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>&nbsp;</th>
+                                    <th>&nbsp;</th>
+                                    <th>&nbsp;</th>
+                                    <th ng-repeat="detail in type.details">{{detail.name}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>       
+                                <tr ng-repeat="asset in type.filterData = (type.assets.slice(
+                                        ((type.assets.currentPage - 1) * type.assets.itemsPerPage)
+                                        , ((type.assets.currentPage) * type.assets.itemsPerPage))|
                                                         filter:type.search | filter:search)" 
-                                ng-class="isEven($index)">
-                                <td style="width: 25px; cursor: pointer;"><span ng-click="edit(asset.typeId, asset.id)" class="glyphicon glyphicon-edit"></span></td>
-                                <td style="width: 25px; cursor: pointer;"><span ng-click="remove(asset, type.name)" class="glyphicon glyphicon-remove"></span></td>
-                                <td style="width: 25px; cursor: pointer;"><span class="glyphicon glyphicon-flag"></span></td>
+                                    ng-class="isEven($index)">
+                                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Edit {{type.name}} Asset" ng-click="edit(asset.typeId, asset.id)" class="glyphicon glyphicon-edit"></span></td>
+                                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Remove {{type.name}} Asset" ng-click="removeAsset(asset, type.name)" class="glyphicon glyphicon-remove"></span></td>
+                                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check In/Out {{type.name}} Asseta"ng-click="assignAsset(asset, type.name)" class="glyphicon glyphicon-flag"></span></td>
 
-                                <td ng-repeat="value in asset.details">
-                                    <span ng-if="value.type === 'ASSET_INPUT_MON_TYPE'" ><span class="glyphicon glyphicon-euro"></span>{{value.value| currency: ""}}</span>
-                                    <span ng-if="value.type === 'ASSET_INPUT_STR_TYPE'" >{{value.value}}</span>
-                                    <span ng-if="value.type === 'ASSET_INPUT_INT_TYPE'" >{{value.value| number}}</span>
-                                    <span ng-if="value.type === 'ASSET_INPUT_DAT_TYPE'" >{{value.value| date:'yyyy-MM-dd'}}</span>  
-                                </td>
-                            </tr>
-                            <tr class="danger text-center" ng-if="!type.filterData.length"><td colspan="{{type.details.length + 3}}">No {{type.name}} Entries Found</td></tr> 
-                        </tbody>
-                    </table>
+                                    <td ng-repeat="value in asset.details">
+                                        <span ng-if="value.type === 'ASSET_INPUT_MON_TYPE'" ><span class="glyphicon glyphicon-euro"></span>{{value.value| currency: ""}}</span>
+                                        <span ng-if="value.type === 'ASSET_INPUT_STR_TYPE'" >{{value.value}}</span>
+                                        <span ng-if="value.type === 'ASSET_INPUT_INT_TYPE'" >{{value.value| number}}</span>
+                                        <span ng-if="value.type === 'ASSET_INPUT_DAT_TYPE'" >{{value.value| date:'yyyy-MM-dd'}}</span>  
+                                    </td>
+                                </tr>
+                                <tr class="danger text-center" ng-if="!type.filterData.length"><td colspan="{{type.details.length + 3}}">No {{type.name}} Entries Found</td></tr> 
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center">
+                        <pagination ng-show="type.filterData.length"  
+                                    total-items="type.assets.totalItems" 
+                                    ng-model="type.assets.currentPage"  
+                                    class="pagination-sm" 
+                                    boundary-links="true" rotate="false"
+                                    items-per-page="type.assets.itemsPerPage"></pagination> 
+                    </div>  
                 </div>
-                <div class="text-center">
-                    <pagination ng-show="type.filterData.length"  
-                                total-items="type.assets.totalItems" 
-                                ng-model="type.assets.currentPage"  
-                                class="pagination-sm" 
-                                boundary-links="true" rotate="false"
-                                items-per-page="type.assets.itemsPerPage"></pagination> 
-                </div>               
             </div>
         </div>
     </div>

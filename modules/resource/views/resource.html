@@ -1,0 +1,137 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed" aria-expanded="true">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">Resources</a>
+        </div>
+
+        <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#/home">back</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div ng-show="error" class="alert alert-danger">{{error}}</div>
+<div ng-show="success" class="alert alert-success">{{success}}</div>
+<div class="container-fluid bg-3">
+    <div class="panel panel-primary">
+        <div data-toggle="tooltip" title="Expand/Collapse New/Update Resource" style="cursor: pointer;" class="panel-heading" ng-click="newCollapse = !newCollapse">
+            <span ng-show="newCollapse" class="glyphicon glyphicon-collapse-down"></span>
+            <span ng-show="!newCollapse"  class="glyphicon glyphicon-collapse-up"></span>
+            <lable ng-if="!resourceId">New Resource</lable>
+            <lable ng-if="resourceId">Update Resource</lable>
+        </div>
+        <form name="form" ng-submit="save()" role="form">
+            <div collapse="!newCollapse" class="container-fluid bg-3">
+                <div class="row">
+                    <span>&nbsp;</span>
+                </div> 
+                <div class="form-group">
+                    <label for="datatype">First Name</label>
+                    <i class="fa fa-key"></i>
+                    <input ng-model="resource.firstName" type="text" name="firstName" id="firstName" class="form-control" required />
+                    <span ng-show="form.firstName.$dirty && form.firstName.$error.required" class="help-block">First Name is required</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="datatype">Surname</label>
+                    <i class="fa fa-key"></i>
+                    <input ng-model="resource.surname" type="text" name="surname" id="surname" class="form-control" required />
+                    <span ng-show="form.surname.$dirty && form.surname.$error.required" class="help-block">Surname is required</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="datatype">Email</label>
+                    <i class="fa fa-key"></i>
+                    <input ng-model="resource.email" type="text" name="email" id="email" class="form-control" required />
+                    <span ng-show="form.email.$dirty && form.email.$error.required" class="help-block">Email is required</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="datatype">Contact Number</label>
+                    <i class="fa fa-key"></i>
+                    <input ng-model="resource.contactNumber" type="text" name="contactNumber" id="contactNumber" class="form-control" required />
+                    <span ng-show="form.contactNumber.$dirty && form.contactNumber.$error.required" class="help-block">Contact Number is required</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="datatype">Placed At Client</label>
+                    <i class="fa fa-key"></i>
+                    <input ng-model="resource.placedAtClient" type="text" name="placedAtClient" id="placedAtClient" class="form-control" required />
+                    <span ng-show="form.placedAtClient.$dirty && form.placedAtClient.$error.required" class="help-block">Placed At Client is required</span>
+                </div>
+
+                <div class="input-group">
+                    <div class="form-actions">
+                        <button type="submit" ng-if="!resourceId" class="btn btn-primary">Submit</button>
+                        <button type="submit" ng-if="resourceId" class="btn btn-primary">Update</button>
+                        <button type="button" ng-if="!resourceId" ng-click="reset()" ng-disabled="dataLoading" class="btn btn-danger">Reset</button>
+                        <button type="button" ng-if="resourceId" ng-click="cancel()" ng-disabled="dataLoading" class="btn btn-danger">Cancel</button>
+                        <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+                    </div>
+                </div>
+                <div class="row">
+                    <span>&nbsp;</span>
+                </div>    
+            </div>
+        </form>
+    </div>
+</div>
+<div class="container-fluid bg-3">
+    <div class="table-responsive panel panel-primary">
+        <div class="panel-heading">
+            <lable>Resource Search</lable>
+        </div>
+
+        <div class="input-group-addon" ng-if="resources.length">      
+            <input type="text" class="form-control" placeholder="Search here" ng-model="search">
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>First Name</th>
+                    <th>Surname</th>
+                    <th>Email</th>
+                    <th>Number</th>
+                    <th>Client</th>
+                </tr>
+            </thead>
+            <tbody>       
+                <tr ng-repeat="resource in filterData = (resources.slice(
+                            ((resources.currentPage - 1) * resources.itemsPerPage)
+                            , ((resources.currentPage) * resources.itemsPerPage))| filter:search)" 
+                    ng-class="isEven($index)">
+                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Edit Resource Resource" ng-click="editResource(resource.id)" class="glyphicon glyphicon-edit"></span></td>
+                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Remove Resource Resource" ng-click="removeResource(resource)" class="glyphicon glyphicon-remove"></span></td>
+                    <td><span>{{resource.firstName}}</span><td/>
+                    <td><span>{{resource.surname}}</span><td/>
+                    <td><span>{{resource.email}}</span><td/>
+                    <td><span>{{resource.contactNumber}}</span><td/>
+                    <td><span>{{resource.placedAtClient}}</span><td/>
+                </tr>
+                <tr class="danger text-center" ng-if="!filterData.length"><td colspan="7">No Resource Entries Found</td></tr> 
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <pagination ng-show="filterData.length"  
+                        total-items="resources.totalItems" 
+                        ng-model="resources.currentPage"  
+                        class="pagination-sm" 
+                        boundary-links="true" rotate="false"
+                        items-per-page="resources.itemsPerPage"></pagination> 
+        </div> 
+
+    </div>
+</div>

@@ -1,27 +1,13 @@
 'use strict';
 
-angular.module('Asset')
-        .factory('AssetService',
+angular.module('Resource')
+        .factory('ResourceService',
                 ['$http', '$rootScope',
                     function ($http, $rootScope) {
                         var service = {};
-                        var baseURL = $rootScope.globalAppUrl + 'asset/';
-
-                        service.getDetail = function (token, id, callback) {
-                            $http({
-                                method: 'POST',
-                                url: baseURL + 'type/get/' + id + '?access_token=' + token,
-                                data: {},
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            }).success(function (response) {
-                                callback(response);
-                            }).error(function (response) {
-                                callback(response);
-                            });
-                        };
                         
+                        var baseURL = $rootScope.globalAppUrl + 'asset/resource/';
+
                         service.get = function (token, id, callback) {
                             $http({
                                 method: 'POST',
@@ -36,10 +22,11 @@ angular.module('Asset')
                             });
                         };
                         
-                        service.save = function (token, id, data, callback) {
+                        
+                        service.save = function (token, data, callback) {
                             $http({
                                 method: 'POST',
-                                url: baseURL + 'add/' + id + '?access_token=' + token,
+                                url: baseURL + 'add/?access_token=' + token,
                                 data: JSON.stringify(data),
                                 headers: {
                                     'Content-Type': 'application/json'
@@ -51,6 +38,21 @@ angular.module('Asset')
                             });
                         };
                         
-
+                        
+                        service.all = function (token, callback) {
+                            $http({
+                                method: 'POST',
+                                url: baseURL + 'all/?access_token=' + token,
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            }).success(function (response) {
+                                callback(response);
+                            }).error(function (response) {
+                                callback(response);
+                            });
+                        };
+                        
+                        
                         return service;
                     }]);
