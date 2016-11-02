@@ -127,20 +127,20 @@ angular.module('Home')
                             }
                         };
 
-                        $scope.edit = function (id, assetID) {
-                            $location.path('/asset').search({id: id, assetId: assetID});
+                        $scope.edit = function (id, assetId) {
+                            $location.path('/asset').search({'id': id, 'assetId': assetId});
                         };
 
                         $scope.editType = function (id) {
-                            $location.path('/type').search({id: id});
+                            $location.path('/type').search({'id': id});
                         };
 
                         $scope.newAsset = function (id) {
-                            $location.path('/asset').search({id: id});
+                            $location.path('/asset').search({'id': id});
                         };
 
-                        $scope.view = function (name, id) {
-                            $location.path('/asset').search({id: id});
+                        $scope.viewAudit = function (id, name) {
+                            $location.path('/link').search({'assetId': id , 'name': name});
                         };
 
                         $scope.removeAsset = function (asset, name) {

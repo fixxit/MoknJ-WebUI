@@ -22,46 +22,56 @@
 </nav>
 <div ng-show="error" class="alert alert-danger">{{error}}</div>
 <div ng-show="success" class="alert alert-success">{{success}}</div>
-<div class="container">
-    <form name="form" ng-submit="save()" role="form">
-        <div class="alert alert-info">
-            <div class="form-group" ng-repeat="detail in type.details">
-                <label for="datatype">{{detail.name}}</label>
-                <div class="form-group" ng-if="detail.type == 'ASSET_INPUT_STR_TYPE'">
-                    <input ng-model="detail.value" type="text" name="field_{{detail.id}}" id="field_{{detail.id}}" class="form-control" required />
-                    <span ng-show="form.field_{{detail.id}}.$dirty && form.field_{{detail.id}}.$error.required" class="help-block">{{detail.name}} is required</span>
-                </div>
-
-                <div class="form-group" ng-if="detail.type == 'ASSET_INPUT_DAT_TYPE'">      
-                    <p class="input-group">
-                        <input type="text" name="field_date_{{detail.id}}" id="field_date_{{detail.id}}" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="detail.value" is-open="openDatePickers[index]"  date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="open($event, index)"><i class="glyphicon glyphicon-calendar"></i></button>
-                        </span>
-                    </p> 
-                    <span ng-show="form.field_date_{{detail.id}}.$dirty && form.field_date_{{detail.id}}.$error.required" class="help-block">{{detail.name}} is required</span>
-                </div> 
-
-                <div class="input-group" ng-if="detail.type == 'ASSET_INPUT_MON_TYPE'" > 
-                    <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-euro"></span></span>
-                    <input ng-model="detail.value" type="text" class="form-control" placeholder="Amount" required/>
-                    <span ng-show="form.field_cur_{{detail.id}}.$dirty && form.field_cur_{{detail.id}}.$error.required" class="help-block">{{detail.name}} is required</span>
-                </div>
-
-                <div class="form-group" ng-if="detail.type == 'ASSET_INPUT_INT_TYPE'" > 
-                    <input ng-model="detail.value" name="field_num_{{detail.id}}" id="field_num_{{detail.id}}" type="number" class="form-control" required/>
-                    <span ng-show="form.field_date_{{detail.id}}.$dirty && form.field_date_{{detail.id}}.$error.required" class="help-block">{{detail.name}} is required</span>
-                </div>
-            </div>
-
-            <div class="input-group">
-                <div class="form-actions">
-                    <button type="submit" ng-if="!assetId" class="btn btn-primary">Submit</button>
-                    <button type="submit" ng-if="assetId" class="btn btn-primary">Update</button>
-                    <button type="button" ng-if="!assetId" ng-click="reset()" ng-disabled="dataLoading" class="btn btn-danger">reset</button>
-                    <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
-                </div>
-            </div>
+<div class="container-fluid bg-3">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <lable>{{type.name}}</lable>
         </div>
-    </form>
-</div>
+        <form name="form" ng-submit="save()" role="form">
+            <div class="container-fluid bg-3">
+                <div class="row">
+                    <span>&nbsp;</span>
+                </div> 
+                <div class="form-group" ng-repeat="detail in type.details">
+                    <label for="datatype">{{detail.name}}</label>
+                    <div class="form-group" ng-if="detail.type == 'ASSET_INPUT_STR_TYPE'">
+                        <input ng-model="detail.value" type="text" name="field_{{detail.id}}" id="field_{{detail.id}}" class="form-control" required />
+                        <span ng-show="form.field_{{detail.id}}.$dirty && form.field_{{detail.id}}.$error.required" class="help-block">{{detail.name}} is required</span>
+                    </div>
+
+                    <div class="form-group" ng-if="detail.type == 'ASSET_INPUT_DAT_TYPE'">      
+                        <p class="input-group">
+                            <input type="text" name="field_date_{{detail.id}}" id="field_date_{{detail.id}}" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="detail.value" is-open="openDatePickers[index]"  date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open($event, index)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </p> 
+                        <span ng-show="form.field_date_{{detail.id}}.$dirty && form.field_date_{{detail.id}}.$error.required" class="help-block">{{detail.name}} is required</span>
+                    </div> 
+
+                    <div class="input-group" ng-if="detail.type == 'ASSET_INPUT_MON_TYPE'" > 
+                        <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-euro"></span></span>
+                        <input ng-model="detail.value" type="text" class="form-control" placeholder="Amount" required/>
+                        <span ng-show="form.field_cur_{{detail.id}}.$dirty && form.field_cur_{{detail.id}}.$error.required" class="help-block">{{detail.name}} is required</span>
+                    </div>
+
+                    <div class="form-group" ng-if="detail.type == 'ASSET_INPUT_INT_TYPE'" > 
+                        <input ng-model="detail.value" name="field_num_{{detail.id}}" id="field_num_{{detail.id}}" type="number" class="form-control" required/>
+                        <span ng-show="form.field_date_{{detail.id}}.$dirty && form.field_date_{{detail.id}}.$error.required" class="help-block">{{detail.name}} is required</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="form-actions">
+                        <button type="submit" ng-if="!assetId" class="btn btn-primary">Submit</button>
+                        <button type="submit" ng-if="assetId" class="btn btn-primary">Update</button>
+                        <button type="button" ng-if="!assetId" ng-click="reset()" ng-disabled="dataLoading" class="btn btn-danger">reset</button>
+                        <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+                    </div>
+                </div>
+                <div class="row">
+                    <span>&nbsp;</span>
+                </div> 
+            </div>
+        </form>
+    </div>
