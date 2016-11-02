@@ -33,7 +33,7 @@ angular.module('Asset')
                                                                                             }
                                                                                         });
                                                                                     });
-
+                                                                                    $scope.type.resourceId = response.asset.resourceId;
                                                                                     $scope.dataLoading = false;
                                                                                 } else {
                                                                                     $scope.error = "Invalid server response";
@@ -126,6 +126,6 @@ angular.module('Asset')
                         };
 
                         $scope.reset = function () {
-                            alert("todo!");
+                            alert("reset todo!");
                         };
                     }]);

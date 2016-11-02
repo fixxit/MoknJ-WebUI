@@ -24,8 +24,8 @@
 <div class="container-fluid bg-3">
     <div class="panel panel-primary">
         <div data-toggle="tooltip" title="Expand/Collapse New/Update Resource" style="cursor: pointer;" class="panel-heading" ng-click="newCollapse = !newCollapse">
-            <span ng-show="newCollapse" class="glyphicon glyphicon-collapse-down"></span>
-            <span ng-show="!newCollapse"  class="glyphicon glyphicon-collapse-up"></span>
+            <span ng-show="!newCollapse" class="glyphicon glyphicon-collapse-down"></span>
+            <span ng-show="newCollapse"  class="glyphicon glyphicon-collapse-up"></span>
             <lable ng-if="!resourceId">New Resource</lable>
             <lable ng-if="resourceId">Update Resource</lable>
         </div>
@@ -73,7 +73,7 @@
                     <div class="form-actions">
                         <button type="submit" ng-if="!resourceId" class="btn btn-primary">Submit</button>
                         <button type="submit" ng-if="resourceId" class="btn btn-primary">Update</button>
-                        <button type="button" ng-if="!resourceId" ng-click="reset()" ng-disabled="dataLoading" class="btn btn-danger">Reset</button>
+                        <button type="button" ng-if="!resourceId" ng-click="reset(true)" ng-disabled="dataLoading" class="btn btn-danger">Reset</button>
                         <button type="button" ng-if="resourceId" ng-click="cancel()" ng-disabled="dataLoading" class="btn btn-danger">Cancel</button>
                         <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
                     </div>

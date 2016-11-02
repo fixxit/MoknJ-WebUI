@@ -12,8 +12,6 @@ angular.module('Resource')
                             $scope.resource.id = resourceId;
                         }
 
-
-
                         $scope.loadPage = function (id) {
                             if (id) {
                                 $scope.editResource(id);
@@ -61,13 +59,14 @@ angular.module('Resource')
                                                 if (!$scope.resourceId) {
                                                     $scope.success = 'Successfully saved a new resource [' + response.resource.id + '], save new resource ?';
                                                 } else {
-                                                    $location.path('/home');
+                                                    $scope.success = 'Successfully update resource [' + response.resource.id + ']';
                                                 }
+                                                $scope.loadPage();
 
-                                                $scope.error = null;
                                                 $scope.dataLoading = false;
                                                 // Reset all data
                                                 $scope.reset();
+                                                $scope.resourceId = null;
                                             } else {
                                                 // error 
                                                 $scope.success = null;
@@ -87,14 +86,19 @@ angular.module('Resource')
                             }
                         };
 
-
-                        $scope.reset = function () {
+                        $scope.reset = function (messages) {
                             $scope.resource = {};
+                            if (messages) {
+                                $scope.success = null;
+                                $scope.error = null;
+                            }
                         };
 
                         $scope.cancel = function () {
                             $scope.resourceId = null;
                             $scope.reset();
+                            $scope.success = null;
+                            $scope.error = null;
                         };
 
                         $scope.removeResource = function () {
