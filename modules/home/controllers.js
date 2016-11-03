@@ -126,6 +126,14 @@ angular.module('Home')
                                 return "active";
                             }
                         };
+                        
+                        $scope.isCollapsed = function (newCollapse) {
+                            if (newCollapse) {
+                                return "glyphicon glyphicon-collapse-down";
+                            } else {
+                                return "glyphicon glyphicon-collapse-up";
+                            }
+                        };
 
                         $scope.edit = function (id, assetId) {
                             $location.path('/asset').search({'id': id, 'assetId': assetId});
@@ -140,7 +148,7 @@ angular.module('Home')
                         };
 
                         $scope.viewAudit = function (id, name) {
-                            $location.path('/link').search({'assetId': id , 'name': name});
+                            $location.path('/link').search({'assetId': id, 'name': name});
                         };
 
                         $scope.removeAsset = function (asset, name) {
@@ -298,6 +306,7 @@ angular.module('Home').controller('ModalRemoveLinkCtrl',
             $scope.name = name + " - Check Asset In";
 
             $scope.ok = function () {
+                $scope.dataLoading = true;
                 $scope.link = {
                     'resourceId': asset.resourceId,
                     'assetId': asset.id,
@@ -380,6 +389,7 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
             $scope.resources = [];
             $scope.selected = 'Select an Resource';
             $scope.resource = {};
+            $scope.date = "";
 
             // selected item desplayed in div
             $scope.dropboxitemselected = function (resource) {
@@ -419,8 +429,7 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
             $scope.loadPage();
 
             $scope.ok = function () {
-
-                alert($scope.auditdate);
+                $scope.dataLoading = true;
                 $scope.link = {
                     'resourceId': $scope.resource.id,
                     'assetId': asset.id,
@@ -470,16 +479,20 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                         }
                 );
             };
-
+            
+            $scope.resourceCollapse = false;
+            
+            $scope.changeDiv = function () {
+                $scope.resourceCollapse = !$scope.resourceCollapse;
+            };
+            
             $scope.openDatePickers = [];
-
             // Disable weekend selection
             $scope.disabled = function (date, mode) {
                 return (mode === 'day'
                         && (date.getDay() === 0
                                 || date.getDay() === 6));
             };
-
 
             $scope.openDate = function ($event, datePickerIndex) {
                 $event.preventDefault();
@@ -491,7 +504,7 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                     $scope.openDatePickers.length = 0;
                     $scope.openDatePickers[datePickerIndex] = true;
                 }
-            };
+            };   
 
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');

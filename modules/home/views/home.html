@@ -59,14 +59,16 @@
     <div ng-repeat="type in types" class="col-sm-12">
         <div class="row">
             <div class="table-responsive panel panel-primary">
-                <div class="panel-heading">
-                    <span data-toggle="tooltip" title="Expand {{type.name}}" style="cursor: pointer;" ng-show="type.newCollapse" class="glyphicon glyphicon-collapse-down" ng-click="type.newCollapse = !type.newCollapse"></span>
-                    <span data-toggle="tooltip" title="Collapse {{type.name}}" style="cursor: pointer;" ng-show="!type.newCollapse" class="glyphicon glyphicon-collapse-up" ng-click="type.newCollapse = !type.newCollapse"></span>
-                    <span data-toggle="tooltip" title="New {{type.name}}" ng-click="newAsset(type.id)" class="glyphicon glyphicon-new-window" style="cursor: pointer;"></span>
-                    <lable style="cursor: pointer;" ng-click="type.newCollapse = !type.newCollapse">{{type.name}} ({{type.filterData.length}})</lable>                  
-                    <span data-toggle="tooltip" title="Remove {{type.name}}" ng-click="removeType(type)" class="glyphicon glyphicon-remove-sign" style="cursor: pointer; float:right;"></span>                   	
+                <div class="panel-heading">                      
+                    <lable data-toggle="tooltip" title="Expand/Collapse {{type.name}}" style="cursor: pointer;" ng-click="type.newCollapse = !type.newCollapse">
+                        <span style="cursor: pointer;" ng-class="isCollapsed(type.newCollapse)"></span>
+                        &nbsp;{{type.name}} ({{type.filterData.length}})
+                    </lable>    
+                    <lable style="cursor: pointer; float:right;" ng-click="newAsset(type.id)" data-toggle="tooltip" title="New {{type.name}}"><span class="glyphicon glyphicon-new-window"></span>&nbsp;New</lable>
                     <span style="float:right;">&nbsp;&nbsp;</span>
-                    <span data-toggle="tooltip" title="Edit {{type.name}} Layout" ng-click="editType(type.id)" class="glyphicon glyphicon-edit" style="cursor: pointer; float:right;"></span>
+                    <lable style="cursor: pointer; float:right;" ng-click="removeType(type)" data-toggle="tooltip" title="Remove {{type.name}}"><span class="glyphicon glyphicon-remove-sign"></span>&nbsp;Delete</lable>
+                    <span style="float:right;">&nbsp;&nbsp;</span>
+                    <lable style="cursor: pointer; float:right;" ng-click="editType(type.id)" data-toggle="tooltip" title="Edit {{type.name}} Layout"><span class="glyphicon glyphicon-edit" ></span>&nbsp;Edit</lable>
                 </div>
                 <div collapse="type.newCollapse">
                     <div class="input-group-addon" ng-if="type.assets.length" >      

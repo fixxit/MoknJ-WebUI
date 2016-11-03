@@ -3,9 +3,10 @@
 </div>
 <form name="form" ng-submit="ok()" role="form">
     <div class="container-fluid">
-        <div class="modal-body" ng-if="asset">
+        <div class="modal-body">
             <div class="form-group">  
                 <label for="datatype">Date</label>
+                <i class="fa fa-key"></i>
                 <p class="input-group">
                     <input type="text" name="date" id="date" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="auditdate" is-open="openDatePickers[0]"  date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" required/>
                     <span class="input-group-btn">
@@ -18,27 +19,30 @@
             <div class="form-group">
                 <label for="datatype">Resource</label>
                 <i class="fa fa-key"></i>
-                <div class="dropdown" ng-class='{open: open}'>
-                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" ng-click='open = !open'>
-                        {{selected}}
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
+                <p class="input-group">
+                    <input ng-model="selected" type="text" name="resource" id="resource" class="form-control" readonly/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="changeDiv()"><span class="caret"></span></button>
+                    </span>
+                    <span ng-show="form.resource.$dirty && form.resource.$error.required" class="help-block">Resource is required</span>
+                </p>
+
+                <div collapse="!resourceCollapse" class="container-fluid">
+                    <div class="panel panel-info">
                         <input type="text" class="form-control" placeholder="Search" ng-model="search"/>  
-                        <li ng-repeat="resource in resources| filter:search | limitTo:5" ng-click="$parent.open = !$parent.open" style="cursor: pointer;">
-                            <a ng-click="dropboxitemselected(resource)" >{{resource.fullname}}</a>
-                        </li>
-                    </ul>
+                        <div ng-repeat="resource in resources| filter:search | limitTo:5" ng-click="changeDiv()" style="cursor: pointer;" >
+                            <i class="fa fa-key"></i>
+                            <lable ng-click="dropboxitemselected(resource)" >{{resource.fullname}}</lable>  
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
     <div class="modal-footer">
+        <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
         <button type="submit" class="btn btn-primary">Check Out</button>
         <button type="button" class="btn btn-warning" ng-click="cancel()">Cancel</button>
-        <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
     </div>
 </form>
-
-
