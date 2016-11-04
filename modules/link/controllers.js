@@ -11,7 +11,7 @@ angular.module('Link')
                             if (name) {
                                 $scope.name = name;
                             } else {
-                                $scope.name = "Asset Audit Trail"
+                                $scope.name = "Asset Audit Trail";
                             }
 
                             if ($scope.assetId) {
@@ -24,7 +24,6 @@ angular.module('Link')
                         };
 
                         $scope.process = function (response) {
-                            console.log("response : " + JSON.stringify(response));
                             if (response) {
                                 if (response.error_description) {
                                     $scope.error = response.error_description + ". Please logout!";
@@ -39,9 +38,14 @@ angular.module('Link')
 
                                     angular.forEach($scope.links, function (link) {
                                         $scope.loadResource(link);
-                                        link.date = $scope.formatDate(new Date(link.date))
+                                        $scope.loadAsset(link);
+                                        link.date = $scope.formatDate(new Date(link.date));
+                                        if (link.checked) {
+                                            link.checkedDir = "CHECKED-OUT";
+                                        } else {
+                                            link.checkedDir = "CHECKED-IN";
+                                        }
                                     });
-
                                 }
                             } else {
                                 $scope.error = "Invalid server response";
@@ -81,15 +85,17 @@ angular.module('Link')
                                             if (response.error_description) {
                                                 $scope.error = response.error_description + ". Please logout!";
                                             } else {
-                                                // asset type success or error
-                                                link.linkedResource = response.resource.firstName + " " + response.resource.surname;
-                                                link.resource = response.resource;
+                                                if (response.resource) {
+                                                    // asset type success or error
+                                                    link.linkedResource = response.resource.firstName + " " + response.resource.surname;
+                                                    link.resource = response.resource;
+                                                }
                                             }
                                         }
                                 );
                             }
                         };
-                        
+
                         $scope.formatDate = function (date) {
                             var year = date.getFullYear();
                             var month = (1 + date.getMonth()).toString();
@@ -97,28 +103,66 @@ angular.module('Link')
                             var day = date.getDate().toString();
                             day = day.length > 1 ? day : '0' + day;
                             return year + '-' + month + '-' + day;
-                        }
-                        
-                        
-//                        $scope.loadAsset = function (link) {
-//                            if (link.assetId) {
-//                                LinkService.getAsset(
-//                                        $rootScope.globals.currentUser.access_token,
-//                                        link.assetId,
-//                                        function (response) {
-//                                            // token auth error
-//                                            if (response.error_description) {
-//                                                $scope.error = response.error_description + ". Please logout!";
-//                                            } else {
-//                                                // asset type success or error
-//                                                link.linkedResource = response.resource.firstName + " " + response.resource.surname;
-//                                                link.resource = response.resource;
-//                                            }
-//                                        }
-//                                );
-//                            }
-//                        };
+                        };
 
+                        $scope.stripTrailing = function (str, trimStr) {
+                            if (str.substr(0, 1) === trimStr) {
+                                str = str.substring(1);
+                            }
+                            var len = str.length;
+                            if (str.substr(len - 1, 1) === trimStr) {
+                                str = str.substring(0, len - 1);
+                            }
+                            return str;
+                        };
+
+                        $scope.loadAsset = function (link) {
+                            if (link.assetId) {
+                                LinkService.getAsset(
+                                        $rootScope.globals.currentUser.access_token,
+                                        link.assetId,
+                                        function (response) {
+                                            // token auth error
+                                            if (response.error_description) {
+                                                $scope.error = response.error_description + ". Please logout!";
+                                            } else {
+                                                // asset type success or error
+                                                if (response.asset) {
+                                                    $scope.loadAssetDetails(response.asset, link);
+                                                }
+                                            }
+                                        }
+                                );
+                            }
+                        };
+
+                        $scope.loadAssetDetails = function (asset, link) {
+                            link.display = "";
+                            LinkService.getDetail($rootScope.globals.currentUser.access_token, asset.typeId,
+                                    function (response) {
+                                        if (response) {
+                                            if (response.error_description) {
+                                                $scope.error = response.error_description + ". Please logout!";
+                                            } else {
+                                                if (response.type) {
+                                                    $scope.type = response.type;
+                                                    link.display = $scope.type.name + " [";
+                                                    angular.forEach(asset.details, function (field) {
+                                                        angular.forEach($scope.type.details, function (detail) {
+                                                            if (detail.id === field.id) {
+                                                                if (detail.display) {
+                                                                    link.display = link.display + field.value + "-";
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                    link.display = $scope.stripTrailing(link.display, "-") + "]";
+                                                }
+                                            }
+                                        }
+                                    }
+                            );
+                        };
 
                         // check if even for row odd and even colors
                         $scope.isEven = function (value) {
@@ -126,6 +170,15 @@ angular.module('Link')
                                 return "success";
                             } else {
                                 return "active";
+                            }
+                        };
+                        
+                        // check if even for row odd and even colors
+                        $scope.getCheckedClass = function (checked) {
+                            if (checked) {
+                                return "glyphicon glyphicon-arrow-left";
+                            } else {
+                                return "glyphicon glyphicon-arrow-right";
                             }
                         };
 

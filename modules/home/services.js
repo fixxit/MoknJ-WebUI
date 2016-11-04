@@ -35,7 +35,6 @@ angular.module('Home')
                                     );
                         };
 
-
                         service.deleteAsset = function (token, payload, callback) {
                             $http.post((url + 'delete/?access_token=' + token),
                                     JSON.stringify(payload))
@@ -48,8 +47,7 @@ angular.module('Home')
                                                 callback(response);
                                             }
                                     );
-                        };
-                        
+                        };                        
                         
                         service.addLink = function (token, payload, callback) {
                             $http.post((url + '/link/add?access_token=' + token),
@@ -63,8 +61,7 @@ angular.module('Home')
                                                 callback(response);
                                             }
                                     );
-                        };
-                        
+                        };                        
                         
                         service.all = function (token, callback) {
                             $http({
@@ -78,8 +75,7 @@ angular.module('Home')
                             }).error(function (response) {
                                 callback(response);
                             });
-                        };
-                        
+                        };                        
                         
                         service.save = function (token, id, data, callback) {
                             $http({
@@ -94,8 +90,7 @@ angular.module('Home')
                             }).error(function (response) {
                                 callback(response);
                             });
-                        };
-                        
+                        };                       
                         
                         service.getResource = function (token, id, callback) {
                             $http({
@@ -109,8 +104,7 @@ angular.module('Home')
                             }).error(function (response) {
                                 callback(response);
                             });
-                        };
-                        
-
+                        };                        
+                       
                         return service;
                     }]);

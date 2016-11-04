@@ -62,6 +62,35 @@ angular.module('Link')
                                 callback(response);
                             });
                         };
+                        
+                        service.getAsset = function (token, id, callback) {
+                            $http({
+                                method: 'POST',
+                                url: url + 'get/' + id + '?access_token=' + token,
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            }).success(function (response) {
+                                callback(response);
+                            }).error(function (response) {
+                                callback(response);
+                            });
+                        };
+                                         
+                        service.getDetail = function (token, id, callback) {
+                            $http({
+                                method: 'POST',
+                                url: url + 'type/get/' + id + '?access_token=' + token,
+                                data: {},
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            }).success(function (response) {
+                                callback(response);
+                            }).error(function (response) {
+                                callback(response);
+                            });
+                        };
 
                         return service;
                     }]);

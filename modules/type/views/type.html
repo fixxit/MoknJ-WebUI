@@ -8,7 +8,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand">New Asset Type</a>
+            <a class="navbar-brand">Asset Type Configuration</a>
         </div>
 
         <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
@@ -68,7 +68,13 @@
                 <div class="form-group">
                     <label for="datatype">Field Options</label>
                     <div class="checkbox">
-                        <label><input type="checkbox" ng-model="unique">Is a unique field?</label>
+                        <label data-toggle="tooltip" title="Is this an unique field?" ><input type="checkbox" ng-model="unique">Unique</label>
+                    </div>
+                    <div class="checkbox">
+                        <label data-toggle="tooltip" title="Is this field mandatory?"><input type="checkbox" ng-model="mandatory">Mandatory</label>
+                    </div>
+                    <div class="checkbox">
+                        <label data-toggle="tooltip" title="Should this field be displayed in the audit view?"><input type="checkbox" ng-model="display">Display</label>
                     </div>
                 </div>  
 
@@ -87,18 +93,21 @@
                                 <th>Field Name</th>
                                 <th>Data Type</th>
                                 <th>Unique</th>
+                                <th>Mandatory</th>
+                                <th>Displayed</th>
                             </tr>
                         </thead>
                         <tbody>                
-                            <tr class="danger text-center" ng-show="!items.length"><td colspan="6">No items to display</td></tr>        
+                            <tr class="danger text-center" ng-show="!items.length"><td colspan="8">No items to display</td></tr>        
                             <tr ng-repeat="item in items" ng-class="isEven($index)">
                                 <td style="width: 25px; cursor: pointer;"><span ng-click="remove($index)" class="glyphicon glyphicon-remove-circle"></span></td> 
                                 <td style="width: 25px; cursor: pointer;"><span ng-show="$index != 0" ng-click="move($index, ($index - 1))" class="glyphicon glyphicon-arrow-up"></span></td>
                                 <td style="width: 25px; cursor: pointer;"><span ng-click="edit($index)" class="glyphicon glyphicon-wrench"></span></td>
                                 <td>{{item.name}}</td>
                                 <td>{{item.type.type}}</td>
-                                <td ng-if="item.unique"><span class="glyphicon glyphicon-ok"></span></td>
-                                <td ng-if="!item.unique"><span class="glyphicon glyphicon-remove"></span></td>
+                                <td><span ng-class="isOkOrRemove(item.unique)"></span></td>
+                                <td><span ng-class="isOkOrRemove(item.mandatory)"></span></td>
+                                <td><span ng-class="isOkOrRemove(item.display)"></span></td>
                             </tr>
                         </tbody>
                     </table>  

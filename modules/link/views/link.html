@@ -36,10 +36,11 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>&nbsp;</th>
                     <th>Direction</th>
                     <th>Date</th>
                     <th>Resource</th>
+                    <th>Asset</th>
+                    <th>Created Date</th>
                 </tr>
             </thead>
             <tbody>       
@@ -47,15 +48,16 @@
                             ((links.currentPage - 1) * links.itemsPerPage)
                             , ((links.currentPage) * links.itemsPerPage))| filter:search)" 
                     ng-class="isEven($index)">
-                    <td style="width: 25px; cursor: pointer;">
-                        <span ng-if="link.checked == false" data-toggle="tooltip" title="Checked Out" class="glyphicon glyphicon-arrow-left"></span>
-                        <span ng-if="link.checked == true" data-toggle="tooltip" title="Checked In" class="glyphicon glyphicon-arrow-right"></span>
+                    <td>
+                        {{link.checkedDir}}
+                        <span ng-class="getCheckedClass(link.checked)"></span>
                     </td>
-                    <td>{{link.checked}}</td>
                     <td>{{link.date}}</td>
                     <td>{{link.linkedResource}}</td>
+                    <td>{{link.display}}</td>
+                    <td>{{link.createdDate}}</td>
                 </tr>
-                <tr class="danger text-center" ng-if="!filterData.length"><td colspan="4">No Audit Entries Found</td></tr> 
+                <tr class="danger text-center" ng-if="!filterData.length"><td colspan="6">No Audit Entries Found</td></tr> 
             </tbody>
         </table>
 

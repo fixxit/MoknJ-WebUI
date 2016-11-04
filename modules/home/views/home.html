@@ -17,26 +17,40 @@
                         Asset Menu <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu" >
+                        <li>
+                            <a href="#/type">New Template
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li> 
+                        <li role="separator" class="divider"></li>
                         <li ng-repeat="type in types" >
-                            <a href="#/asset?id={{type.id}}">{{type.name}}</a>
+                            <a href="#/asset?id={{type.id}}">New&nbsp;{{type.name}}</a>
                         </li>
                         <li ng-show="!types.length">
-                            <a href="#">no asset types</a>
+                            <a>Click on New Template</a>
                         </li>
                     </ul>
-                </li>
+                </li>               
                 <li>
-                    <a href="#/resource">Resources</a>
-                </li>
-                <li >
-                    <a href="#/type">New Types<span class="sr-only">(current)</span>
+                    <a href="#/link">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                        &nbsp;Audit Trail
                     </a>
-                </li>     
+                </li> 
+                <li>
+                    <a href="#/resource">
+                        <span class="glyphicon glyphicon-user"></span>
+                        &nbsp;Resources
+                    </a>
+                </li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="#/login">Logout</a>
+                    <a href="#/login">
+                        <span class="glyphicon-log-out"></span>
+                        &nbsp;Logout
+                    </a>
                 </li>
             </ul>
         </div>
@@ -83,7 +97,7 @@
                                     <th>&nbsp;</th>
                                     <th>&nbsp;</th>
                                     <th ng-repeat="detail in type.details">{{detail.name}}</th>
-                                    <th>assigned</th>
+                                    <th>Link</th>
                                 </tr>
                             </thead>
                             <tbody>       

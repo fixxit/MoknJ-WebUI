@@ -69,7 +69,15 @@ angular.module('Asset')
                                     && (date.getDay() === 0
                                             || date.getDay() === 6));
                         };
-
+                        
+                        $scope.required = function (required) {
+                            console.log("required : " +required);
+                            if (required) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
 
                         $scope.open = function ($event, datePickerIndex) {
                             $event.preventDefault();

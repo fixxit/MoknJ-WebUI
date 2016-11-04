@@ -10,65 +10,63 @@ angular.module('Type')
 
                         $scope.dataLoading = true;
                         $scope.selectedItem = {'name': 'nosec', 'type': 'no selection'};
-                        TypeService.getFieldTypes($rootScope.globals.currentUser.access_token,
-                                function (response) {
-                                    if (response) {
-                                        if (response.error_description) {
-                                            $scope.error = response.error_description + ". Please logout!";
-                                        } else {
-                                            if (response.fieldTypes) {
-                                                $scope.types = response.fieldTypes;
-                                                if ($scope.id) {
-                                                    TypeService.getType($rootScope.globals.currentUser.access_token, $scope.id,
-                                                            function (response) {
-                                                                if (response) {
-                                                                    if (response.error_description) {
-                                                                        $scope.error = response.error_description + ". Please logout!";
-                                                                    } else {
-                                                                        if (response.type) {
-                                                                            $scope.type = response.type;
-                                                                            $scope.typename = $scope.type.name;
-                                                                            angular.forEach($scope.type.details, function (detail) {
-                                                                                angular.forEach($scope.types, function (type) {
-                                                                                    if (detail.type == type.name) {
-                                                                                        $scope.items.push(
-                                                                                                {
-                                                                                                    'id': detail.id,
-                                                                                                    'type': type,
-                                                                                                    'name': detail.name,
-                                                                                                    'unique': detail.unique
-                                                                                                }
-                                                                                        );
-                                                                                    }
-                                                                                });
-                                                                            });
-                                                                            $scope.dataLoading = false;
-                                                                        } else {
-                                                                            $scope.error = "Invalid server response";
-                                                                        }
-                                                                    }
-                                                                } else {
-                                                                    $scope.error = "Invalid server response";
-                                                                }
+
+                        $scope.loadPage = function (id) {
+                            TypeService.getFieldTypes(
+                                    $rootScope.globals.currentUser.access_token,
+                                    $scope.process
+                                    );
+                        };
+
+                        $scope.process = function (response) {
+                            console.log("response : " + JSON.stringify(response));
+                            if (response) {
+                                if (response.error_description) {
+                                    $scope.error = response.error_description + ". Please logout!";
+                                } else {
+                                    if (response.type) {
+                                        $scope.type = response.type;
+                                        $scope.typename = $scope.type.name;
+                                        angular.forEach($scope.type.details, function (detail) {
+                                            angular.forEach($scope.types, function (type) {
+                                                if (detail.type === type.name) {
+                                                    $scope.items.push(
+                                                            {
+                                                                'id': detail.id,
+                                                                'type': type,
+                                                                'name': detail.name,
+                                                                'unique': detail.unique,
+                                                                'display': detail.display,
+                                                                'mandatory': detail.mandatory
                                                             }
                                                     );
                                                 }
-
-                                                $scope.dataLoading = false;
-                                            } else {
-                                                $scope.error = "Invalid server response";
-                                            }
-                                        }
-                                    } else {
-                                        $scope.error = "Invalid server response";
+                                            });
+                                        });
+                                    } else if (response.fieldTypes) {
+                                        $scope.types = response.fieldTypes;
+                                        TypeService.getType(
+                                                $rootScope.globals.currentUser.access_token,
+                                                $scope.id,
+                                                $scope.process
+                                                );
                                     }
+
                                 }
-                        );
+                                $scope.dataLoading = false;
+                            } else {
+                                $scope.error = "Invalid server response";
+                            }
+                        };
+
+                        $scope.loadPage($scope.id);
 
                         $scope.edit = function (index) {
                             $scope.selectedItem = $scope.items[index].type;
                             $scope.dispname = $scope.items[index].name;
                             $scope.unique = $scope.items[index].unique;
+                            $scope.mandatory = $scope.items[index].mandatory;
+                            $scope.display = $scope.items[index].display;
                             $scope.selectIndex = index;
                         };
 
@@ -87,18 +85,24 @@ angular.module('Type')
                                     $scope.items[$scope.selectIndex].type = $scope.selectedItem;
                                     $scope.items[$scope.selectIndex].name = $scope.dispname;
                                     $scope.items[$scope.selectIndex].unique = $scope.unique;
+                                    $scope.items[$scope.selectIndex].mandatory = $scope.mandatory;
+                                    $scope.items[$scope.selectIndex].display = $scope.display;
                                 } else {
                                     $scope.items.push(
                                             {
                                                 'type': $scope.selectedItem,
                                                 'name': $scope.dispname,
-                                                'unique': $scope.unique
+                                                'unique': $scope.unique,
+                                                'mandatory': $scope.mandatory,
+                                                'display': $scope.display
                                             }
                                     );
                                 }
                                 $scope.dispname = '';
                                 $scope.selectIndex = null;
                                 $scope.unique = false;
+                                $scope.mandatory = false;
+                                $scope.display = false;
                                 $scope.selectedItem = {'name': 'nosec', 'type': 'no selection'};
                             } else {
                                 // to do !
@@ -135,7 +139,15 @@ angular.module('Type')
                                 return "active";
                             }
                         };
-
+                        
+                        $scope.isOkOrRemove = function (unique) {
+                            if (unique) {
+                                return "glyphicon glyphicon-ok";
+                            } else {
+                                return "glyphicon glyphicon-remove";
+                            }
+                        };
+                        
                         // reset input boxes
                         $scope.reset = function (messages) {
                             // Reset all data
@@ -144,6 +156,8 @@ angular.module('Type')
                             $scope.typename = '';
                             $scope.dispname = '';
                             $scope.unique = false;
+                            $scope.display = false;
+                            $scope.mandatory = false;
                             // include messages
                             if (messages) {
                                 $scope.success = null;
@@ -171,7 +185,9 @@ angular.module('Type')
                                                     'id': value.id,
                                                     'type': value.type.name,
                                                     'name': value.name,
-                                                    'unique': value.unique
+                                                    'unique': value.unique,
+                                                    'mandatory': value.mandatory,
+                                                    'display': value.display
                                                 }
                                         );
                                     } else {
@@ -179,7 +195,9 @@ angular.module('Type')
                                                 {
                                                     'type': value.type.name,
                                                     'name': value.name,
-                                                    'unique': value.unique
+                                                    'unique': value.unique,
+                                                    'mandatory': value.mandatory,
+                                                    'display': value.display
                                                 }
                                         );
                                     }

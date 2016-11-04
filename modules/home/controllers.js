@@ -49,7 +49,27 @@ angular.module('Home')
                                         }
                                     }
                             );
-                        }
+                        };
+
+                        $scope.refreshAsset = function (asset, load_resource) {
+                            angular.forEach($scope.types, function (type) {
+                                if (type.id === asset.typeId) {
+                                    angular.forEach(type.assets,
+                                            function (type_asset) {
+                                                if (type_asset.id === asset.id) {
+                                                    type_asset = asset;
+                                                    if (load_resource) {
+                                                        $scope.loadResource(type_asset);
+                                                    } else {
+                                                        type_asset.linkedResource = null;
+                                                        type_asset.resource = {};
+                                                    }
+                                                }
+                                            }
+                                    );
+                                }
+                            });
+                        };
 
                         $scope.formatDate = function (date) {
                             var year = date.getFullYear();
@@ -58,7 +78,7 @@ angular.module('Home')
                             var day = date.getDate().toString();
                             day = day.length > 1 ? day : '0' + day;
                             return year + '-' + month + '-' + day;
-                        }
+                        };
 
                         $scope.loadResource = function (asset) {
                             if (asset.resourceId) {
@@ -77,7 +97,7 @@ angular.module('Home')
                                         }
                                 );
                             }
-                        }
+                        };
 
                         $scope.loadPage = function (typeId) {
                             HomeService.getAllTypes($rootScope.globals.currentUser.access_token,
@@ -114,7 +134,7 @@ angular.module('Home')
                                         }
                                     }
                             );
-                        }
+                        };
 
                         $scope.loadPage();
 
@@ -126,7 +146,7 @@ angular.module('Home')
                                 return "active";
                             }
                         };
-                        
+
                         $scope.isCollapsed = function (newCollapse) {
                             if (newCollapse) {
                                 return "glyphicon glyphicon-collapse-down";
@@ -322,8 +342,13 @@ angular.module('Home').controller('ModalRemoveLinkCtrl',
                                     $scope.error = response.error_description + ". Please logout!";
                                 } else {
                                     if (response.success) {
-                                        parentScope.loadPage(asset.typeId);
-                                        $scope.saveAsset(asset.typeId);
+                                        $scope.saveAsset(
+                                                asset.typeId,
+                                                function (response_asset) {
+                                                    parentScope.refreshAsset(response_asset, false);
+                                                    $modalInstance.close();
+                                                }
+                                        );
                                     } else {
                                         $scope.message = response.message;
                                     }
@@ -339,7 +364,7 @@ angular.module('Home').controller('ModalRemoveLinkCtrl',
                 $modalInstance.dismiss('cancel');
             };
 
-            $scope.saveAsset = function (typeId) {
+            $scope.saveAsset = function (typeId, callback) {
                 HomeService.save(
                         token,
                         typeId,
@@ -351,7 +376,7 @@ angular.module('Home').controller('ModalRemoveLinkCtrl',
                             } else {
                                 // asset type success or error
                                 if (response.success === true) {
-                                    $modalInstance.close();
+                                    callback(asset);
                                 } else {
                                     $scope.error = response.message;
                                 }
@@ -427,7 +452,6 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
             };
 
             $scope.loadPage();
-
             $scope.ok = function () {
                 $scope.dataLoading = true;
                 $scope.link = {
@@ -438,7 +462,6 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                 };
 
                 asset.resourceId = $scope.resource.id;
-
                 HomeService.addLink(token, $scope.link,
                         function (response) {
                             if (response) {
@@ -446,8 +469,13 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                                     $scope.error = response.error_description + ". Please logout!";
                                 } else {
                                     if (response.success) {
-                                        parentScope.loadPage(asset.typeId);
-                                        $scope.saveAsset(asset.typeId);
+                                        $scope.saveAsset(
+                                                asset.typeId,
+                                                function (response_asset) {
+                                                    parentScope.refreshAsset(response_asset, true);
+                                                    $modalInstance.close();
+                                                }
+                                        );
                                     } else {
                                         $scope.message = response.message;
                                     }
@@ -459,7 +487,7 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                 );
             };
 
-            $scope.saveAsset = function (typeId) {
+            $scope.saveAsset = function (typeId, callback) {
                 HomeService.save(
                         token,
                         typeId,
@@ -471,7 +499,7 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                             } else {
                                 // asset type success or error
                                 if (response.success === true) {
-                                    $modalInstance.close();
+                                    callback(asset);
                                 } else {
                                     $scope.error = response.message;
                                 }
@@ -479,13 +507,13 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                         }
                 );
             };
-            
+
             $scope.resourceCollapse = false;
-            
+
             $scope.changeDiv = function () {
                 $scope.resourceCollapse = !$scope.resourceCollapse;
             };
-            
+
             $scope.openDatePickers = [];
             // Disable weekend selection
             $scope.disabled = function (date, mode) {
@@ -504,7 +532,7 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                     $scope.openDatePickers.length = 0;
                     $scope.openDatePickers[datePickerIndex] = true;
                 }
-            };   
+            };
 
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
