@@ -40,11 +40,11 @@ angular.module('Home')
                                                     type.assets.push(asset);
                                                 });
 
-                                                type.assets.viewby = 5;
-                                                type.assets.totalItems = response.assets.length;
-                                                type.assets.currentPage = 1;
-                                                type.assets.itemsPerPage = type.assets.viewby;
-                                                type.assets.maxSize = 5; //Number of pager buttons to show
+                                                type.viewby = 5;
+                                                type.totalItems = response.assets.length;
+                                                type.currentPage = 1;
+                                                type.itemsPerPage = type.viewby;
+                                                type.maxSize = 5; //Number of pager buttons to show
                                             }
                                         }
                                     }
@@ -70,6 +70,9 @@ angular.module('Home')
                                 }
                             });
                         };
+
+
+
 
                         $scope.formatDate = function (date) {
                             var year = date.getFullYear();
@@ -405,6 +408,48 @@ angular.module('Home').controller('ModalRemoveLinkCtrl',
                 }
             };
         });
+
+angular.module('Home').filter('filterAsset', function () {
+    // function that's invoked each time Angular runs $digest()
+    // pass in `item` which is the single Object we'll manipulate
+    return function (items) {
+        if (items && Array === items.constructor) {
+            return items.slice(
+                    ((items.currentPage - 1) * items.itemsPerPage),
+                    ((items.currentPage) * items.itemsPerPage)
+                    );
+        }
+        return items;
+    };
+});
+
+angular.module('Home').filter('filterMultiple', ['$filter', function ($filter) {
+        return function (items, values, type) {
+            if (values && Array === values.constructor) {
+                var results = items;
+                angular.forEach(values, function (value) {
+                    if (value) {
+                        if (items && Array === items.constructor) {
+                            results = $filter('filter')(results, value);
+
+                        }
+                    }
+                });
+
+                if (items && Array === items.constructor) {
+                    if (values && Array === values.constructor) {
+                        console.log("searchSize : " + results.length);
+                        type.searchSize = results.length;
+                        items = results.slice(
+                                        ((type.currentPage - 1) * type.itemsPerPage),
+                                        ((type.currentPage) * type.itemsPerPage)
+                                        );
+                    }
+                }
+            }
+            return items;
+        };
+    }]);
 
 
 angular.module('Home').controller('ModalAssignAssetCtrl',

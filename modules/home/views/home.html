@@ -76,7 +76,7 @@
                 <div class="panel-heading">                      
                     <lable data-toggle="tooltip" title="Expand/Collapse {{type.name}}" style="cursor: pointer;" ng-click="type.newCollapse = !type.newCollapse">
                         <span style="cursor: pointer;" ng-class="isCollapsed(type.newCollapse)"></span>
-                        &nbsp;{{type.name}} ({{type.filterData.length}})
+                        &nbsp;{{type.name}} ({{type.searchSize}})
                     </lable>    
                     <lable style="cursor: pointer; float:right;" ng-click="newAsset(type.id)" data-toggle="tooltip" title="New {{type.name}}"><span class="glyphicon glyphicon-new-window"></span>&nbsp;New</lable>
                     <span style="float:right;">&nbsp;&nbsp;</span>
@@ -101,10 +101,7 @@
                                 </tr>
                             </thead>
                             <tbody>       
-                                <tr ng-repeat="asset in type.filterData = (type.assets.slice(
-                                            ((type.assets.currentPage - 1) * type.assets.itemsPerPage)
-                                            , ((type.assets.currentPage) * type.assets.itemsPerPage))|
-                                                        filter:type.search | filter:search)" 
+                                <tr ng-repeat="asset in type.filterData = (type.assets| filterMultiple:[search, type.search] : type)" 
                                     ng-class="isEven($index)">
                                     <td style="width: 25px; cursor: pointer;">
                                         <span ng-if="!asset.linkedResource" data-toggle="tooltip" title="Remove {{type.name}} Asset" ng-click="removeAsset(asset, type.name)" class="glyphicon glyphicon-remove"></span>
@@ -128,12 +125,12 @@
                         </table>
                     </div>
                     <div class="text-center">
-                        <pagination ng-show="type.filterData.length"  
-                                    total-items="type.assets.totalItems" 
-                                    ng-model="type.assets.currentPage"  
+                        <pagination ng-show="type.searchSize"  
+                                    total-items="type.searchSize" 
+                                    ng-model="type.currentPage"  
                                     class="pagination-sm" 
                                     boundary-links="true" rotate="false"
-                                    items-per-page="type.assets.itemsPerPage"></pagination> 
+                                    items-per-page="type.itemsPerPage"></pagination> 
                     </div>  
                 </div>
             </div>
