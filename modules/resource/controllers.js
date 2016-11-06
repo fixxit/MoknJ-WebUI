@@ -8,6 +8,7 @@ angular.module('Resource')
                         $scope.containerCollapsed = false;
                         $scope.resourceId = $location.search().resourceId;
                         $scope.resource = {};
+                        $scope.pagination = {};
                         if ($scope.resourceId) {
                             $scope.resource.id = resourceId;
                         }
@@ -26,11 +27,11 @@ angular.module('Resource')
                                                 if (response.resources) {
                                                     // do not refresh the entire structure
                                                     $scope.resources = response.resources;
-                                                    $scope.resources.viewby = 5;
-                                                    $scope.resources.totalItems = response.resources.length;
-                                                    $scope.resources.currentPage = 1;
-                                                    $scope.resources.itemsPerPage = 5;
-                                                    $scope.resources.maxSize = 5;
+                                                    $scope.pagination.viewby = 5;
+                                                    $scope.pagination.totalItems = response.resources.length;
+                                                    $scope.pagination.currentPage = 1;
+                                                    $scope.pagination.itemsPerPage = 5;
+                                                    $scope.pagination.maxSize = 5;
                                                     $scope.dataLoading = false;
                                                 } else {
                                                     $scope.error = "Invalid server response";
@@ -85,6 +86,15 @@ angular.module('Resource')
                                 return "active";
                             }
                         };
+                        
+                        
+                        $scope.isSystemUser = function (value) {
+                            if (value) {
+                                return "glyphicon glyphicon-ok";
+                            } else {
+                                return "glyphicon glyphicon-remove";
+                            }
+                        };
 
                         $scope.reset = function (messages) {
                             $scope.resource = {};
@@ -126,3 +136,30 @@ angular.module('Resource')
 
                         $scope.loadPage($scope.resourceId);
                     }]);
+                
+angular.module('Resource').filter('filterMultiple', ['$filter', function ($filter) {
+        return function (items, values, pagination) {
+            if (values && Array === values.constructor) {
+                var results = items;
+                angular.forEach(values, function (value) {
+                    if (value) {
+                        if (items && Array === items.constructor) {
+                            results = $filter('filter')(results, value);
+                        }
+                    }
+                });
+
+                if (items && Array === items.constructor) {
+                    if (values && Array === values.constructor) {    
+                        pagination.searchSize = results.length;
+                        items = results.slice(
+                                ((pagination.currentPage - 1) * pagination.itemsPerPage),
+                                ((pagination.currentPage) * pagination.itemsPerPage)
+                                );
+                    }
+                }
+            }
+            return items;
+        };
+    }]);
+                

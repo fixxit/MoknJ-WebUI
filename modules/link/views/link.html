@@ -23,16 +23,23 @@
 <div ng-show="error" class="alert alert-danger">{{error}}</div>
 <div ng-show="success" class="alert alert-success">{{success}}</div>
 
-<div class="container-fluid bg-3">
+<div class="container-fluid">
+    <div ng-show="links.length" class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-search"></span>
+            &nbsp;Global Search
+        </div> 
+        <div class="input-group-addon">
+            <input type="text" class="form-control" placeholder="Search" ng-model="search"/>   
+        </div>     
+    </div>
+</div>
+
+<div class="container-fluid">
     <div class="table-responsive panel panel-primary">
         <div class="panel-heading">
-            <lable>Check in/out History</lable>
+            <label><span class="glyphicon glyphicon-list"></span>&nbsp;Check in/out History ({{pagination.searchSize}})</label>
         </div>
-
-        <div class="input-group-addon" ng-if="links.length">      
-            <input type="text" class="form-control" placeholder="Search here" ng-model="search">
-        </div>
-
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -40,21 +47,20 @@
                     <th>Date</th>
                     <th>Resource</th>
                     <th>Asset</th>
+                    <th>Checked In By</th>
                     <th>Created Date</th>
                 </tr>
             </thead>
             <tbody>       
-                <tr ng-repeat="link in filterData = (links.slice(
-                            ((links.currentPage - 1) * links.itemsPerPage)
-                            , ((links.currentPage) * links.itemsPerPage))| filter:search)" 
+                <tr ng-repeat="link in filterData = (links| filterMultiple:[search] : pagination)" 
                     ng-class="isEven($index)">
                     <td>
                         {{link.checkedDir}}
-                        <span ng-class="getCheckedClass(link.checked)"></span>
                     </td>
                     <td>{{link.date}}</td>
                     <td>{{link.linkedResource}}</td>
                     <td>{{link.display}}</td>
+                    <td>{{link.createdBy}}</td>
                     <td>{{link.createdDate}}</td>
                 </tr>
                 <tr class="danger text-center" ng-if="!filterData.length"><td colspan="6">No Audit Entries Found</td></tr> 
@@ -62,12 +68,13 @@
         </table>
 
         <div class="text-center">
-            <pagination ng-show="filterData.length"  
-                        total-items="links.totalItems" 
-                        ng-model="links.currentPage"  
+            <pagination ng-show="pagination.searchSize"  
+                        total-items="pagination.totalItems" 
+                        ng-model="pagination.currentPage"  
                         class="pagination-sm" 
                         boundary-links="true" rotate="false"
-                        items-per-page="links.itemsPerPage"></pagination> 
+                        items-per-page="pagination.itemsPerPage">      
+            </pagination> 
         </div> 
 
     </div>

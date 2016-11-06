@@ -71,8 +71,14 @@ angular.module('Home')
                             });
                         };
 
-
-
+                        // remove item by index from items
+                        $scope.removeFromList = function (asset, index) {
+                            angular.forEach($scope.types, function (type) {
+                                if (type.id === asset.typeId) {
+                                    type.assets.splice(index, 1);
+                                }
+                            });
+                        };
 
                         $scope.formatDate = function (date) {
                             var year = date.getFullYear();
@@ -174,7 +180,7 @@ angular.module('Home')
                             $location.path('/link').search({'assetId': id, 'name': name});
                         };
 
-                        $scope.removeAsset = function (asset, name) {
+                        $scope.removeAsset = function (asset, name, index) {
                             $modal.open({
                                 backdrop: true,
                                 templateUrl: '../modules/home/templates/deleteasset.html',
@@ -194,6 +200,9 @@ angular.module('Home')
                                     },
                                     token: function () {
                                         return $rootScope.globals.currentUser.access_token;
+                                    },
+                                    index: function () {
+                                        return index;
                                     }
                                 }
                             });
@@ -278,7 +287,7 @@ angular.module('Home')
 
 
 angular.module('Home').controller('ModalDeleteAssetCtrl',
-        function ($scope, $modalInstance, parentScope, HomeService, asset, name, token) {
+        function ($scope, $modalInstance, parentScope, HomeService, asset, name, token, index) {
             $scope.name = name;
             $scope.message = "Are you sure you want to delete asset id[" + asset.id + "] this record ?";
 
@@ -290,7 +299,7 @@ angular.module('Home').controller('ModalDeleteAssetCtrl',
                                     $scope.error = response.error_description + ". Please logout!";
                                 } else {
                                     if (response.success) {
-                                        parentScope.loadPage(asset.typeId);
+                                        parentScope.removeFromList(asset, index);
                                     } else {
                                         $scope.message = response.message;
                                     }
@@ -409,19 +418,6 @@ angular.module('Home').controller('ModalRemoveLinkCtrl',
             };
         });
 
-angular.module('Home').filter('filterAsset', function () {
-    // function that's invoked each time Angular runs $digest()
-    // pass in `item` which is the single Object we'll manipulate
-    return function (items) {
-        if (items && Array === items.constructor) {
-            return items.slice(
-                    ((items.currentPage - 1) * items.itemsPerPage),
-                    ((items.currentPage) * items.itemsPerPage)
-                    );
-        }
-        return items;
-    };
-});
 
 angular.module('Home').filter('filterMultiple', ['$filter', function ($filter) {
         return function (items, values, type) {
@@ -438,12 +434,11 @@ angular.module('Home').filter('filterMultiple', ['$filter', function ($filter) {
 
                 if (items && Array === items.constructor) {
                     if (values && Array === values.constructor) {
-                        console.log("searchSize : " + results.length);
                         type.searchSize = results.length;
                         items = results.slice(
-                                        ((type.currentPage - 1) * type.itemsPerPage),
-                                        ((type.currentPage) * type.itemsPerPage)
-                                        );
+                                ((type.currentPage - 1) * type.itemsPerPage),
+                                ((type.currentPage) * type.itemsPerPage)
+                                );
                     }
                 }
             }
@@ -482,7 +477,7 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                                             entry.fullname = entry.firstName + " " + entry.surname;
                                         });
 
-                                        console.log("response : " + JSON.stringify($scope.resources));
+
 
                                         $scope.dataLoading = false;
                                     } else {

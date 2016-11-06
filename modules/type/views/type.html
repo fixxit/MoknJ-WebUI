@@ -40,79 +40,87 @@
                     <input type="text" name="typename" id="typename" class="form-control" ng-model="typename" required />
                     <span ng-show="form.typename.$dirty && form.typename.$error.required" class="help-block">Asset Type is required</span>
                 </div>
-                
-                <hr/>
 
-                <div class="form-group">
-                    <label for="dispname">Field Display Name</label>
-                    <i class="fa fa-key"></i>
-                    <input type="text" name="field" id="dispname" class="form-control" ng-model="dispname"  />
-                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" class="panel-heading">
+                        New Template Field
+                    </div>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <span>&nbsp;</span>
+                        </div> 
+                        <div class="form-group">
+                            <label for="dispname">Field Display Name</label>
+                            <i class="fa fa-key"></i>
+                            <input type="text" name="field" id="dispname" class="form-control" ng-model="dispname"  />
+                        </div>
 
-                <div class="form-group">
-                    <label for="datatype">Data Type</label>
-                    <i class="fa fa-key"></i>
-                    <div class="dropdown" ng-class='{open: open}'>
-                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" ng-click='open = !open'>
-                            {{selectedItem.type}}
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li ng-repeat="t in types" ng-click="$parent.open = !$parent.open" style="cursor: pointer;">
-                                <a ng-click="dropboxitemselected(t)" >{{t.type}}</a>
-                            </li>
-                        </ul>
+                        <div class="form-group">
+                            <label for="datatype">Data Type</label>
+                            <i class="fa fa-key"></i>
+                            <div class="dropdown" ng-class='{open: open}'>
+                                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" ng-click='open = !open'>
+                                    {{selectedItem.type}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat="t in types" ng-click="$parent.open = !$parent.open" style="cursor: pointer;">
+                                        <a ng-click="dropboxitemselected(t)" >{{t.type}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="datatype">Field Options</label>
+                            <div class="checkbox">
+                                <label data-toggle="tooltip" title="Is this an unique field?" ><input type="checkbox" ng-model="unique">Unique</label>
+                            </div>
+                            <div class="checkbox">
+                                <label data-toggle="tooltip" title="Is this field mandatory?"><input type="checkbox" ng-model="mandatory">Mandatory</label>
+                            </div>
+                            <div class="checkbox">
+                                <label data-toggle="tooltip" title="Should this field be displayed in the audit view?"><input type="checkbox" ng-model="display">Display</label>
+                            </div>
+                        </div>  
+
+                        <div class="form-group">
+                            <button ng-if="selectIndex == null"  type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Add</button>
+                            <button ng-if="selectIndex != null"  type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Update</button>
+                        </div>
+                    </div>
+                </div> 
+                <div class="panel panel-default">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Field Name</th>
+                                    <th>Data Type</th>
+                                    <th>Unique</th>
+                                    <th>Mandatory</th>
+                                    <th>Displayed</th>
+                                </tr>
+                            </thead>
+                            <tbody>                
+                                <tr class="danger text-center" ng-show="!items.length"><td colspan="8">No items to display</td></tr>        
+                                <tr ng-repeat="item in items" ng-class="isEven($index)">
+                                    <td style="width: 25px; cursor: pointer;"><span ng-click="remove($index)" class="glyphicon glyphicon-remove-circle"></span></td> 
+                                    <td style="width: 25px; cursor: pointer;"><span ng-show="$index != 0" ng-click="move($index, ($index - 1))" class="glyphicon glyphicon-arrow-up"></span></td>
+                                    <td style="width: 25px; cursor: pointer;"><span ng-click="edit($index)" class="glyphicon glyphicon-wrench"></span></td>
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.type.type}}</td>
+                                    <td><span ng-class="isOkOrRemove(item.unique)"></span></td>
+                                    <td><span ng-class="isOkOrRemove(item.mandatory)"></span></td>
+                                    <td><span ng-class="isOkOrRemove(item.display)"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>  
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="datatype">Field Options</label>
-                    <div class="checkbox">
-                        <label data-toggle="tooltip" title="Is this an unique field?" ><input type="checkbox" ng-model="unique">Unique</label>
-                    </div>
-                    <div class="checkbox">
-                        <label data-toggle="tooltip" title="Is this field mandatory?"><input type="checkbox" ng-model="mandatory">Mandatory</label>
-                    </div>
-                    <div class="checkbox">
-                        <label data-toggle="tooltip" title="Should this field be displayed in the audit view?"><input type="checkbox" ng-model="display">Display</label>
-                    </div>
-                </div>  
-
-                <div class="form-group">
-                    <button ng-if="selectIndex == null"  type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Add</button>
-                    <button ng-if="selectIndex != null"  type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Update</button>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th>Field Name</th>
-                                <th>Data Type</th>
-                                <th>Unique</th>
-                                <th>Mandatory</th>
-                                <th>Displayed</th>
-                            </tr>
-                        </thead>
-                        <tbody>                
-                            <tr class="danger text-center" ng-show="!items.length"><td colspan="8">No items to display</td></tr>        
-                            <tr ng-repeat="item in items" ng-class="isEven($index)">
-                                <td style="width: 25px; cursor: pointer;"><span ng-click="remove($index)" class="glyphicon glyphicon-remove-circle"></span></td> 
-                                <td style="width: 25px; cursor: pointer;"><span ng-show="$index != 0" ng-click="move($index, ($index - 1))" class="glyphicon glyphicon-arrow-up"></span></td>
-                                <td style="width: 25px; cursor: pointer;"><span ng-click="edit($index)" class="glyphicon glyphicon-wrench"></span></td>
-                                <td>{{item.name}}</td>
-                                <td>{{item.type.type}}</td>
-                                <td><span ng-class="isOkOrRemove(item.unique)"></span></td>
-                                <td><span ng-class="isOkOrRemove(item.mandatory)"></span></td>
-                                <td><span ng-class="isOkOrRemove(item.display)"></span></td>
-                            </tr>
-                        </tbody>
-                    </table>  
-                </div>
-
                 <div class="row">
                     <span>&nbsp;</span>
                 </div> 

@@ -5,6 +5,8 @@ angular.module('Link')
                     function ($scope, $rootScope, $location, LinkService) {
                         $scope.assetId = $location.search().assetId;
                         $scope.resourceId = $location.search().resourceId;
+                        $scope.pagination = {};
+                        
                         var name = $location.search().name;
 
                         $scope.loadPage = function () {
@@ -29,11 +31,11 @@ angular.module('Link')
                                     $scope.error = response.error_description + ". Please logout!";
                                 } else {
                                     $scope.links = response.links;
-                                    $scope.links.viewby = 5;
-                                    $scope.links.totalItems = $scope.links.length;
-                                    $scope.links.currentPage = 1;
-                                    $scope.links.itemsPerPage = 5;
-                                    $scope.links.maxSize = 5;
+                                    $scope.pagination.viewby = 10;
+                                    $scope.pagination.totalItems = $scope.links.length;
+                                    $scope.pagination.currentPage = 1;
+                                    $scope.pagination.itemsPerPage = 10;
+                                    $scope.pagination.maxSize = 10;
                                     $scope.dataLoading = false;
 
                                     angular.forEach($scope.links, function (link) {
@@ -172,7 +174,7 @@ angular.module('Link')
                                 return "active";
                             }
                         };
-                        
+
                         // check if even for row odd and even colors
                         $scope.getCheckedClass = function (checked) {
                             if (checked) {
@@ -184,3 +186,29 @@ angular.module('Link')
 
                         $scope.loadPage();
                     }]);
+
+angular.module('Link').filter('filterMultiple', ['$filter', function ($filter) {
+        return function (items, values, pagination) {
+            if (values && Array === values.constructor) {
+                var results = items;
+                angular.forEach(values, function (value) {
+                    if (value) {
+                        if (items && Array === items.constructor) {
+                            results = $filter('filter')(results, value);
+                        }
+                    }
+                });
+
+                if (items && Array === items.constructor) {
+                    if (values && Array === values.constructor) {
+                        pagination.searchSize = results.length;
+                        items = results.slice(
+                                ((pagination.currentPage - 1) * pagination.itemsPerPage),
+                                ((pagination.currentPage) * pagination.itemsPerPage)
+                                );
+                    }
+                }
+            }
+            return items;
+        };
+    }]);
