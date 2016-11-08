@@ -169,7 +169,7 @@ angular.module('Link')
                         // check if even for row odd and even colors
                         $scope.isEven = function (value) {
                             if (value % 2 === 0) {
-                                return "success";
+                                return "info";
                             } else {
                                 return "active";
                             }
