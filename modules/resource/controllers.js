@@ -2,8 +2,8 @@
 
 angular.module('Resource')
         .controller('ResourceController',
-                ['$scope', '$rootScope', '$location', 'ResourceService',
-                    function ($scope, $rootScope, $location, ResourceService) {
+                ['$scope', '$rootScope', '$location', 'ResourceService', '$modal',
+                    function ($scope, $rootScope, $location, ResourceService, $modal) {
                         $scope.isCollapsed = false;
                         $scope.containerCollapsed = false;
                         $scope.resourceId = $location.search().resourceId;
@@ -42,7 +42,7 @@ angular.module('Resource')
                                         }
                                     }
                             );
-                        }
+                        };
 
                         $scope.save = function () {
                             ResourceService.save(
@@ -86,8 +86,8 @@ angular.module('Resource')
                                 return "active";
                             }
                         };
-                        
-                        
+
+
                         $scope.isSystemUser = function (value) {
                             if (value) {
                                 return "glyphicon glyphicon-ok";
@@ -111,8 +111,18 @@ angular.module('Resource')
                             $scope.error = null;
                         };
 
-                        $scope.removeResource = function () {
-                            alert("todo!");
+                        $scope.deletResource = function (resource, callback) {
+                            ResourceService.remove(
+                                    $rootScope.globals.currentUser.access_token,
+                                    resource.id,
+                                    function (response) {
+                                        if (response.error_description) {
+                                            callback(false, response.error_description);
+                                        } else {
+                                            callback(true);
+                                        }
+                                    }
+                            );
                         };
 
                         $scope.editResource = function (id) {
@@ -135,8 +145,64 @@ angular.module('Resource')
                         };
 
                         $scope.loadPage($scope.resourceId);
+
+                        $scope.removeResource = function (resource) {
+                            $modal.open({
+                                backdrop: true,
+                                templateUrl: '../modules/resource/templates/deleteresource.html',
+                                controller: 'ModalDeleteResourceCtrl',
+                                resolve: {
+                                    parentScope: function () {
+                                        return $scope;
+                                    },
+                                    resource: function () {
+                                        return resource;
+                                    }
+                                }
+                            });
+                        };
+
+                        // remove item by index from items
+                        $scope.removeFromList = function (resource) {
+                            var index = $scope.resources.indexOf(resource);
+                            $scope.resources.splice(index, 1);
+                        };
+
                     }]);
-                
+
+angular.module('Resource').controller('ModalDeleteResourceCtrl',
+        function ($scope, $modalInstance, parentScope, resource) {
+            $scope.name = resource.firstName + ' ' + resource.surname;
+            $scope.accept = false;
+            $scope.errorMessage = false;
+            $scope.message = '';
+
+            $scope.ok = function () {
+                if ($scope.accept) {
+                    $scope.errorMessage = false;
+                    $scope.dataLoading = true;
+                    parentScope.deletResource(resource,
+                            function (success, message) {
+                                if (success) {
+                                    parentScope.removeFromList(resource);
+                                    $modalInstance.close();
+                                } else {
+                                    $scope.errorMessage = true
+                                    $scope.message = message;
+                                }
+                            }
+                    );
+                } else {
+                    $scope.message = 'Please accept that you want to remove the employee.';
+                    $scope.errorMessage = true;
+                }
+            };
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
+        });
+
 angular.module('Resource').filter('filterMultiple', ['$filter', function ($filter) {
         return function (items, values, pagination) {
             if (values && Array === values.constructor) {
@@ -150,7 +216,7 @@ angular.module('Resource').filter('filterMultiple', ['$filter', function ($filte
                 });
 
                 if (items && Array === items.constructor) {
-                    if (values && Array === values.constructor) {    
+                    if (values && Array === values.constructor) {
                         pagination.searchSize = results.length;
                         items = results.slice(
                                 ((pagination.currentPage - 1) * pagination.itemsPerPage),

@@ -226,7 +226,6 @@ angular.module('Home')
                             });
                         };
 
-
                         $scope.removeType = function (type) {
                             $modal.open({
                                 backdrop: true,

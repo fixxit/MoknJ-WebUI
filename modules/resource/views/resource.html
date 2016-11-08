@@ -138,10 +138,11 @@
                 </tr>
             </thead>
             <tbody>       
-                <tr ng-repeat="resource in filterData = (resources| filterMultiple:[search] : pagination)" 
+                <tr ng-repeat="resource in filterData =
+                                    (resources| filterMultiple:[search] : pagination)" 
                     ng-class="isEven($index)">
-                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Edit Employee Employee" ng-click="editEmployee(resource.id)" class="glyphicon glyphicon-edit"></span></td>
-                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Remove Employee Employee" ng-click="removeEmployee(resource)" class="glyphicon glyphicon-remove"></span></td>
+                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Edit Employee Employee" ng-click="editResource(resource.id)" class="glyphicon glyphicon-edit"></span></td>
+                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Remove Employee Employee" ng-click="removeResource(resource)" class="glyphicon glyphicon-remove"></span></td>
                     <td>{{resource.firstName}}</td>
                     <td>{{resource.surname}}</td>
                     <td>{{resource.email}}</td>

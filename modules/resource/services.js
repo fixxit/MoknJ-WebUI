@@ -54,5 +54,20 @@ angular.module('Resource')
                         };
                         
                         
+                        service.remove = function (token, id,callback) {
+                            $http({
+                                method: 'POST',
+                                url: baseURL + 'delete/' + id + '?access_token=' + token,
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            }).success(function (response) {
+                                callback(response);
+                            }).error(function (response) {
+                                callback(response);
+                            });
+                        };
+                        
+                        
                         return service;
                     }]);
