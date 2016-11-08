@@ -72,9 +72,9 @@ angular.module('Home')
                         };
 
                         // remove item by index from items
-                        $scope.removeFromList = function (asset, index) {
+                        $scope.removeFromList = function (typeId, index) {
                             angular.forEach($scope.types, function (type) {
-                                if (type.id === asset.typeId) {
+                                if (type.id === typeId) {
                                     type.assets.splice(index, 1);
                                 }
                             });
@@ -198,7 +198,7 @@ angular.module('Home')
                             $location.path('/link').search({'assetId': id, 'name': name});
                         };
 
-                        $scope.removeAsset = function (asset, name, index) {
+                        $scope.removeAsset = function (asset, name, typeId, index) {
                             $modal.open({
                                 backdrop: true,
                                 templateUrl: '../modules/home/templates/deleteasset.html',
@@ -218,6 +218,9 @@ angular.module('Home')
                                     },
                                     token: function () {
                                         return $rootScope.globals.currentUser.access_token;
+                                    },
+                                    typeId: function () {
+                                        return typeId;
                                     },
                                     index: function () {
                                         return index;
@@ -301,11 +304,12 @@ angular.module('Home')
 
 
 angular.module('Home').controller('ModalDeleteAssetCtrl',
-        function ($scope, $modalInstance, parentScope, HomeService, asset, name, token, index) {
+        function ($scope, $modalInstance, parentScope, HomeService,
+                asset, name, token, typeId, index) {
             $scope.name = name;
             $scope.message = "Are you sure you want to delete asset id[" + asset.id + "] this record ?";
 
-            $scope.ok = function () {   
+            $scope.ok = function () {
                 HomeService.deleteAsset(token, asset,
                         function (response) {
                             if (response) {
@@ -313,7 +317,7 @@ angular.module('Home').controller('ModalDeleteAssetCtrl',
                                     $scope.error = response.error_description + ". Please logout!";
                                 } else {
                                     if (response.success) {
-                                        parentScope.removeFromList(asset, index);
+                                        parentScope.removeFromList(typeId, index);
                                     } else {
                                         $scope.message = response.message;
                                     }

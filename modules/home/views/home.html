@@ -104,7 +104,7 @@
                                     <th>&nbsp;</th>
                                     <th>&nbsp;</th>
                                     <th ng-repeat="detail in type.details">{{detail.name}}</th>
-                                    <th>Link</th>
+                                    <th>Assignee</th>
                                     <th>Last Modified</th>
                                 </tr>
                             </thead>
@@ -112,7 +112,7 @@
                                 <tr ng-repeat="asset in type.filterData = (type.assets| filterAssetMultiple:[search, type.search] : type)" 
                                     ng-class="isEven($index)">
                                     <td style="width: 25px; cursor: pointer;">
-                                        <span ng-if="!asset.linkedResource" data-toggle="tooltip" title="Remove {{type.name}} Asset" ng-click="removeAsset(asset, type.name, index)" class="glyphicon glyphicon-remove"></span>
+                                        <span ng-if="!asset.linkedResource" data-toggle="tooltip" title="Remove {{type.name}} Asset" ng-click="removeAsset(asset, type.name, type.id, $index)" class="glyphicon glyphicon-remove"></span>
                                         <span ng-if="asset.linkedResource" data-toggle="tooltip" title="{{type.name}} is checked out unable to delete!" class="glyphicon glyphicon-lock"></span>
                                     </td>
                                     <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Edit {{type.name}} Asset" ng-click="edit(asset.typeId, asset.id)" class="glyphicon glyphicon-edit"></span></td>

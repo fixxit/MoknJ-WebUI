@@ -161,7 +161,7 @@ angular.module('Resource')
                                 }
                             });
                         };
-
+                        
                         // remove item by index from items
                         $scope.removeFromList = function (resource) {
                             var index = $scope.resources.indexOf(resource);
