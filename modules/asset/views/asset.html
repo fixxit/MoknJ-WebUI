@@ -36,7 +36,6 @@
                     <label for="datatype">{{detail.name}}</label>
                     <div class="form-group" ng-if="detail.type == 'ASSET_INPUT_STR_TYPE'">
                         <input ng-required="required(detail.mandatory)" ng-model="detail.value" type="text" name="field_{{detail.id}}" id="field_{{detail.id}}" class="form-control" />
-                        <span ng-if="required(detail.mandatory)" ng-show="form.field_{{detail.id}}.$dirty && form.field_{{detail.id}}.$error.required" class="help-block">{{detail.name}} is required</span>
                     </div>
 
                     <div class="form-group" ng-if="detail.type == 'ASSET_INPUT_DAT_TYPE'">      
@@ -46,19 +45,17 @@
                                 <button type="button" class="btn btn-default" ng-click="open($event, index)"><i class="glyphicon glyphicon-calendar"></i></button>
                             </span>
                         </p> 
-                        <span ng-if="required(detail.mandatory)" ng-show="form.field_date_{{detail.id}}.$dirty && form.field_date_{{detail.id}}.$error.required" class="help-block">{{detail.name}} is required</span>
                     </div> 
-
+                    
                     <div class="input-group" ng-if="detail.type == 'ASSET_INPUT_MON_TYPE'" > 
                         <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-euro"></span></span>
                         <input ng-required="required(detail.mandatory)" ng-model="detail.value" type="text" class="form-control" placeholder="Amount" required/>
-                        <span ng-if="required(detail.mandatory)" ng-show="form.field_cur_{{detail.id}}.$dirty && form.field_cur_{{detail.id}}.$error.required" class="help-block">{{detail.name}} is required</span>
                     </div>
 
                     <div class="form-group" ng-if="detail.type == 'ASSET_INPUT_INT_TYPE'" > 
                         <input ng-required="required(detail.mandatory)" ng-model="detail.value" name="field_num_{{detail.id}}" id="field_num_{{detail.id}}" type="number" class="form-control" required/>
-                        <span ng-if="required(detail.mandatory)" ng-show="form.field_date_{{detail.id}}.$dirty && form.field_date_{{detail.id}}.$error.required" class="help-block">{{detail.name}} is required</span>
                     </div>
+                    <span ng-if="required(detail.mandatory)" ng-show="detail.value == null" class="help-block">{{detail.name}} is required</span>
                 </div>
 
                 <div class="input-group">

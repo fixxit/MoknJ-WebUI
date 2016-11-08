@@ -58,7 +58,7 @@ angular.module('Asset')
                             }
                         };
 
-                        
+
                         $scope.loadPage(id);
 
                         $scope.openDatePickers = [];
@@ -69,9 +69,9 @@ angular.module('Asset')
                                     && (date.getDay() === 0
                                             || date.getDay() === 6));
                         };
-                        
+
                         $scope.required = function (required) {
-                            console.log("required : " +required);
+                            console.log("required : " + required);
                             if (required) {
                                 return true;
                             } else {
@@ -134,6 +134,10 @@ angular.module('Asset')
                         };
 
                         $scope.reset = function () {
-                            alert("reset todo!");
+                            $scope.error = null;
+                            $scope.success = null;
+                            angular.forEach($scope.type.details, function (detail) {
+                                detail.value = null;
+                            });
                         };
                     }]);
