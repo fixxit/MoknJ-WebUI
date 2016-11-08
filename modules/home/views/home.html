@@ -73,15 +73,21 @@
         <div class="row">
             <div class="table-responsive panel panel-primary">
                 <div class="panel-heading">                      
-                    <label data-toggle="tooltip" title="Expand/Collapse {{type.name}}" style="cursor: pointer;" ng-click="type.newCollapse = !type.newCollapse">
+                    <span data-toggle="tooltip" title="Expand/Collapse {{type.name}}" style="cursor: pointer;" ng-click="type.newCollapse = !type.newCollapse">
                         <span style="cursor: pointer;" ng-class="isCollapsed(type.newCollapse)"></span>
-                        &nbsp;{{type.name}} ({{type.searchSize}})
-                    </label>    
-                    <label style="cursor: pointer; float:right;" ng-click="newAsset(type.id)" data-toggle="tooltip" title="New {{type.name}}"><span class="glyphicon glyphicon-new-window"></span>&nbsp;New</label>
+                        &nbsp;{{type.name}} 
+                        (<span  class="glyphicon glyphicon-flag"></span>
+                        in:{{type.checkedIn}}, 
+                        <span class="glyphicon glyphicon-link"></span>
+                        out:{{type.checkedOut}}, 
+                        <span class="glyphicon glyphicon-list"></span>
+                        total:{{type.searchSize}})
+                    </span>    
+                    <span style="cursor: pointer; float:right;" ng-click="newAsset(type.id)" data-toggle="tooltip" title="New {{type.name}}"><span class="glyphicon glyphicon-new-window"></span>&nbsp;New</span>
                     <span style="float:right;">&nbsp;&nbsp;</span>
-                    <label style="cursor: pointer; float:right;" ng-click="removeType(type)" data-toggle="tooltip" title="Remove {{type.name}}"><span class="glyphicon glyphicon-remove-sign"></span>&nbsp;Delete</label>
+                    <span style="cursor: pointer; float:right;" ng-click="removeType(type)" data-toggle="tooltip" title="Remove {{type.name}}"><span class="glyphicon glyphicon-remove-sign"></span>&nbsp;Delete</span>
                     <span style="float:right;">&nbsp;&nbsp;</span>
-                    <label style="cursor: pointer; float:right;" ng-click="editType(type.id)" data-toggle="tooltip" title="Edit {{type.name}} Layout"><span class="glyphicon glyphicon-edit" ></span>&nbsp;Edit</label>
+                    <span style="cursor: pointer; float:right;" ng-click="editType(type.id)" data-toggle="tooltip" title="Edit {{type.name}} Layout"><span class="glyphicon glyphicon-edit" ></span>&nbsp;Edit</span>
                 </div>
                 <div collapse="type.newCollapse">
                     <div class="input-group-addon" ng-if="type.assets.length" >      
@@ -101,7 +107,7 @@
                                 </tr>
                             </thead>
                             <tbody>       
-                                <tr ng-repeat="asset in type.filterData = (type.assets| filterMultiple:[search, type.search] : type)" 
+                                <tr ng-repeat="asset in type.filterData = (type.assets| filterAssetMultiple:[search, type.search] : type)" 
                                     ng-class="isEven($index)">
                                     <td style="width: 25px; cursor: pointer;">
                                         <span ng-if="!asset.linkedResource" data-toggle="tooltip" title="Remove {{type.name}} Asset" ng-click="removeAsset(asset, type.name, index)" class="glyphicon glyphicon-remove"></span>
@@ -109,8 +115,8 @@
                                     </td>
                                     <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Edit {{type.name}} Asset" ng-click="edit(asset.typeId, asset.id)" class="glyphicon glyphicon-edit"></span></td>
                                     <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="View {{type.name}} Audit" ng-click="viewAudit(asset.id, type.name)" class="glyphicon glyphicon-eye-open"></span></td>
-                                    <td ng-if="!asset.linkedResource" style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check Out {{type.name}} Asseta"ng-click="assignAsset(asset, type.name)" class="glyphicon glyphicon-link"></span></td>
-                                    <td ng-if="asset.linkedResource" style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check In {{type.name}} Asseta"ng-click="removeLink(asset, type.name)" class="glyphicon glyphicon-flag"></span></td>
+                                    <td ng-if="!asset.linkedResource" style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check Out {{type.name}} Asset" ng-click="assignAsset(asset, type.name)" class="glyphicon glyphicon-link"></span></td>
+                                    <td ng-if="asset.linkedResource" style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check In {{type.name}} Asset" ng-click="removeLink(asset, type.name)" class="glyphicon glyphicon-flag"></span></td>
 
                                     <td ng-repeat="value in asset.details">
                                         <span ng-if="value.type === 'ASSET_INPUT_MON_TYPE'" ><span class="glyphicon glyphicon-euro"></span>{{value.value| currency: ""}}</span>

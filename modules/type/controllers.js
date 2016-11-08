@@ -11,45 +11,49 @@ angular.module('Type')
                         $scope.dataLoading = true;
                         $scope.selectedItem = {'name': 'nosec', 'type': 'no selection'};
 
-                        $scope.loadPage = function (id) {
+                        $scope.loadPage = function () {
                             TypeService.getFieldTypes(
                                     $rootScope.globals.currentUser.access_token,
                                     $scope.process
                                     );
                         };
 
-                        $scope.process = function (response) {
-                            console.log("response : " + JSON.stringify(response));
-                            if (response) {
-                                if (response.error_description) {
-                                    $scope.error = response.error_description + ". Please logout!";
+                        $scope.process = function (loadpageResponse) {
+                            console.log("response : " + JSON.stringify(loadpageResponse));
+                            if (loadpageResponse) {
+                                if (loadpageResponse.error_description) {
+                                    $scope.error = loadpageResponse.error_description + ". Please logout!";
                                 } else {
-                                    if (response.type) {
-                                        $scope.type = response.type;
-                                        $scope.typename = $scope.type.name;
-                                        angular.forEach($scope.type.details, function (detail) {
-                                            angular.forEach($scope.types, function (type) {
-                                                if (detail.type === type.name) {
-                                                    $scope.items.push(
-                                                            {
-                                                                'id': detail.id,
-                                                                'type': type,
-                                                                'name': detail.name,
-                                                                'unique': detail.unique,
-                                                                'display': detail.display,
-                                                                'mandatory': detail.mandatory
-                                                            }
-                                                    );
-                                                }
-                                            });
-                                        });
-                                    } else if (response.fieldTypes) {
-                                        $scope.types = response.fieldTypes;
-                                        TypeService.getType(
-                                                $rootScope.globals.currentUser.access_token,
-                                                $scope.id,
-                                                $scope.process
-                                                );
+                                    if (loadpageResponse.fieldTypes) {
+                                        $scope.types = loadpageResponse.fieldTypes;
+                                        if ($scope.id) {
+                                            TypeService.getType(
+                                                    $rootScope.globals.currentUser.access_token,
+                                                    $scope.id,
+                                                    function (response) {
+                                                        if (response.type) {
+                                                            $scope.type = response.type;
+                                                            $scope.typename = $scope.type.name;
+                                                            angular.forEach($scope.type.details, function (detail) {
+                                                                angular.forEach($scope.types, function (type) {
+                                                                    if (detail.type === type.name) {
+                                                                        $scope.items.push(
+                                                                                {
+                                                                                    'id': detail.id,
+                                                                                    'type': type,
+                                                                                    'name': detail.name,
+                                                                                    'unique': detail.unique,
+                                                                                    'display': detail.display,
+                                                                                    'mandatory': detail.mandatory
+                                                                                }
+                                                                        );
+                                                                    }
+                                                                });
+                                                            });
+                                                        }
+                                                    }
+                                            );
+                                        }
                                     }
 
                                 }
@@ -59,7 +63,7 @@ angular.module('Type')
                             }
                         };
 
-                        $scope.loadPage($scope.id);
+                        $scope.loadPage();
 
                         $scope.edit = function (index) {
                             $scope.selectedItem = $scope.items[index].type;
@@ -139,7 +143,7 @@ angular.module('Type')
                                 return "active";
                             }
                         };
-                        
+
                         $scope.isOkOrRemove = function (unique) {
                             if (unique) {
                                 return "glyphicon glyphicon-ok";
@@ -147,7 +151,7 @@ angular.module('Type')
                                 return "glyphicon glyphicon-remove";
                             }
                         };
-                        
+
                         // reset input boxes
                         $scope.reset = function (messages) {
                             // Reset all data
@@ -218,7 +222,7 @@ angular.module('Type')
                                                     if (!$scope.id) {
                                                         $scope.success = 'Successfully saved a new asset type, create new type ?';
                                                     } else {
-                                                        $location.path('/home')
+                                                        $location.path('/home');
                                                     }
 
                                                     $scope.error = null;

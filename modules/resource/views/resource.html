@@ -26,8 +26,8 @@
         <div data-toggle="tooltip" title="Expand/Collapse New/Update Resource" style="cursor: pointer;" class="panel-heading" ng-click="newCollapse = !newCollapse">
             <span ng-show="!newCollapse" class="glyphicon glyphicon-collapse-down"></span>
             <span ng-show="newCollapse"  class="glyphicon glyphicon-collapse-up"></span>
-            <label ng-if="!resourceId">New Resource</label>
-            <label ng-if="resourceId">Update Resource</label>
+            <span ng-if="!resourceId">New Resource</span>
+            <span ng-if="resourceId">Update Resource</span>
         </div>
         <form name="form" ng-submit="save()" role="form">
             <div collapse="!newCollapse" class="container-fluid bg-3">
@@ -123,7 +123,7 @@
 <div class="container-fluid bg-3">
     <div class="table-responsive panel panel-primary">
         <div class="panel-heading">
-            <label><span class="glyphicon glyphicon-list"></span>&nbsp;Resources ({{pagination.searchSize}})</label>
+            <span><span class="glyphicon glyphicon-list"></span>&nbsp;Resources ({{pagination.searchSize}})</span>
         </div>
         <table class="table table-hover">
             <thead>

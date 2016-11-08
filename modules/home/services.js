@@ -10,8 +10,22 @@ angular.module('Home')
                         service.getAllTypes = function (token, callback) {
                             $http({
                                 method: 'POST',
-                                url: url + 'type/all' + '?access_token=' + token,
-                                data: {},
+                                url: url + 'type/all?access_token=' + token,
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            }).success(function (response) {
+                                callback(response);
+                            }).error(function (response) {
+                                callback(response);
+                            });
+                        };
+                        
+                        service.deleteTemplate = function (token, id, cascade, callback) {
+                            $http({
+                                method: 'POST',
+                                url: url + 'type/delete/' + id + '?access_token='
+                                        + token + '&cascade=' + cascade,
                                 headers: {
                                     'Content-Type': 'application/json'
                                 }
@@ -50,7 +64,7 @@ angular.module('Home')
                         };                        
                         
                         service.addLink = function (token, payload, callback) {
-                            $http.post((url + '/link/add?access_token=' + token),
+                            $http.post((url + 'link/add?access_token=' + token),
                                     JSON.stringify(payload))
                                     .success(
                                             function (response) {

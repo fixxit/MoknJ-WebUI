@@ -31,18 +31,18 @@ angular.module('Authentication')
                             var expiresValue = new Date(now);
                             expiresValue.setSeconds(now.getSeconds() + expires_in);
 
-                            console.log("setting date : " + expiresValue);
-
                             $rootScope.globals = {
                                 currentUser: {
                                     username: username,
                                     password: password,
                                     access_token: access_token,
                                     refresh_token: refresh_token,
-                                    expires_in: expires_in,
+                                    expires_in: expiresValue.getTime(),
                                     authdata: authdata
                                 }
                             };
+                            
+                            console.log("$rootScope.globals : " + JSON.stringify($rootScope.globals));
                             $cookieStore.put('globals', $rootScope.globals, {'expires': expiresValue});
                             $http.defaults.headers.common['Authorization'] = 'Basic ' + authdata;
                         };

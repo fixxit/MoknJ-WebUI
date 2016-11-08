@@ -108,6 +108,24 @@ angular.module('Home')
                             }
                         };
 
+                        $scope.deleteTemplate = function (id, cascade, token, callback) {
+                            if (id) {
+                                HomeService.deleteTemplate(
+                                        token,
+                                        id,
+                                        cascade,
+                                        function (response) {
+                                            // token auth error
+                                            if (response.error_description) {
+                                                $scope.error = response.error_description + ". Please logout!";
+                                            } else {
+                                                callback();
+                                            }
+                                        }
+                                );
+                            }
+                        };
+
                         $scope.loadPage = function (typeId) {
                             HomeService.getAllTypes($rootScope.globals.currentUser.access_token,
                                     function (response) {
@@ -218,9 +236,6 @@ angular.module('Home')
                                     parentScope: function () {
                                         return $scope;
                                     },
-                                    HomeService: function () {
-                                        return HomeService;
-                                    },
                                     type: function () {
                                         return type;
                                     },
@@ -291,7 +306,7 @@ angular.module('Home').controller('ModalDeleteAssetCtrl',
             $scope.name = name;
             $scope.message = "Are you sure you want to delete asset id[" + asset.id + "] this record ?";
 
-            $scope.ok = function () {
+            $scope.ok = function () {   
                 HomeService.deleteAsset(token, asset,
                         function (response) {
                             if (response) {
@@ -319,14 +334,19 @@ angular.module('Home').controller('ModalDeleteAssetCtrl',
         });
 
 angular.module('Home').controller('ModalDeleteTypeCtrl',
-        function ($scope, $modalInstance, parentScope, HomeService, type, token) {
+        function ($scope, $modalInstance, parentScope, type, token) {
             $scope.name = type.name;
-            $scope.message = "blah blah! delete stuff!";
+            $scope.cascade = false;
 
             $scope.ok = function () {
-                $modalInstance.close();
+                $scope.dataLoading = true;
+                parentScope.deleteTemplate(type.id, $scope.cascade, token,
+                        function () {
+                            parentScope.loadPage();
+                            $modalInstance.close();
+                        }
+                );
             };
-
 
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
@@ -419,7 +439,7 @@ angular.module('Home').controller('ModalRemoveLinkCtrl',
         });
 
 
-angular.module('Home').filter('filterMultiple', ['$filter', function ($filter) {
+angular.module('Home').filter('filterAssetMultiple', ['$filter', function ($filter) {
         return function (items, values, type) {
             if (values && Array === values.constructor) {
                 var results = items;
@@ -435,6 +455,14 @@ angular.module('Home').filter('filterMultiple', ['$filter', function ($filter) {
                 if (items && Array === items.constructor) {
                     if (values && Array === values.constructor) {
                         type.searchSize = results.length;
+                        var checkedOut = 0;
+                        angular.forEach(results, function (result) {
+                            if (result.linkedResource) {
+                                checkedOut = checkedOut + 1;
+                            }
+                        });
+                        type.checkedOut = checkedOut;
+                        type.checkedIn = type.searchSize - checkedOut;
                         items = results.slice(
                                 ((type.currentPage - 1) * type.itemsPerPage),
                                 ((type.currentPage) * type.itemsPerPage)
@@ -460,6 +488,7 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
             $scope.dropboxitemselected = function (resource) {
                 $scope.selected = resource.fullname;
                 $scope.resource = resource;
+                $scope.resourceCollapse = !$scope.resourceCollapse;
             };
 
             $scope.loadPage = function () {
@@ -477,8 +506,6 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                                             entry.fullname = entry.firstName + " " + entry.surname;
                                         });
 
-
-
                                         $scope.dataLoading = false;
                                     } else {
                                         $scope.error = "Invalid server response";
@@ -491,40 +518,61 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                 );
             };
 
+
+            // check if even for row odd and even colors
+            $scope.isEven = function (value) {
+                return parentScope.isEven(value);
+            };
+
+
             $scope.loadPage();
             $scope.ok = function () {
-                $scope.dataLoading = true;
-                $scope.link = {
-                    'resourceId': $scope.resource.id,
-                    'assetId': asset.id,
-                    'date': $scope.auditdate,
-                    'checked': true
-                };
+                if (date != null) {
+                    $scope.showDateIsRequired = true;
+                } else {
+                    $scope.showDateIsRequired = false;
+                }
 
-                asset.resourceId = $scope.resource.id;
-                HomeService.addLink(token, $scope.link,
-                        function (response) {
-                            if (response) {
-                                if (response.error_description) {
-                                    $scope.error = response.error_description + ". Please logout!";
-                                } else {
-                                    if (response.success) {
-                                        $scope.saveAsset(
-                                                asset.typeId,
-                                                function (response_asset) {
-                                                    parentScope.refreshAsset(response_asset, true);
-                                                    $modalInstance.close();
-                                                }
-                                        );
+                if ('Select an Resource' === $scope.selected) {
+                    $scope.showResourceIsRequired = true;
+                } else {
+                    $scope.showResourceIsRequired = false;
+                }
+                if (!$scope.showResourceIsRequired
+                        && !$scope.showResourceIsRequired) {
+                    $scope.dataLoading = true;
+                    $scope.link = {
+                        'resourceId': $scope.resource.id,
+                        'assetId': asset.id,
+                        'date': $scope.auditdate,
+                        'checked': true
+                    };
+
+                    asset.resourceId = $scope.resource.id;
+                    HomeService.addLink(token, $scope.link,
+                            function (response) {
+                                if (response) {
+                                    if (response.error_description) {
+                                        $scope.error = response.error_description + ". Please logout!";
                                     } else {
-                                        $scope.message = response.message;
+                                        if (response.success) {
+                                            $scope.saveAsset(
+                                                    asset.typeId,
+                                                    function (response_asset) {
+                                                        parentScope.refreshAsset(response_asset, true);
+                                                        $modalInstance.close();
+                                                    }
+                                            );
+                                        } else {
+                                            $scope.message = response.message;
+                                        }
                                     }
+                                } else {
+                                    $scope.error = "Invalid server response";
                                 }
-                            } else {
-                                $scope.error = "Invalid server response";
                             }
-                        }
-                );
+                    );
+                }
             };
 
             $scope.saveAsset = function (typeId, callback) {

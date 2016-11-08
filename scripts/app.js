@@ -19,125 +19,112 @@ angular.module('FixxitAssetTrackerUI', [
     'ngRoute',
     'ngCookies'
 ]).config(['$routeProvider', function ($routeProvider) {
-                // new controllers are instantiated here to the include!
-                $routeProvider
-                        .when('/login', {
-                            controller: 'LoginController',
-                            templateUrl: 'modules/authentication/views/login.html',
-                            hideMenus: true
-                        })
+        // new controllers are instantiated here to the include!
+        $routeProvider
+                .when('/login', {
+                    controller: 'LoginController',
+                    templateUrl: 'modules/authentication/views/login.html',
+                    hideMenus: true
+                })
 
-                        .when('/home', {
-                            controller: 'HomeController',
-                            templateUrl: 'modules/home/views/home.html'
-                        })
+                .when('/home', {
+                    controller: 'HomeController',
+                    templateUrl: 'modules/home/views/home.html'
+                })
 
-                        .when('/type', {
-                            controller: 'TypeController',
-                            templateUrl: 'modules/type/views/type.html'
-                        })
+                .when('/type', {
+                    controller: 'TypeController',
+                    templateUrl: 'modules/type/views/type.html'
+                })
 
-                        .when('/asset', {
-                            controller: 'AssetController',
-                            templateUrl: 'modules/asset/views/asset.html'
-                        })
-                        
-                        .when('/resource', {
-                            controller: 'ResourceController',
-                            templateUrl: 'modules/resource/views/resource.html'
-                        })
-                        
-                        .when('/link', {
-                            controller: 'LinkController',
-                            templateUrl: 'modules/link/views/link.html'
-                        })
+                .when('/asset', {
+                    controller: 'AssetController',
+                    templateUrl: 'modules/asset/views/asset.html'
+                })
 
-                        .otherwise({redirectTo: '/login'});
-            }])
+                .when('/resource', {
+                    controller: 'ResourceController',
+                    templateUrl: 'modules/resource/views/resource.html'
+                })
+
+                .when('/link', {
+                    controller: 'LinkController',
+                    templateUrl: 'modules/link/views/link.html'
+                })
+
+                .otherwise({redirectTo: '/login'});
+    }])
 
         .run(['$rootScope', '$location', '$cookieStore', '$http', 'AuthenticationService',
             function ($rootScope, $location, $cookieStore, $http, AuthenticationService) {
                 // set default server address.
-                $rootScope.globalAppUrl = "http://localhost:8080/";
-                
+                $rootScope.globalAppUrl = "http://192.168.1.1:8080/";
+
                 // keep user logged in after page refresh
                 $rootScope.globals = $cookieStore.get('globals') || {};
                 if ($rootScope.globals.currentUser) {
-                    $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
+                    $http.defaults.headers.common['Authorization'] = 'Basic ' +
+                            $rootScope.globals.currentUser.authdata; // jshint ignore:line
                 }
 
                 $rootScope.$on('$locationChangeStart', function (event, next, current) {
-                    // redirect to login page if not logged in
-                    if ($location.path() === '/login') {
-                        $rootScope.token = {};
-                        $cookieStore.remove('token');
-                        AuthenticationService.ClearCredentials();
-                        clearInterval($rootScope.interval);
-                    } else {
-                        $rootScope.token = $cookieStore.get('token') || {};
-                        if ($rootScope.token && $rootScope.token.expired) {
-                            AuthenticationService.ClearCredentials();
-                            alert(JSON.stringify($rootScope.token))
-                            $location.path($rootScope.token.location);
-                        }
-                    }
 
-                    if ($location.path() !== '/login' && !$rootScope.globals.currentUser) {
-                        $location.path('/login');
-                    }
-
-                    $rootScope.refreshToken = function () {
+                    $rootScope.refreshToken = function (callback) {
                         $rootScope.globals = $cookieStore.get('globals') || {};
-                        if ($rootScope.globals.currentUser) {
-                            var message = confirm("login expired refresh token ?");
-                            if (message) {
-                                AuthenticationService.Login(
-                                        $rootScope.globals.currentUser.username,
-                                        $rootScope.globals.currentUser.password,
-                                        function (response) {
-                                            if (response.error_description) {
-                                                clearInterval($rootScope.interval);
-                                                alert(response.error_description);
-                                                AuthenticationService.ClearCredentials();
-                                                $rootScope.token = {'location': '/login', 'expired': true};
-                                            } else {
-                                                if (response.access_token) {
-                                                    AuthenticationService.SetCredentials(
-                                                            $rootScope.globals.currentUser.username,
-                                                            $rootScope.globals.currentUser.password,
-                                                            response.access_token,
-                                                            response.refresh_token,
-                                                            response.expires_in);
-                                                    $rootScope.token = {'location': '', 'expired': false};
-                                                    $cookieStore.put('token', $rootScope.token);
-                                                } else {
-                                                    clearInterval($rootScope.interval);
-                                                    alert("Web app logged off no token recieved!");
-                                                    $rootScope.token = {'location': '/login', 'expired': true};
-                                                    $cookieStore.put('token', $rootScope.token);
-                                                }
-                                            }
-                                            console.log("reset response : " + JSON.stringify(response));
-                                        });
-                            } else {
-                                clearInterval($rootScope.interval);
-                                $rootScope.token = {'location': '/login', 'expired': true};
-                                $cookieStore.put('token', $rootScope.token);
-                            }
-                        }
+                        var username = $rootScope.globals.currentUser.username;
+                        var password = $rootScope.globals.currentUser.password;
+                        AuthenticationService.Login(
+                                username,
+                                password,
+                                function (response) {
+                                    if (response.error_description) {
+                                        callback(false);
+                                    } else {
+                                        if (response.access_token) {
+                                            AuthenticationService.SetCredentials(
+                                                    username,
+                                                    password,
+                                                    response.access_token,
+                                                    response.refresh_token,
+                                                    response.expires_in);
+                                        } else {
+                                            callback(false);
+
+                                        }
+                                    }
+                                    callback(true);
+                                });
                     };
 
-                    if ($rootScope.globals.currentUser) {
-                        // refresh token
-                        // needs to calculate the date by getting the cookies date and then
-                        if (!$rootScope.interval) {
+                    // redirect to login page if not logged in
+                    if ($location.path() === '/login') {
+                        AuthenticationService.ClearCredentials();
+                    } else {
+                        if ($rootScope.globals.currentUser) {
+                            // refresh token
+                            // needs to calculate the date by getting the cookies date and then
                             var expiry = $rootScope.globals.currentUser.expires_in;
-                            $rootScope.interval = setInterval(
-                                    function () {
-                                        $rootScope.refreshToken()
-                                    }
-                            , 1000 * expiry);// 1000 = 1 sec
+                            var current = new Date().getTime();
+                            var tokenExpiry = new Date(expiry).getTime();
+                            var dif = tokenExpiry - current;
+
+                            if (dif < 0) {
+                                $rootScope.refreshToken(
+                                        function (success) {
+                                            alert(success);
+                                            if (!success) {
+                                                alert("User logged out of system!");
+                                                $location.path('/login');
+                                            } else {
+                                                $rootScope.globals = $cookieStore.get('globals') || {};
+                                            }
+                                        }
+                                );
+                            }
                         }
+                    }
+                    if ($location.path() !== '/login' && !$rootScope.globals.currentUser) {
+                        $location.path('/login');
                     }
                 });
             }]);
