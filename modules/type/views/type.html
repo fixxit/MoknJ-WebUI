@@ -87,6 +87,7 @@
                         <div class="form-group">
                             <button ng-if="selectIndex == null"  type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Add</button>
                             <button ng-if="selectIndex != null"  type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Update</button>
+                            <button ng-if="selectIndex != null"  type="button" ng-disabled="dataLoading" ng-click="cancel()" class="btn btn-danger">Cancel</button>
                         </div>
                     </div>
                 </div> 
@@ -127,7 +128,7 @@
 
                 <div class="form-actions">
                     <button type="submit" ng-if="!id" class="btn btn-primary">Submit</button>
-                    <button type="submit" ng-if="id" class="btn btn-primary">Update</button>
+                    <button type="submit" ng-if="id" ng-show="selectIndex == null" class="btn btn-primary">Update</button>
                     <button type="button" ng-if="!id" ng-click="reset(true)" ng-disabled="dataLoading" class="btn btn-danger">reset</button>     
                     <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
                 </div>

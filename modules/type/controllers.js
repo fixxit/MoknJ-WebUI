@@ -151,6 +151,19 @@ angular.module('Type')
                                 return "glyphicon glyphicon-remove";
                             }
                         };
+                        
+                        
+                        // reset input boxes
+                        $scope.cancel = function () {
+                            // Reset all data
+                            $scope.selectIndex = null;
+                            $scope.dispname = '';
+                            $scope.unique = false;
+                            $scope.display = false;
+                            $scope.mandatory = false;
+                            $scope.selectedItem = {'name': 'nosec', 'type': 'no selection'};
+                        };
+                        
 
                         // reset input boxes
                         $scope.reset = function (messages) {
