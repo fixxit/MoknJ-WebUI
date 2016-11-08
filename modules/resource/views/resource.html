@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand">Resources</a>
+            <a class="navbar-brand">Employees</a>
         </div>
 
         <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
@@ -23,11 +23,11 @@
 <div ng-show="success" class="alert alert-success">{{success}}</div>
 <div class="container-fluid bg-3">
     <div class="panel panel-primary">
-        <div data-toggle="tooltip" title="Expand/Collapse New/Update Resource" style="cursor: pointer;" class="panel-heading" ng-click="newCollapse = !newCollapse">
+        <div data-toggle="tooltip" title="Expand/Collapse New/Update Employee" style="cursor: pointer;" class="panel-heading" ng-click="newCollapse = !newCollapse">
             <span ng-show="!newCollapse" class="glyphicon glyphicon-collapse-down"></span>
             <span ng-show="newCollapse"  class="glyphicon glyphicon-collapse-up"></span>
-            <span ng-if="!resourceId">New Resource</span>
-            <span ng-if="resourceId">Update Resource</span>
+            <span ng-if="!resourceId">New Employee</span>
+            <span ng-if="resourceId">Update Employee</span>
         </div>
         <form name="form" ng-submit="save()" role="form">
             <div collapse="!newCollapse" class="container-fluid bg-3">
@@ -123,7 +123,7 @@
 <div class="container-fluid bg-3">
     <div class="table-responsive panel panel-primary">
         <div class="panel-heading">
-            <span><span class="glyphicon glyphicon-list"></span>&nbsp;Resources ({{pagination.searchSize}})</span>
+            <span><span class="glyphicon glyphicon-list"></span>&nbsp;Employees ({{pagination.searchSize}})</span>
         </div>
         <table class="table table-hover">
             <thead>
@@ -140,15 +140,15 @@
             <tbody>       
                 <tr ng-repeat="resource in filterData = (resources| filterMultiple:[search] : pagination)" 
                     ng-class="isEven($index)">
-                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Edit Resource Resource" ng-click="editResource(resource.id)" class="glyphicon glyphicon-edit"></span></td>
-                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Remove Resource Resource" ng-click="removeResource(resource)" class="glyphicon glyphicon-remove"></span></td>
+                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Edit Employee Employee" ng-click="editEmployee(resource.id)" class="glyphicon glyphicon-edit"></span></td>
+                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Remove Employee Employee" ng-click="removeEmployee(resource)" class="glyphicon glyphicon-remove"></span></td>
                     <td>{{resource.firstName}}</td>
                     <td>{{resource.surname}}</td>
                     <td>{{resource.email}}</td>
                     <td>{{resource.contactNumber}}</td>
                     <td>{{resource.placedAtClient}}</td>
                 </tr>
-                <tr class="danger text-center" ng-if="!filterData.length"><td colspan="7">No Resource Entries Found</td></tr> 
+                <tr class="danger text-center" ng-if="!filterData.length"><td colspan="7">No Employee Entries Found</td></tr> 
             </tbody>
         </table>
 

@@ -58,9 +58,9 @@ angular.module('Resource')
                                             if (response.success === true) {
                                                 //success
                                                 if (!$scope.resourceId) {
-                                                    $scope.success = 'Successfully saved a new resource [' + response.resource.id + '], save new resource ?';
+                                                    $scope.success = 'Successfully saved a new employee [' + response.resource.id + '], save new resource ?';
                                                 } else {
-                                                    $scope.success = 'Successfully update resource [' + response.resource.id + ']';
+                                                    $scope.success = 'Successfully update employee [' + response.resource.id + ']';
                                                 }
                                                 $scope.loadPage();
 

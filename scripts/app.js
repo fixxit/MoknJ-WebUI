@@ -111,7 +111,6 @@ angular.module('FixxitAssetTrackerUI', [
                             if (dif < 0) {
                                 $rootScope.refreshToken(
                                         function (success) {
-                                            alert(success);
                                             if (!success) {
                                                 alert("User logged out of system!");
                                                 $location.path('/login');
