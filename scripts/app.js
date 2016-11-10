@@ -58,7 +58,7 @@ angular.module('FixxitAssetTrackerUI', [
         .run(['$rootScope', '$location', '$cookieStore', '$http', 'AuthenticationService',
             function ($rootScope, $location, $cookieStore, $http, AuthenticationService) {
                 // set default server address.
-                $rootScope.globalAppUrl = "http://192.168.1.1:8080/";
+                $rootScope.globalAppUrl = "http://192.168.1.1:8085/";
 
                 // keep user logged in after page refresh
                 $rootScope.globals = $cookieStore.get('globals') || {};
