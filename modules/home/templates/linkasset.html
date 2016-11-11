@@ -4,6 +4,7 @@
 <form name="form" ng-submit="ok()" role="form">
     <div class="container-fluid">
         <div class="modal-body">
+            <div ng-show="error" class="alert alert-danger">{{error}}</div>
             <div class="form-group">  
                 <label for="datatype">Date</label>
                 <i class="fa fa-key"></i>
@@ -31,16 +32,26 @@
                         <div class="input-group-addon">
                             <input type="text" class="form-control" placeholder="Search" ng-model="search"/>   
                         </div>
-
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <tbody>
                                     <tr class="danger text-center" ng-show="!filterData.length"><td colspan="1">No Employee Found</td></tr>        
-                                    <tr ng-click="dropboxitemselected(resource)" ng-repeat="resource in filterData = (resources| filter:search | limitTo:5)" style="cursor: pointer;" ng-class="isEven($index)">
+                                    <tr ng-click="dropboxitemselected(resource)" 
+                                        ng-repeat="resource in filterData = (resources| filterMultiple:[search] : pagination)" 
+                                        style="cursor: pointer;" ng-class="isEven($index)">
                                         <td>{{resource.fullname}}</td>
                                     </tr>
                                 </tbody>
                             </table>  
+                            <div class="text-center" ng-if="pagination.totalItems > 5">
+                                <pagination ng-show="pagination.searchSize"  
+                                            total-items="pagination.totalItems" 
+                                            ng-model="pagination.currentPage"  
+                                            class="pagination-sm" 
+                                            boundary-links="false" rotate="false"
+                                            items-per-page="pagination.itemsPerPage">      
+                                </pagination>  
+                            </div> 
                         </div>
 
                     </div>

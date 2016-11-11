@@ -485,7 +485,7 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
             $scope.resources = [];
             $scope.selected = 'Select an Resource';
             $scope.resource = {};
-            $scope.date = "";
+            $scope.pagination = {};
 
             // selected item desplayed in div
             $scope.dropboxitemselected = function (resource) {
@@ -504,6 +504,12 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                                     if (response.resources) {
                                         // do not refresh the entire structure
                                         $scope.resources = response.resources;
+
+                                        $scope.pagination.viewby = 5;
+                                        $scope.pagination.totalItems = $scope.resources.length;
+                                        $scope.pagination.currentPage = 1;
+                                        $scope.pagination.itemsPerPage = 5;
+                                        $scope.pagination.maxSize = 5;
 
                                         angular.forEach($scope.resources, function (entry) {
                                             entry.fullname = entry.firstName + " " + entry.surname;
@@ -530,19 +536,23 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
 
             $scope.loadPage();
             $scope.ok = function () {
-                if (date != null) {
+                if ($scope.auditdate == null) {
                     $scope.showDateIsRequired = true;
+                    $scope.error = "Date is required";
                 } else {
                     $scope.showDateIsRequired = false;
+                    $scope.error = null;
                 }
 
                 if ('Select an Resource' === $scope.selected) {
                     $scope.showResourceIsRequired = true;
+                    $scope.error = "Employee is required";
                 } else {
                     $scope.showResourceIsRequired = false;
+                    $scope.error = null;
                 }
                 if (!$scope.showResourceIsRequired
-                        && !$scope.showResourceIsRequired) {
+                        && !$scope.showDateIsRequired) {
                     $scope.dataLoading = true;
                     $scope.link = {
                         'resourceId': $scope.resource.id,
