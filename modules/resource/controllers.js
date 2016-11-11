@@ -163,7 +163,7 @@ angular.module('Resource')
                                 }
                             });
                         };
-                        
+
                         // remove item by index from items
                         $scope.removeFromList = function (resource) {
                             var index = $scope.resources.indexOf(resource);
@@ -180,24 +180,19 @@ angular.module('Resource').controller('ModalDeleteResourceCtrl',
             $scope.message = '';
 
             $scope.ok = function () {
-                if ($scope.accept) {
-                    $scope.errorMessage = false;
-                    $scope.dataLoading = true;
-                    parentScope.deletResource(resource,
-                            function (success, message) {
-                                if (success) {
-                                    parentScope.removeFromList(resource);
-                                    $modalInstance.close();
-                                } else {
-                                    $scope.errorMessage = true;
-                                    $scope.message = message;
-                                }
+                $scope.errorMessage = false;
+                $scope.dataLoading = true;
+                parentScope.deletResource(resource,
+                        function (success, message) {
+                            if (success) {
+                                parentScope.removeFromList(resource);
+                                $modalInstance.close();
+                            } else {
+                                $scope.errorMessage = true;
+                                $scope.message = message;
                             }
-                    );
-                } else {
-                    $scope.message = 'Please accept that you want to remove the employee.';
-                    $scope.errorMessage = true;
-                }
+                        }
+                );
             };
 
             $scope.cancel = function () {
