@@ -13,7 +13,7 @@
         <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="#/home">back</a>
+                    <a href="#/home"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
                 </li>
             </ul>
         </div>
@@ -71,7 +71,7 @@
 
                 <div class="panel panel-primary">
                     <div class="panel-heading" style="cursor: pointer;" class="panel-heading" ng-click="resource.systemUser = !resource.systemUser">
-                        <label><span ng-class="isSystemUser(resource.systemUser)"></span>&nbsp;System User</label>
+                        <span ng-class="isSystemUser(resource.systemUser)"></span>&nbsp;System User
                     </div>
                     <div class="container-fluid" ng-if="resource.systemUser">
                         <div class="row">

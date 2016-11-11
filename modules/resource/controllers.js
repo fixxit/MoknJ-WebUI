@@ -1,3 +1,5 @@
+/* global resourceId */
+
 'use strict';
 
 angular.module('Resource')
@@ -58,9 +60,9 @@ angular.module('Resource')
                                             if (response.success === true) {
                                                 //success
                                                 if (!$scope.resourceId) {
-                                                    $scope.success = 'Successfully saved a new employee [' + response.resource.id + '], save new resource ?';
+                                                    $scope.success = 'Successfully saved a new employee';
                                                 } else {
-                                                    $scope.success = 'Successfully update employee [' + response.resource.id + ']';
+                                                    $scope.success = 'Successfully update employee';
                                                 }
                                                 $scope.loadPage();
 
@@ -187,7 +189,7 @@ angular.module('Resource').controller('ModalDeleteResourceCtrl',
                                     parentScope.removeFromList(resource);
                                     $modalInstance.close();
                                 } else {
-                                    $scope.errorMessage = true
+                                    $scope.errorMessage = true;
                                     $scope.message = message;
                                 }
                             }

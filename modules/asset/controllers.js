@@ -113,7 +113,7 @@ angular.module('Asset')
                                                 if (response.success === true) {
                                                     //success
                                                     if (!$scope.assetId) {
-                                                        $scope.success = 'Successfully saved a new asset [' + response.asset.id + '], save new asset ?';
+                                                        $scope.success = 'Successfully saved asset, save new asset ?';
                                                     } else {
                                                         $location.path('/home');
                                                     }
@@ -121,7 +121,10 @@ angular.module('Asset')
                                                     $scope.error = null;
                                                     $scope.dataLoading = false;
                                                     // Reset all data
-                                                    $scope.reset();
+                                                    $scope.reset(false);
+                                                    setInterval(function () {
+                                                        $scope.success = "";
+                                                    }, 5000);
                                                 } else {
                                                     // error 
                                                     $scope.success = null;
@@ -133,11 +136,15 @@ angular.module('Asset')
                             }
                         };
 
-                        $scope.reset = function () {
+                        $scope.reset = function (clear) {
                             $scope.error = null;
-                            $scope.success = null;
+                            if (clear) {
+                                $scope.success = null;
+                            }
                             angular.forEach($scope.type.details, function (detail) {
                                 detail.value = null;
                             });
                         };
+
+
                     }]);

@@ -307,7 +307,7 @@ angular.module('Home').controller('ModalDeleteAssetCtrl',
         function ($scope, $modalInstance, parentScope, HomeService,
                 asset, name, token, typeId, index) {
             $scope.name = name;
-            $scope.message = "Are you sure you want to delete asset id[" + asset.id + "] this record ?";
+            $scope.message = "Are you sure you want to delete this asset ?";
 
             $scope.ok = function () {
                 HomeService.deleteAsset(token, asset,

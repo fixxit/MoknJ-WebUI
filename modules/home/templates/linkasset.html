@@ -25,7 +25,7 @@
                         <button type="button" class="btn btn-default" ng-click="changeDiv()"><span class="caret"></span></button>
                     </span>
                 </p>
-                <span ng-show="showResourceIsRequired" class="help-block">Resource is required</span>
+                <span ng-show="showResourceIsRequired" class="help-block">Employee is required</span>
                 <div collapse="!resourceCollapse" class="container-fluid">
                     <div class="panel panel-default">
                         <div class="input-group-addon">
@@ -35,7 +35,7 @@
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <tbody>
-                                    <tr class="danger text-center" ng-show="!filterData.length"><td colspan="1">No Resources Found</td></tr>        
+                                    <tr class="danger text-center" ng-show="!filterData.length"><td colspan="1">No Employee Found</td></tr>        
                                     <tr ng-click="dropboxitemselected(resource)" ng-repeat="resource in filterData = (resources| filter:search | limitTo:5)" style="cursor: pointer;" ng-class="isEven($index)">
                                         <td>{{resource.fullname}}</td>
                                     </tr>
