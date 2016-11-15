@@ -71,7 +71,6 @@ angular.module('Asset')
                         };
 
                         $scope.required = function (required) {
-                            console.log("required : " + required);
                             if (required) {
                                 return true;
                             } else {
@@ -82,7 +81,6 @@ angular.module('Asset')
                         $scope.open = function ($event, datePickerIndex) {
                             $event.preventDefault();
                             $event.stopPropagation();
-
                             if ($scope.openDatePickers[datePickerIndex] === true) {
                                 $scope.openDatePickers.length = 0;
                             } else {

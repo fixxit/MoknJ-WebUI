@@ -7,9 +7,8 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand">{{name}} Audit</a>
+            <a class="navbar-brand">Hidden Templates</a>
         </div>
-
         <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
             <ul class="nav navbar-nav navbar-right">
                 <li>
@@ -19,12 +18,10 @@
         </div>
     </div>
 </nav>
-
 <div ng-show="error" class="alert alert-danger">{{error}}</div>
 <div ng-show="success" class="alert alert-success">{{success}}</div>
-
 <div class="container-fluid">
-    <div ng-show="links.length" class="panel panel-primary">
+    <div ng-show="types.length" class="panel panel-primary">
         <div class="panel-heading">
             <span class="glyphicon glyphicon-search"></span>
             &nbsp;Search
@@ -34,36 +31,30 @@
         </div>     
     </div>
 </div>
-
-<div class="container-fluid">
+<div class="container-fluid bg-3">
     <div class="table-responsive panel panel-primary">
         <div class="panel-heading">
-            <span class="glyphicon glyphicon-list"></span>&nbsp;Check in/out History ({{pagination.searchSize}})
+            <span><span class="glyphicon glyphicon-list"></span>&nbsp;Hidden Templates ({{pagination.searchSize}})</span>
         </div>
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>Direction</th>
-                    <th>Date</th>
-                    <th>Employee</th>
-                    <th>Asset</th>
-                    <th>User</th>
-                    <th>Created Date</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>Template</th>
+                    <th>Fields</th>
                 </tr>
             </thead>
             <tbody>       
-                <tr ng-repeat="link in filterData = (links| filterMultiple:[search] : pagination)" 
+                <tr ng-repeat="type in filterData =
+                                    (types| filterMultiple:[search] : pagination)" 
                     ng-class="isEven($index)">
-                    <td>
-                        {{link.checkedDir}}
-                    </td>
-                    <td>{{link.date}}</td>
-                    <td>{{link.linkedResource}}</td>
-                    <td>{{link.display}}</td>
-                    <td>{{link.createdBy}}</td>
-                    <td>{{link.createdDate}}</td>
+                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="change to visible" ng-click="unhideTemplate(type)" class="glyphicon glyphicon-eye-open"></span></td>
+                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="delete" ng-click="deleteTemplete(type)" class="glyphicon glyphicon-trash"></span></td>
+                    <td>{{type.name}}</td>
+                    <td><span ng-repeat="detail in type.details">{{detail.name}},&nbsp;</span></td>
                 </tr>
-                <tr class="danger text-center" ng-if="!filterData.length"><td colspan="6">No Audit Entries Found</td></tr> 
+                <tr class="danger text-center" ng-if="!filterData.length"><td colspan="4">No Templates Found</td></tr> 
             </tbody>
         </table>
 
@@ -76,6 +67,5 @@
                         items-per-page="pagination.itemsPerPage">      
             </pagination> 
         </div> 
-
     </div>
 </div>

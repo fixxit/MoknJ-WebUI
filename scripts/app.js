@@ -9,6 +9,7 @@ angular.module('Type', ['ui.bootstrap']);
 angular.module('Asset', ['ui.bootstrap']);
 angular.module('Resource', ['ui.bootstrap']);
 angular.module('Link', ['ui.bootstrap']);
+angular.module('Template', ['ui.bootstrap']);
 
 // new modles copme here
 angular.module('FixxitAssetTrackerUI', [
@@ -18,6 +19,7 @@ angular.module('FixxitAssetTrackerUI', [
     'Asset',
     'Resource',
     'Link',
+    'Template',
     'ngRoute',
     'ngCookies'
 ]).config(['$routeProvider', function ($routeProvider) {
@@ -53,7 +55,12 @@ angular.module('FixxitAssetTrackerUI', [
                     controller: 'LinkController',
                     templateUrl: 'modules/link/views/link.html'
                 })
-
+                
+                .when('/template', {
+                    controller: 'TemplateController',
+                    templateUrl: 'modules/template/views/template.html'
+                })
+                
                 .otherwise({redirectTo: '/login'});
     }])
 

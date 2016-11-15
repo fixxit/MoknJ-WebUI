@@ -14,23 +14,17 @@
             <ul class="nav navbar-nav">
                 <li class="dropdown" dropdown>
                     <a href="#" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">
-                        Asset Menu <span class="caret"></span>
+                        <span class="glyphicon glyphicon-new-window"></span>&nbsp;New<span class="caret"></span>
                     </a>
-                    <ul class="dropdown-menu" role="menu" >
-                        <li>
-                            <a href="#/type">New Template
-                                <span class="sr-only">(current)</span>
-                            </a>
-                        </li> 
-                        <li role="separator" class="divider"></li>
+                    <ul class="dropdown-menu" role="menu" > 
                         <li ng-repeat="type in types" >
-                            <a href="#/asset?id={{type.id}}">New&nbsp;{{type.name}}</a>
+                            <a href="#/asset?id={{type.id}}">{{type.name}}</a>
                         </li>
                         <li ng-show="!types.length">
                             <a>Click on New Template</a>
                         </li>
                     </ul>
-                </li>               
+                </li> 
                 <li>
                     <a href="#/link">
                         <span class="glyphicon glyphicon-eye-open"></span>
@@ -45,9 +39,27 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown" dropdown>
+                    <a href="#" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">
+                        <span class="glyphicon glyphicon-wrench"></span>&nbsp;<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" >
+                        <li>
+                            <a href="#/type">New Template
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li> 
+                        <li role="separator" class="divider"></li>
+                        <li>
+                            <a href="#/template">Hidden Templates
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li> 
+                    </ul>
+                </li>  
                 <li>
                     <a href="#/login">
-                        <span class="glyphicon-log-out"></span>
+                        <span class="glyphicon glyphicon-log-out"></span>
                         &nbsp;Logout
                     </a>
                 </li>
@@ -112,18 +124,18 @@
                                 <tr ng-repeat="asset in type.filterData = (type.assets| filterAssetMultiple:[search, type.search] : type)" 
                                     ng-class="isEven($index)">
                                     <td style="width: 25px; cursor: pointer;">
-                                        <span ng-if="!asset.linkedResource" data-toggle="tooltip" title="Remove {{type.name}} Asset" ng-click="removeAsset(asset, type.name, type.id, $index)" class="glyphicon glyphicon-remove"></span>
-                                        <span ng-if="asset.linkedResource" data-toggle="tooltip" title="{{type.name}} is checked out unable to delete!" class="glyphicon glyphicon-lock"></span>
+                                        <span ng-if="asset.linkedResource === 'unassigned'" data-toggle="tooltip" title="Remove {{type.name}} Asset" ng-click="removeAsset(asset, type.name, type.id, $index)" class="glyphicon glyphicon-remove"></span>
+                                        <span ng-if="asset.linkedResource !== 'unassigned'" data-toggle="tooltip" title="{{type.name}} is checked out unable to delete!" class="glyphicon glyphicon-lock"></span>
                                     </td>
                                     <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Edit {{type.name}} Asset" ng-click="edit(asset.typeId, asset.id)" class="glyphicon glyphicon-edit"></span></td>
                                     <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="View {{type.name}} Audit" ng-click="viewAudit(asset.id, type.name)" class="glyphicon glyphicon-eye-open"></span></td>
-                                    <td ng-if="!asset.linkedResource" style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check Out {{type.name}} Asset" ng-click="assignAsset(asset, type.name)" class="glyphicon glyphicon-link"></span></td>
-                                    <td ng-if="asset.linkedResource" style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check In {{type.name}} Asset" ng-click="removeLink(asset, type.name)" class="glyphicon glyphicon-flag"></span></td>
+                                    <td ng-if="asset.linkedResource === 'unassigned'" style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check Out {{type.name}} Asset" ng-click="assignAsset(asset, type.name)" class="glyphicon glyphicon-link"></span></td>
+                                    <td ng-if="asset.linkedResource !== 'unassigned'" style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check In {{type.name}} Asset" ng-click="removeLink(asset, type.name)" class="glyphicon glyphicon-flag"></span></td>
 
                                     <td ng-repeat="value in asset.details">
                                         <span ng-if="value.type === 'ASSET_INPUT_MON_TYPE'" ><span class="glyphicon glyphicon-euro"></span>{{value.value| currency: ""}}</span>
                                         <span ng-if="value.type === 'ASSET_INPUT_STR_TYPE'" >{{value.value}}</span>
-                                        <span ng-if="value.type === 'ASSET_INPUT_INT_TYPE'" >{{value.value| number}}</span>
+                                        <span ng-if="value.type === 'ASSET_INPUT_INT_TYPE'" >{{value.value}}</span>
                                         <span ng-if="value.type === 'ASSET_INPUT_DAT_TYPE'" >{{value.value| date:'yyyy-MM-dd'}}</span>  
                                     </td>                                   
                                     <td>{{asset.linkedResource}}</td>

@@ -105,6 +105,8 @@ angular.module('Home')
                                             }
                                         }
                                 );
+                            } else {
+                                asset.linkedResource = 'unassigned';
                             }
                         };
 
@@ -477,6 +479,32 @@ angular.module('Home').filter('filterAssetMultiple', ['$filter', function ($filt
         };
     }]);
 
+
+angular.module('Home').filter('filterResources', ['$filter', function ($filter) {
+        return function (items, values, pagination) {
+            if (values && Array === values.constructor) {
+                var results = items;
+                angular.forEach(values, function (value) {
+                    if (value) {
+                        if (items && Array === items.constructor) {
+                            results = $filter('filter')(results, value);
+                        }
+                    }
+                });
+
+                if (items && Array === items.constructor) {
+                    if (values && Array === values.constructor) {
+                        pagination.searchSize = results.length;
+                        items = results.slice(
+                                ((pagination.currentPage - 1) * pagination.itemsPerPage),
+                                ((pagination.currentPage) * pagination.itemsPerPage)
+                                );
+                    }
+                }
+            }
+            return items;
+        };
+    }]);
 
 angular.module('Home').controller('ModalAssignAssetCtrl',
         function ($scope, $modalInstance, parentScope, HomeService, asset, name, token) {

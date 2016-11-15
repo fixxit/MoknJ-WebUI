@@ -37,7 +37,7 @@
                                 <tbody>
                                     <tr class="danger text-center" ng-show="!filterData.length"><td colspan="1">No Employee Found</td></tr>        
                                     <tr ng-click="dropboxitemselected(resource)" 
-                                        ng-repeat="resource in filterData = (resources| filterMultiple:[search] : pagination)" 
+                                        ng-repeat="resource in filterData = (resources| filterResources:[search] : pagination)" 
                                         style="cursor: pointer;" ng-class="isEven($index)">
                                         <td>{{resource.fullname}}</td>
                                     </tr>
@@ -45,7 +45,7 @@
                             </table>  
                             <div class="text-center" ng-if="pagination.totalItems > 5">
                                 <pagination ng-show="pagination.searchSize"  
-                                            total-items="pagination.totalItems" 
+                                            total-items="pagination.searchSize" 
                                             ng-model="pagination.currentPage"  
                                             class="pagination-sm" 
                                             boundary-links="false" rotate="false"
