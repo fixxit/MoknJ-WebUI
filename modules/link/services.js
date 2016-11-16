@@ -7,89 +7,53 @@ angular.module('Link')
                         var service = {};
                         var url = $rootScope.globalAppUrl + 'asset/';
 
+                        service.process = function (url, callback) {
+                            $http.post(url)
+                                    .success(
+                                            function (response) {
+                                                callback(response);
+                                            })
+                                    .error(
+                                            function (response) {
+                                                callback(response);
+                                            }
+                                    );
+                        };
+
                         service.allLinkForAssetId = function (token, id, callback) {
-                            $http({
-                                method: 'POST',
-                                url: url + 'link/all/'+id+'/asset?access_token=' + token,
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            }).success(function (response) {
-                                callback(response);
-                            }).error(function (response) {
-                                callback(response);
-                            });
+                            service.process(
+                                    url + 'link/all/' + id + '/asset?access_token=' + token,
+                                    callback);
                         };
-                        
+
                         service.allLinkForResourceId = function (token, id, callback) {
-                            $http({
-                                method: 'POST',
-                                url: url + 'link/all/'+id+'/resource?access_token=' + token,
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            }).success(function (response) {
-                                callback(response);
-                            }).error(function (response) {
-                                callback(response);
-                            });
-                        }; 
-                        
+                            service.process(
+                                    url + 'link/all/' + id + '/resource?access_token=' + token,
+                                    callback);
+                        };
+
                         service.allLink = function (token, callback) {
-                            $http({
-                                method: 'POST',
-                                url: url + 'link/all/?access_token=' + token,
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            }).success(function (response) {
-                                callback(response);
-                            }).error(function (response) {
-                                callback(response);
-                            });
+                            service.process(
+                                    url + 'link/all/?access_token=' + token,
+                                    callback);
                         };
-                        
+
                         service.getResource = function (token, id, callback) {
-                            $http({
-                                method: 'POST',
-                                url: url + 'resource/get/' + id + '?access_token=' + token,
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            }).success(function (response) {
-                                callback(response);
-                            }).error(function (response) {
-                                callback(response);
-                            });
+                            service.process(
+                                    url + 'resource/get/' + id + '?access_token=' + token,
+                                    callback);
                         };
-                        
+
                         service.getAsset = function (token, id, callback) {
-                            $http({
-                                method: 'POST',
-                                url: url + 'get/' + id + '?access_token=' + token,
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            }).success(function (response) {
-                                callback(response);
-                            }).error(function (response) {
-                                callback(response);
-                            });
+                            service.process(
+                                    url + 'get/' + id + '?access_token=' + token,
+                                    callback);
                         };
-                                         
+
                         service.getDetail = function (token, id, callback) {
-                            $http({
-                                method: 'POST',
-                                url: url + 'type/get/' + id + '?access_token=' + token,
-                                data: {},
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            }).success(function (response) {
-                                callback(response);
-                            }).error(function (response) {
-                                callback(response);
-                            });
+                            service.process(
+                                    url + 'type/get/' + id + '?access_token=' + token,
+                                    callback);
                         };
 
                         return service;

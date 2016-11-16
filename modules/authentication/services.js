@@ -4,10 +4,16 @@ angular.module('Authentication')
         .factory('AuthenticationService',
                 ['Base64', '$http', '$cookieStore', '$rootScope',
                     function (Base64, $http, $cookieStore, $rootScope) {
+                        // set default server address.
+                        $http.get('../settings.json').success(
+                                function (response) {
+                                    $rootScope.globalAppUrl = response.api_url;
+                                    $rootScope.auth_user = response.auth_user;
+                                    $rootScope.auth_psw = response.auth_psw;
+                                });
+
                         var service = {};
-
-                        var authdata = Base64.encode("fixx-trusted-client" + ':' + "fixx_secret");
-
+                        // SETS BASIC AUTH PARMS                 
                         service.Login = function (username, password, callback) {
                             $http({
                                 method: 'POST',
@@ -15,12 +21,11 @@ angular.module('Authentication')
                                 data: {},
                                 headers: {
                                     'Content-Type': 'application/json',
-                                    'Authorization': 'Basic ' + authdata
+                                    'Authorization': 'Basic ' + Base64.encode($rootScope.auth_user + ':' + $rootScope.auth_psw)
                                 }
                             }).success(function (response) {
                                 callback(response);
                             }).error(function (response) {
-                                console.log("fail response : " + JSON.stringify(response));
                                 callback(response);
                             });
                         };
@@ -38,13 +43,12 @@ angular.module('Authentication')
                                     access_token: access_token,
                                     refresh_token: refresh_token,
                                     expires_in: expiresValue.getTime(),
-                                    authdata: authdata
+                                    authdata: Base64.encode($rootScope.auth_user + ':' + $rootScope.auth_psw)
                                 }
                             };
-                            
-                            console.log("$rootScope.globals : " + JSON.stringify($rootScope.globals));
+
                             $cookieStore.put('globals', $rootScope.globals, {'expires': expiresValue});
-                            $http.defaults.headers.common['Authorization'] = 'Basic ' + authdata;
+                            $http.defaults.headers.common['Authorization'] = 'Basic ' + Base64.encode($rootScope.auth_user + ':' + $rootScope.auth_psw);
                         };
 
                         service.ClearCredentials = function () {

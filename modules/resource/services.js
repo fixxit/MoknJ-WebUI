@@ -5,69 +5,63 @@ angular.module('Resource')
                 ['$http', '$rootScope',
                     function ($http, $rootScope) {
                         var service = {};
-                        
                         var baseURL = $rootScope.globalAppUrl + 'asset/resource/';
 
+                        service.process = function (url, payload, callback) {
+                            if (payload) {
+                                $http({
+                                    method: 'POST',
+                                    url: url,
+                                    data: JSON.stringify(payload),
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    }
+                                }).success(function (response) {
+                                    callback(response);
+                                }).error(function (response) {
+                                    callback(response);
+                                });
+                            } else {
+                                $http.post(url)
+                                        .success(
+                                                function (response) {
+                                                    callback(response);
+                                                })
+                                        .error(
+                                                function (response) {
+                                                    callback(response);
+                                                }
+                                        );
+                            }
+                        };
+
                         service.get = function (token, id, callback) {
-                            $http({
-                                method: 'POST',
-                                url: baseURL + 'get/' + id + '?access_token=' + token,
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            }).success(function (response) {
-                                callback(response);
-                            }).error(function (response) {
-                                callback(response);
-                            });
+                            service.process(
+                                    baseURL + 'get/' + id + '?access_token=' + token,
+                                    null,
+                                    callback);
                         };
-                        
-                        
+
                         service.save = function (token, data, callback) {
-                            $http({
-                                method: 'POST',
-                                url: baseURL + 'add/?access_token=' + token,
-                                data: JSON.stringify(data),
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            }).success(function (response) {
-                                callback(response);
-                            }).error(function (response) {
-                                callback(response);
-                            });
+                            service.process(
+                                    baseURL + 'add/?access_token=' + token,
+                                    data,
+                                    callback);
                         };
-                        
-                        
+
                         service.all = function (token, callback) {
-                            $http({
-                                method: 'POST',
-                                url: baseURL + 'all/?access_token=' + token,
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            }).success(function (response) {
-                                callback(response);
-                            }).error(function (response) {
-                                callback(response);
-                            });
+                            service.process(
+                                    baseURL + 'all/?access_token=' + token,
+                                    null,
+                                    callback);
                         };
-                        
-                        
-                        service.remove = function (token, id,callback) {
-                            $http({
-                                method: 'POST',
-                                url: baseURL + 'delete/' + id + '?access_token=' + token,
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            }).success(function (response) {
-                                callback(response);
-                            }).error(function (response) {
-                                callback(response);
-                            });
+
+                        service.remove = function (token, id, callback) {
+                            service.process(
+                                    baseURL + 'delete/' + id + '?access_token=' + token,
+                                    null,
+                                    callback);
                         };
-                        
-                        
+
                         return service;
                     }]);

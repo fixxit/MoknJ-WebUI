@@ -66,11 +66,7 @@ angular.module('FixxitAssetTrackerUI', [
 
         .run(['$rootScope', '$location', '$cookieStore', '$http', 'AuthenticationService',
             function ($rootScope, $location, $cookieStore, $http, AuthenticationService) {
-                // set default server address.
-                $http.get('../settings.json').success(
-                        function (response) {
-                            $rootScope.globalAppUrl = response.api_url;
-                        });
+                
 
                 // keep user logged in after page refresh
                 $rootScope.globals = $cookieStore.get('globals') || {};

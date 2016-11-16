@@ -61,7 +61,7 @@ angular.module('Home')
                                                     if (load_resource) {
                                                         $scope.loadResource(type_asset);
                                                     } else {
-                                                        type_asset.linkedResource = null;
+                                                        type_asset.linkedResource = 'unassigned';
                                                         type_asset.resource = {};
                                                     }
                                                 }
@@ -99,9 +99,11 @@ angular.module('Home')
                                             if (response.error_description) {
                                                 $scope.error = response.error_description + ". Please logout!";
                                             } else {
-                                                // asset type success or error
-                                                asset.linkedResource = response.resource.firstName + " " + response.resource.surname;
-                                                asset.resource = response.resource;
+                                                if (response.resource) {
+                                                    // asset type success or error
+                                                    asset.linkedResource = response.resource.firstName + " " + response.resource.surname;
+                                                    asset.resource = response.resource;
+                                                }
                                             }
                                         }
                                 );

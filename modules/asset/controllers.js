@@ -76,7 +76,7 @@ angular.module('Asset')
                             } else {
                                 return false;
                             }
-                        }
+                        };
 
                         $scope.open = function ($event, datePickerIndex) {
                             $event.preventDefault();
@@ -120,9 +120,6 @@ angular.module('Asset')
                                                     $scope.dataLoading = false;
                                                     // Reset all data
                                                     $scope.reset(false);
-                                                    setInterval(function () {
-                                                        $scope.success = "";
-                                                    }, 5000);
                                                 } else {
                                                     // error 
                                                     $scope.success = null;
@@ -143,6 +140,47 @@ angular.module('Asset')
                                 detail.value = null;
                             });
                         };
-
-
                     }]);
+
+angular.module('Asset').directive('number', function () {
+    return {
+        link: function (scope, el, attr) {
+            el.bind("keydown keypress", function (event) {
+                if (event.keyCode === 8
+                        || event.keyCode === 13
+                        || event.keyCode === 46
+                        || event.keyCode === 99
+                        || event.keyCode === 118
+                        || event.keyCode === 190) {
+                    return;
+                } else {
+                    if ((event.keyCode < 48
+                            || event.keyCode > 57)) {
+                        event.preventDefault();
+                    }
+                }
+            });
+        }
+    };
+});
+
+angular.module('Asset').directive('numberonly', function () {
+    return {
+        link: function (scope, el, attr) {
+            el.bind("keydown keypress", function (event) {
+                if (event.keyCode === 8
+                        || event.keyCode === 13
+                        || event.keyCode === 46
+                        || event.keyCode === 99
+                        || event.keyCode === 118
+                        ) {
+                    return;
+                }
+                if ((event.keyCode < 48
+                        || event.keyCode > 57)) {
+                    event.preventDefault();
+                }
+            });
+        }
+    };
+});
