@@ -8,10 +8,9 @@ angular.module('Type')
                         // REST controller method types /fields
                         $scope.id = $location.search().id;
 
-                        $scope.dataLoading = true;
                         $scope.selectedItem = {'name': 'nosec', 'type': 'no selection'};
 
-                        $scope.loadPage = function () {
+                        $scope.loadPage = function () {                           
                             TypeService.getFieldTypes(
                                     $rootScope.globals.currentUser.access_token,
                                     $scope.process
@@ -19,7 +18,7 @@ angular.module('Type')
                         };
 
                         $scope.process = function (loadpageResponse) {
-                            console.log("response : " + JSON.stringify(loadpageResponse));
+                            $scope.loading = true;
                             if (loadpageResponse) {
                                 if (loadpageResponse.error_description) {
                                     $scope.error = loadpageResponse.error_description + ". Please logout!";
@@ -31,6 +30,7 @@ angular.module('Type')
                                                     $rootScope.globals.currentUser.access_token,
                                                     $scope.id,
                                                     function (response) {
+                                                        $scope.loading = true;
                                                         if (response.type) {
                                                             $scope.type = response.type;
                                                             $scope.typename = $scope.type.name;
@@ -51,16 +51,16 @@ angular.module('Type')
                                                                 });
                                                             });
                                                         }
+                                                        $scope.loading = false;
                                                     }
                                             );
                                         }
                                     }
-
-                                }
-                                $scope.dataLoading = false;
+                                }                               
                             } else {
                                 $scope.error = "Invalid server response";
                             }
+                            $scope.loading = false;
                         };
 
                         $scope.loadPage();

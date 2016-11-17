@@ -11,11 +11,13 @@ angular.module('Resource')
                         $scope.resourceId = $location.search().resourceId;
                         $scope.resource = {};
                         $scope.pagination = {};
+                        
                         if ($scope.resourceId) {
                             $scope.resource.id = resourceId;
                         }
 
                         $scope.loadPage = function (id) {
+                            $scope.loading = true;
                             if (id) {
                                 $scope.editResource(id);
                             }
@@ -29,12 +31,11 @@ angular.module('Resource')
                                                 if (response.resources) {
                                                     // do not refresh the entire structure
                                                     $scope.resources = response.resources;
-                                                    $scope.pagination.viewby = 5;
+                                                    $scope.pagination.viewby = 10;
                                                     $scope.pagination.totalItems = response.resources.length;
                                                     $scope.pagination.currentPage = 1;
-                                                    $scope.pagination.itemsPerPage = 5;
-                                                    $scope.pagination.maxSize = 5;
-                                                    $scope.dataLoading = false;
+                                                    $scope.pagination.itemsPerPage = 10;
+                                                    $scope.pagination.maxSize = 10;                                                   
                                                 } else {
                                                     $scope.error = "Invalid server response";
                                                 }
@@ -42,11 +43,13 @@ angular.module('Resource')
                                         } else {
                                             $scope.error = "Invalid server response";
                                         }
+                                        $scope.loading = false;
                                     }
                             );
                         };
 
                         $scope.save = function () {
+                            $scope.dataLoading = true;
                             ResourceService.save(
                                     $rootScope.globals.currentUser.access_token,
                                     $scope.resource,
@@ -65,8 +68,6 @@ angular.module('Resource')
                                                     $scope.success = 'Successfully update employee';
                                                 }
                                                 $scope.loadPage();
-
-                                                $scope.dataLoading = false;
                                                 // Reset all data
                                                 $scope.reset();
                                                 $scope.resourceId = null;
@@ -76,6 +77,7 @@ angular.module('Resource')
                                                 $scope.error = response.message;
                                             }
                                         }
+                                        $scope.dataLoading = false;
                                     }
                             );
                         };

@@ -38,6 +38,7 @@ angular.module('Home')
                                                     asset.details = fields;
                                                     $scope.loadResource(asset);
                                                     type.assets.push(asset);
+                                                    type.loading = false;
                                                 });
 
                                                 type.viewby = 5;
@@ -157,6 +158,7 @@ angular.module('Home')
                                                         } else {
                                                             $scope.getAllAssetForType(type);
                                                         }
+                                                        type.loading = true;
                                                     });
                                                     $scope.dataLoading = false;
                                                 } else {

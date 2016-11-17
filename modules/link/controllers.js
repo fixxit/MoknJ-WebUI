@@ -6,10 +6,11 @@ angular.module('Link')
                         $scope.assetId = $location.search().assetId;
                         $scope.resourceId = $location.search().resourceId;
                         $scope.pagination = {};
-                        
+
                         var name = $location.search().name;
 
                         $scope.loadPage = function () {
+                            $scope.loading = true;
                             if (name) {
                                 $scope.name = name;
                             } else {
@@ -39,14 +40,34 @@ angular.module('Link')
                                     $scope.dataLoading = false;
 
                                     angular.forEach($scope.links, function (link) {
-                                        $scope.loadResource(link);
-                                        $scope.loadAsset(link);
+                                        $scope.loadResource(link,
+                                                function (resource) {
+                                                    // asset type success or error
+                                                    if (resource) {
+                                                        link.linkedResource = resource.firstName + " " + resource.surname;
+                                                        link.resource = resource;
+                                                    }
+                                                }
+                                        );
+
+                                        if (!link.resource) {
+                                            link.linkedResource = "employee deleted";
+                                            link.resource = null;
+                                        }
+
+                                        $scope.loadAsset(link,
+                                                function (asset) {
+                                                    $scope.loadAssetDetails(asset, link);
+                                                }
+                                        );
+
                                         link.date = $scope.formatDate(new Date(link.date));
                                         if (link.checked) {
                                             link.checkedDir = "CHECKED-OUT";
                                         } else {
                                             link.checkedDir = "CHECKED-IN";
                                         }
+                                        $scope.loading = false;
                                     });
                                 }
                             } else {
@@ -77,8 +98,9 @@ angular.module('Link')
                                     );
                         };
 
-                        $scope.loadResource = function (link) {
+                        $scope.loadResource = function (link, callback) {
                             if (link.resourceId) {
+                                $scope.loading = true;
                                 LinkService.getResource(
                                         $rootScope.globals.currentUser.access_token,
                                         link.resourceId,
@@ -86,15 +108,15 @@ angular.module('Link')
                                             // token auth error
                                             if (response.error_description) {
                                                 $scope.error = response.error_description + ". Please logout!";
+                                                callback();
                                             } else {
                                                 if (response.resource) {
-                                                    // asset type success or error
-                                                    link.linkedResource = response.resource.firstName + " " + response.resource.surname;
-                                                    link.resource = response.resource;
+                                                    callback(response.resource);
                                                 }
                                             }
                                         }
                                 );
+                                $scope.loading = false;
                             }
                         };
 
@@ -118,7 +140,7 @@ angular.module('Link')
                             return str;
                         };
 
-                        $scope.loadAsset = function (link) {
+                        $scope.loadAsset = function (link, callback) {
                             if (link.assetId) {
                                 LinkService.getAsset(
                                         $rootScope.globals.currentUser.access_token,
@@ -127,10 +149,11 @@ angular.module('Link')
                                             // token auth error
                                             if (response.error_description) {
                                                 $scope.error = response.error_description + ". Please logout!";
+                                                callback();
                                             } else {
                                                 // asset type success or error
                                                 if (response.asset) {
-                                                    $scope.loadAssetDetails(response.asset, link);
+                                                    callback(response.asset);
                                                 }
                                             }
                                         }
@@ -140,6 +163,7 @@ angular.module('Link')
 
                         $scope.loadAssetDetails = function (asset, link) {
                             link.display = "";
+                            $scope.loading = true;
                             LinkService.getDetail($rootScope.globals.currentUser.access_token, asset.typeId,
                                     function (response) {
                                         if (response) {
@@ -161,6 +185,7 @@ angular.module('Link')
                                                     link.display = $scope.stripTrailing(link.display, "-") + "]";
                                                 }
                                             }
+                                            $scope.loading = false;
                                         }
                                     }
                             );

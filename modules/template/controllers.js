@@ -7,6 +7,7 @@ angular.module('Template')
                         $scope.pagination = {};
 
                         $scope.loadPage = function () {
+                            $scope.loading = true;
                             TypeService.hidden($rootScope.globals.currentUser.access_token,
                                     function (response) {
                                         if (response) {
@@ -20,8 +21,7 @@ angular.module('Template')
                                                     $scope.pagination.totalItems = response.types.length;
                                                     $scope.pagination.currentPage = 1;
                                                     $scope.pagination.itemsPerPage = 5;
-                                                    $scope.pagination.maxSize = 5;
-                                                    $scope.dataLoading = false;
+                                                    $scope.pagination.maxSize = 5;                                                 
                                                 } else {
                                                     $scope.error = "Invalid server response";
                                                 }
@@ -29,6 +29,7 @@ angular.module('Template')
                                         } else {
                                             $scope.error = "Invalid server response";
                                         }
+                                        $scope.loading = false;
                                     }
                             );
                         };
