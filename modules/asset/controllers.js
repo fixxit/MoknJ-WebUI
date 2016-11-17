@@ -70,14 +70,6 @@ angular.module('Asset')
                                             || date.getDay() === 6));
                         };
 
-                        $scope.required = function (required) {
-                            if (required) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        };
-
                         $scope.open = function ($event, datePickerIndex) {
                             $event.preventDefault();
                             $event.stopPropagation();
@@ -142,21 +134,30 @@ angular.module('Asset')
                         };
                     }]);
 
-angular.module('Asset').directive('number', function () {
+angular.module('Asset').directive('moneyOnlyInput', function () {
     return {
-        link: function (scope, el, attr) {
-            el.bind("keydown keypress", function (event) {
-                if (event.keyCode === 8
-                        || event.keyCode === 13
-                        || event.keyCode === 46
-                        || event.keyCode === 99
-                        || event.keyCode === 118
-                        || event.keyCode === 190) {
-                    return;
-                } else {
-                    if ((event.keyCode < 48
-                            || event.keyCode > 57)) {
-                        event.preventDefault();
+        restrict: 'EA',
+        template: '<input name="{{inputName}}" ng-model="inputValue" class="form-control" />',
+        scope: {
+            inputValue: '=',
+            inputName: '='
+        },
+        link: function (scope) {
+            scope.$watch('inputValue', function (newValue, oldValue) {
+                if (newValue) {
+                    var arr = String(newValue).split("");
+                    if (arr.length === 0)
+                        return;
+                    if (arr.length === 1 && (arr[0] === '-' || arr[0] === '.'))
+                        return;
+                    if (arr.length === 2 && newValue === '-.')
+                        return;
+                    if (isNaN(newValue)) {
+                        if (oldValue) {
+                            scope.inputValue = oldValue;
+                        } else {
+                            scope.inputValue = '';
+                        }
                     }
                 }
             });
@@ -164,23 +165,105 @@ angular.module('Asset').directive('number', function () {
     };
 });
 
-angular.module('Asset').directive('numberonly', function () {
+angular.module('Asset').directive('moneyOnlyInputRequired', function () {
     return {
-        link: function (scope, el, attr) {
-            el.bind("keydown keypress", function (event) {
-                if (event.keyCode === 8
-                        || event.keyCode === 13
-                        || event.keyCode === 46
-                        || event.keyCode === 99
-                        || event.keyCode === 118
-                        ) {
-                    return;
-                }
-                if ((event.keyCode < 48
-                        || event.keyCode > 57)) {
-                    event.preventDefault();
+        restrict: 'EA',
+        template: '<input name="{{inputName}}" ng-model="inputValue" class="form-control" required />',
+        scope: {
+            inputValue: '=',
+            inputName: '='
+        },
+        link: function (scope) {
+            scope.$watch('inputValue', function (newValue, oldValue) {
+                if (newValue) {
+                    var arr = String(newValue).split("");
+                    if (arr.length === 0)
+                        return;
+                    if (arr.length === 1 && (arr[0] === '-' || arr[0] === '.'))
+                        return;
+                    if (arr.length === 2 && newValue === '-.')
+                        return;
+                    if (isNaN(newValue)) {
+                        if (oldValue) {
+                            scope.inputValue = oldValue;
+                        } else {
+                            scope.inputValue = '';
+                        }
+                    }
                 }
             });
         }
     };
 });
+
+
+angular.module('Asset').directive('numberOnlyInput', function () {
+    return {
+        restrict: 'EA',
+        template: '<input name="{{inputName}}" ng-model="inputValue" class="form-control" />',
+        scope: {
+            inputValue: '=',
+            inputName: '='
+        },
+        link: function (scope) {
+            scope.$watch('inputValue', function (newValue, oldValue) {
+                if (newValue) {
+                    var arr = String(newValue).split("");
+                    if (arr.length === 0) {
+                        return;
+                    } else if (arr.length === 1 && (arr[0] === '-' || arr[0] === '.')) {
+                        return;
+                    } else if (arr.length === 2 && newValue === '-.') {
+                        return;
+                    } else {
+                        if (isNaN(newValue)) {
+                            if (oldValue) {
+                                scope.inputValue = oldValue;
+                            } else {
+                                scope.inputValue = '';
+                            }
+                        } else {
+                            scope.inputValue = parseInt(Number(newValue));
+                        }
+                    }
+                }
+            });
+        }
+    };
+});
+
+angular.module('Asset').directive('numberOnlyInputRequired', function () {
+    return {
+        restrict: 'EA',
+        template: '<input name="{{inputName}}" ng-model="inputValue" class="form-control" required/>',
+        scope: {
+            inputValue: '=',
+            inputName: '='
+        },
+        link: function (scope) {
+            scope.$watch('inputValue', function (newValue, oldValue) {
+                if (newValue) {
+                    var arr = String(newValue).split("");
+                    if (arr.length === 0) {
+                        return;
+                    } else if (arr.length === 1 && (arr[0] === '-' || arr[0] === '.')) {
+                        return;
+                    } else if (arr.length === 2 && newValue === '-.') {
+                        return;
+                    } else {
+                        if (isNaN(newValue)) {
+                            if (oldValue) {
+                                scope.inputValue = oldValue;
+                            } else {
+                                scope.inputValue = '';
+                            }
+                        } else {
+                            scope.inputValue = parseInt(Number(newValue));
+                        }
+                    }
+                }
+            });
+        }
+    };
+});
+

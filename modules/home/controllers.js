@@ -103,6 +103,9 @@ angular.module('Home')
                                                     // asset type success or error
                                                     asset.linkedResource = response.resource.firstName + " " + response.resource.surname;
                                                     asset.resource = response.resource;
+                                                } else {
+                                                    asset.resource = null;
+                                                    asset.linkedResource = 'employee deleted';
                                                 }
                                             }
                                         }
@@ -464,7 +467,10 @@ angular.module('Home').filter('filterAssetMultiple', ['$filter', function ($filt
                         type.searchSize = results.length;
                         var checkedOut = 0;
                         angular.forEach(results, function (result) {
-                            if (result.linkedResource) {
+                            var linked = result.linkedResource;
+                            if (linked
+                                    && linked !== 'unassigned'
+                                    && linked !== 'employee deleted') {
                                 checkedOut = checkedOut + 1;
                             }
                         });
