@@ -5,7 +5,7 @@ angular.module('Resource')
                 ['$http', '$rootScope',
                     function ($http, $rootScope) {
                         var service = {};
-                        var baseURL = $rootScope.globalAppUrl + 'asset/resource/';
+                        var baseURL = $rootScope.globalAppUrl;
 
                         service.process = function (url, payload, callback) {
                             if (payload) {
@@ -37,28 +37,35 @@ angular.module('Resource')
 
                         service.get = function (token, id, callback) {
                             service.process(
-                                    baseURL + 'get/' + id + '?access_token=' + token,
+                                    baseURL + 'resource/get/' + id + '?access_token=' + token,
                                     null,
                                     callback);
                         };
 
                         service.save = function (token, data, callback) {
                             service.process(
-                                    baseURL + 'add/?access_token=' + token,
+                                    baseURL + 'resource/add/?access_token=' + token,
                                     data,
+                                    callback);
+                        };
+
+                        service.authorities = function (token, callback) {
+                            service.process(
+                                    baseURL + 'resource/authorities?access_token=' + token,
+                                    null,
                                     callback);
                         };
 
                         service.all = function (token, callback) {
                             service.process(
-                                    baseURL + 'all/?access_token=' + token,
+                                    baseURL + 'resource/get/all/?access_token=' + token,
                                     null,
                                     callback);
                         };
 
                         service.remove = function (token, id, callback) {
                             service.process(
-                                    baseURL + 'delete/' + id + '?access_token=' + token,
+                                    baseURL + 'resource/delete/' + id + '?access_token=' + token,
                                     null,
                                     callback);
                         };

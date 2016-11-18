@@ -5,7 +5,7 @@ angular.module('Home')
                 ['$http', '$rootScope',
                     function ($http, $rootScope) {
                         var service = {};
-                        var url = $rootScope.globalAppUrl + 'asset/';
+                        var url = $rootScope.globalAppUrl;
 
                         service.process = function (url, payload, callback) {
                             if (payload) {
@@ -52,7 +52,7 @@ angular.module('Home')
 
                         service.getAllAssetForType = function (token, id, callback) {
                             service.process(
-                                    url + 'get/all/' + id + '?access_token=' + token,
+                                    url + 'asset/get/all/' + id + '?access_token=' + token,
                                     null,
                                     callback);
                         };
@@ -80,7 +80,7 @@ angular.module('Home')
 
                         service.save = function (token, id, data, callback) {
                             service.process(
-                                    url + 'add/' + id + '?access_token=' + token,
+                                    url + 'asset/add/' + id + '?access_token=' + token,
                                     data,
                                     callback);
                         };

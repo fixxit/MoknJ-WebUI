@@ -11,7 +11,7 @@ angular.module('Resource')
                         $scope.resourceId = $location.search().resourceId;
                         $scope.resource = {};
                         $scope.pagination = {};
-                        
+
                         if ($scope.resourceId) {
                             $scope.resource.id = resourceId;
                         }
@@ -21,6 +21,8 @@ angular.module('Resource')
                             if (id) {
                                 $scope.editResource(id);
                             }
+
+                            $scope.getAuthorities();
 
                             ResourceService.all($rootScope.globals.currentUser.access_token,
                                     function (response) {
@@ -35,7 +37,7 @@ angular.module('Resource')
                                                     $scope.pagination.totalItems = response.resources.length;
                                                     $scope.pagination.currentPage = 1;
                                                     $scope.pagination.itemsPerPage = 10;
-                                                    $scope.pagination.maxSize = 10;                                                   
+                                                    $scope.pagination.maxSize = 10;
                                                 } else {
                                                     $scope.error = "Invalid server response";
                                                 }
@@ -50,6 +52,15 @@ angular.module('Resource')
 
                         $scope.save = function () {
                             $scope.dataLoading = true;
+                            $scope.resource.authorities = [];
+                            angular.forEach($scope.authorities, function (auth) {
+                                if (auth.value) {
+                                    $scope.resource.authorities.push(
+                                            auth.name
+                                            );
+                                }
+                            });
+
                             ResourceService.save(
                                     $rootScope.globals.currentUser.access_token,
                                     $scope.resource,
@@ -106,6 +117,10 @@ angular.module('Resource')
                                 $scope.success = null;
                                 $scope.error = null;
                             }
+
+                            angular.forEach($scope.authorities, function (auth) {
+                                auth.value = false;
+                            });
                         };
 
                         $scope.cancel = function () {
@@ -142,13 +157,48 @@ angular.module('Resource')
                                         } else {
                                             // asset type success or error
                                             $scope.resource = response.resource;
+                                            angular.forEach($scope.authorities, function (auth) {
+                                                var value = false;
+                                                angular.forEach($scope.resource.authorities, function (resAuth) {
+                                                    if (resAuth === auth.name) {
+                                                        value = true;
+                                                    }
+                                                });
+                                                auth.value = value;
+                                            });
                                             $scope.newCollapse = true;
                                         }
                                     }
                             );
                         };
 
-                        $scope.loadPage($scope.resourceId);
+                        $scope.getAuthorities = function () {
+                            ResourceService.authorities(
+                                    $rootScope.globals.currentUser.access_token,
+                                    function (response) {
+                                        // token auth error
+                                        if (response.error_description) {
+                                            $scope.success = null;
+                                            $scope.error = response.error_description + ". Please logout!";
+                                        } else {
+                                            if (response.authorities) {
+                                                // asset type success or error
+                                                $scope.authorities = [];
+                                                angular.forEach(response.authorities, function (auth) {
+                                                    if (auth) {
+                                                        $scope.authorities.push(
+                                                                {
+                                                                    'name': auth,
+                                                                    'value': {}
+                                                                }
+                                                        );
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+                            );
+                        };
 
                         $scope.removeResource = function (resource) {
                             $modal.open({
@@ -172,6 +222,7 @@ angular.module('Resource')
                             $scope.resources.splice(index, 1);
                         };
 
+                        $scope.loadPage($scope.resourceId);
                     }]);
 
 angular.module('Resource').controller('ModalDeleteResourceCtrl',

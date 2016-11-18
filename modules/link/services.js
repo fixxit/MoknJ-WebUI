@@ -5,7 +5,7 @@ angular.module('Link')
                 ['$http', '$rootScope',
                     function ($http, $rootScope) {
                         var service = {};
-                        var url = $rootScope.globalAppUrl + 'asset/';
+                        var url = $rootScope.globalAppUrl;
 
                         service.process = function (url, callback) {
                             $http.post(url)
@@ -46,7 +46,7 @@ angular.module('Link')
 
                         service.getAsset = function (token, id, callback) {
                             service.process(
-                                    url + 'get/' + id + '?access_token=' + token,
+                                    url + 'asset/get/' + id + '?access_token=' + token,
                                     callback);
                         };
 

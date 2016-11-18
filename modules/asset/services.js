@@ -5,7 +5,7 @@ angular.module('Asset')
                 ['$http', '$rootScope',
                     function ($http, $rootScope) {
                         var service = {};
-                        var baseURL = $rootScope.globalAppUrl + 'asset/';
+                        var baseURL = $rootScope.globalAppUrl;
 
                         service.process = function (url, payload, callback) {
                             if (payload) {
@@ -44,14 +44,14 @@ angular.module('Asset')
 
                         service.get = function (token, id, callback) {
                             service.process(
-                                    baseURL + 'get/' + id + '?access_token=' + token,
+                                    baseURL + 'asset/get/' + id + '?access_token=' + token,
                                     null,
                                     callback);
                         };
 
                         service.save = function (token, id, data, callback) {
                             service.process(
-                                    baseURL + 'add/' + id + '?access_token=' + token,
+                                    baseURL + 'asset/add/' + id + '?access_token=' + token,
                                     data,
                                     callback);
                         };

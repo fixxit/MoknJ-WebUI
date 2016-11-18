@@ -5,7 +5,7 @@ angular.module('Type')
                 ['$http', '$rootScope',
                     function ($http, $rootScope) {
                         var service = {};
-                        var url = $rootScope.globalAppUrl + 'asset/type/';
+                        var url = $rootScope.globalAppUrl;
 
                         service.porcess = function (command, callback) {
                             $http({
@@ -24,7 +24,7 @@ angular.module('Type')
                         service.save = function (item, token, callback) {
                             $http({
                                 method: 'POST',
-                                url: url + 'add?access_token=' + token,
+                                url: url + 'type/add?access_token=' + token,
                                 data: JSON.stringify(item),
                                 headers: {
                                     'Content-Type': 'application/json'
@@ -38,31 +38,31 @@ angular.module('Type')
 
                         service.getFieldTypes = function (token, callback) {
                             service.porcess(
-                                    url + 'fields?access_token=' + token,
+                                    url + 'type/fields?access_token=' + token,
                                     callback);
                         };
 
                         service.getType = function (token, id, callback) {
                             service.porcess(
-                                    url + 'get/' + id + '?access_token=' + token,
+                                    url + 'type/get/' + id + '?access_token=' + token,
                                     callback);
                         };
 
                         service.hidden = function (token, callback) {
                             service.porcess(
-                                    url + 'hidden/?access_token=' + token,
+                                    url + 'type/hidden/?access_token=' + token,
                                     callback);
 
                         };
 
                         service.unhide = function (token, id, callback) {
-                            service.porcess(url + 'unhide/' + id
+                            service.porcess(url + 'type/unhide/' + id
                                     + '?access_token=' + token,
                                     callback);
                         };
 
                         service.delete = function (token, id, callback) {
-                            service.porcess(url + 'delete/' + id
+                            service.porcess(url + 'type/delete/' + id
                                     + '?access_token=' + token
                                     + '&cascade=' + true,
                                     callback);
