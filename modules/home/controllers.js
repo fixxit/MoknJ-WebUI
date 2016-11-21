@@ -77,11 +77,9 @@ angular.module('Home')
                         $scope.removeAssetFromTemplate = function (typeId, remove) {
                             angular.forEach($scope.types, function (type) {
                                 if (type.id === typeId) {
-                                    alert("found template list");
                                     var index = 0; 
                                     angular.forEach(type.assets, function (asset) {        
                                         if (asset.id === remove.id) {
-                                            alert("found asset!");
                                             type.assets.splice(index, 1);
                                         }
                                         index = index + 1;
@@ -335,7 +333,6 @@ angular.module('Home').controller('ModalDeleteAssetCtrl',
                                     $scope.error = response.error_description + ". Please logout!";
                                 } else {
                                     if (response.success) {
-                                        alert(asset.id);
                                         parentScope.removeAssetFromTemplate(typeId, asset);
                                     } else {
                                         $scope.message = response.message;
