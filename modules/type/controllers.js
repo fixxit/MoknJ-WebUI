@@ -10,7 +10,7 @@ angular.module('Type')
 
                         $scope.selectedItem = {'name': 'nosec', 'type': 'no selection'};
 
-                        $scope.loadPage = function () {                           
+                        $scope.loadPage = function () {
                             TypeService.getFieldTypes(
                                     $rootScope.globals.currentUser.access_token,
                                     $scope.process
@@ -34,6 +34,7 @@ angular.module('Type')
                                                         if (response.type) {
                                                             $scope.type = response.type;
                                                             $scope.typename = $scope.type.name;
+                                                            $scope.index = $scope.type.index;
                                                             angular.forEach($scope.type.details, function (detail) {
                                                                 angular.forEach($scope.types, function (type) {
                                                                     if (detail.type === type.name) {
@@ -56,7 +57,7 @@ angular.module('Type')
                                             );
                                         }
                                     }
-                                }                               
+                                }
                             } else {
                                 $scope.error = "Invalid server response";
                             }
@@ -138,7 +139,7 @@ angular.module('Type')
                         // check if even for row odd and even colors
                         $scope.isEven = function (value) {
                             if (value % 2 === 0) {
-                                return "info";
+                                return "";//"info";
                             } else {
                                 return "active";
                             }
@@ -151,8 +152,8 @@ angular.module('Type')
                                 return "glyphicon glyphicon-remove";
                             }
                         };
-                        
-                        
+
+
                         // reset input boxes
                         $scope.cancel = function () {
                             // Reset all data
@@ -163,7 +164,7 @@ angular.module('Type')
                             $scope.mandatory = false;
                             $scope.selectedItem = {'name': 'nosec', 'type': 'no selection'};
                         };
-                        
+
 
                         // reset input boxes
                         $scope.reset = function (messages) {
@@ -191,6 +192,7 @@ angular.module('Type')
                                 if ($scope.type) {
                                     $scope.type.details = [];
                                     $scope.type.name = $scope.typename;
+                                    $scope.type.index = $scope.index;
                                 } else {
                                     $scope.type = {'name': $scope.typename, 'details': []};
                                 }
@@ -257,3 +259,4 @@ angular.module('Type')
                             }
                         };
                     }]);
+

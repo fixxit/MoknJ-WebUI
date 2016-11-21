@@ -13,6 +13,7 @@ angular.module('Home')
                                     function (response) {
                                         if (response) {
                                             if (response.assets) {
+                                                type.loading = true;
                                                 type.assets = [];
                                                 angular.forEach(response.assets, function (asset) {
                                                     var fields = [];
@@ -31,7 +32,7 @@ angular.module('Home')
                                                         });
                                                         // add blank value for field which dont exist...
                                                         if (noFieldFound) {
-                                                            var field = {'value': "N/A", 'type': "ASSET_INPUT_STR_TYPE"};
+                                                            var field = {'value': "n/a", 'type': "ASSET_INPUT_STR_TYPE"};
                                                             fields.push(field);
                                                         }
                                                     });
@@ -139,7 +140,9 @@ angular.module('Home')
                                     function (response) {
                                         if (response) {
                                             if (response.error_description) {
-                                                $scope.error = response.error_description + ". Please logout!";
+                                                if ("Access is denied" !== response.error_description) {
+                                                    $scope.error = response.error_description + ". Please logout!";
+                                                }
                                             } else {
                                                 if (response.types) {
                                                     // do not refresh the entire structure
@@ -148,6 +151,7 @@ angular.module('Home')
                                                     }
 
                                                     angular.forEach($scope.types, function (type) {
+                                                        type.loading = true;
                                                         // filter all or only on type 
                                                         // depending on if typeId
                                                         // is set
@@ -158,7 +162,7 @@ angular.module('Home')
                                                         } else {
                                                             $scope.getAllAssetForType(type);
                                                         }
-                                                        type.loading = true;
+                                                        type.loading = false;           
                                                     });
                                                     $scope.dataLoading = false;
                                                 } else {
@@ -177,7 +181,7 @@ angular.module('Home')
                         // check if even for row odd and even colors
                         $scope.isEven = function (value) {
                             if (value % 2 === 0) {
-                                return "info";
+                                return "";//"info";
                             } else {
                                 return "active";
                             }
@@ -367,7 +371,7 @@ angular.module('Home').controller('ModalDeleteTypeCtrl',
 
 angular.module('Home').controller('ModalRemoveLinkCtrl',
         function ($scope, $modalInstance, parentScope, HomeService, asset, name, token) {
-            $scope.name = name + " - Check Asset In";
+            $scope.name = 'Check ' + name + " In";
 
             $scope.ok = function () {
                 $scope.dataLoading = true;
@@ -378,7 +382,6 @@ angular.module('Home').controller('ModalRemoveLinkCtrl',
                     'checked': false
                 };
 
-                asset.resourceId = null;
                 HomeService.addLink(token, $scope.link,
                         function (response) {
                             if (response) {
@@ -386,13 +389,8 @@ angular.module('Home').controller('ModalRemoveLinkCtrl',
                                     $scope.error = response.error_description + ". Please logout!";
                                 } else {
                                     if (response.success) {
-                                        $scope.saveAsset(
-                                                asset.typeId,
-                                                function (response_asset) {
-                                                    parentScope.refreshAsset(response_asset, false);
-                                                    $modalInstance.close();
-                                                }
-                                        );
+                                        parentScope.refreshAsset(asset, false);
+                                        $modalInstance.close();
                                     } else {
                                         $scope.message = response.message;
                                     }
@@ -406,27 +404,6 @@ angular.module('Home').controller('ModalRemoveLinkCtrl',
 
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
-            };
-
-            $scope.saveAsset = function (typeId, callback) {
-                HomeService.save(
-                        token,
-                        typeId,
-                        asset,
-                        function (response) {
-                            // token auth error
-                            if (response.error_description) {
-                                $scope.error = response.error_description + ". Please logout!";
-                            } else {
-                                // asset type success or error
-                                if (response.success === true) {
-                                    callback(asset);
-                                } else {
-                                    $scope.error = response.message;
-                                }
-                            }
-                        }
-                );
             };
 
             $scope.openDatePickers = [];
@@ -518,7 +495,7 @@ angular.module('Home').filter('filterResources', ['$filter', function ($filter) 
 
 angular.module('Home').controller('ModalAssignAssetCtrl',
         function ($scope, $modalInstance, parentScope, HomeService, asset, name, token) {
-            $scope.name = name + " - Check Asset Out";
+            $scope.name = 'Check ' + name + " Out";
             $scope.asset = asset;
             $scope.resources = [];
             $scope.selected = 'Select an Resource';
@@ -598,7 +575,8 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                         'date': $scope.auditdate,
                         'checked': true
                     };
-
+                    // this setting of the resource is required for refreshAsset
+                    // method which is called by the addLink.
                     asset.resourceId = $scope.resource.id;
                     HomeService.addLink(token, $scope.link,
                             function (response) {
@@ -607,13 +585,8 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                                         $scope.error = response.error_description + ". Please logout!";
                                     } else {
                                         if (response.success) {
-                                            $scope.saveAsset(
-                                                    asset.typeId,
-                                                    function (response_asset) {
-                                                        parentScope.refreshAsset(response_asset, true);
-                                                        $modalInstance.close();
-                                                    }
-                                            );
+                                            parentScope.refreshAsset(asset, true);
+                                            $modalInstance.close();
                                         } else {
                                             $scope.message = response.message;
                                         }
@@ -621,31 +594,12 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                                 } else {
                                     $scope.error = "Invalid server response";
                                 }
+                                $scope.dataLoading = false;
                             }
                     );
                 }
             };
 
-            $scope.saveAsset = function (typeId, callback) {
-                HomeService.save(
-                        token,
-                        typeId,
-                        asset,
-                        function (response) {
-                            // token auth error
-                            if (response.error_description) {
-                                $scope.error = response.error_description + ". Please logout!";
-                            } else {
-                                // asset type success or error
-                                if (response.success === true) {
-                                    callback(asset);
-                                } else {
-                                    $scope.error = response.message;
-                                }
-                            }
-                        }
-                );
-            };
 
             $scope.resourceCollapse = false;
 

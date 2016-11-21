@@ -39,10 +39,16 @@
                 </div> 
 
                 <div class="form-group">
-                    <label for="typename">Asset Type Name</label>
+                    <label for="typename">Asset Template Name</label>
                     <i class="fa fa-key"></i>
                     <input type="text" name="typename" id="typename" class="form-control" ng-model="typename" required />
-                    <span ng-show="form.typename.$dirty && form.typename.$error.required" class="help-block">Asset Type is required</span>
+                    <span ng-show="form.typename.$dirty && form.typename.$error.required" class="help-block">Asset template name is required</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="index">Asset Template Order On Home Page</label>
+                    <i class="fa fa-key"></i>
+                    <number-only-input input-value="index" input-name="index"/>      
                 </div>
 
                 <div class="panel panel-default">

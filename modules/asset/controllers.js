@@ -13,7 +13,9 @@ angular.module('Asset')
                                         function (response) {
                                             if (response) {
                                                 if (response.error_description) {
-                                                    $scope.error = response.error_description + ". Please logout!";
+                                                    if ("Access is denied" !== response.error_description) {
+                                                        $scope.error = response.error_description + ". Please logout!";
+                                                    }
                                                 } else {
                                                     if (response.type) {
                                                         $scope.type = response.type;
@@ -97,7 +99,11 @@ angular.module('Asset')
                                             // token auth error
                                             if (response.error_description) {
                                                 $scope.success = null;
-                                                $scope.error = response.error_description + ". Please logout!";
+                                                if ("Access is denied" !== response.error_description) {
+                                                    $scope.error = response.error_description + ". Please logout!";
+                                                } else {
+                                                     $scope.error = response.error_description + ". Please contact your administrator.";
+                                                }
                                             } else {
                                                 // asset type success or error
                                                 if (response.success === true) {

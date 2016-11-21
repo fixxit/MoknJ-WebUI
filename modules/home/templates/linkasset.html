@@ -33,16 +33,18 @@
                             <input type="text" class="form-control" placeholder="Search" ng-model="search"/>   
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-hover">
-                                <tbody>
-                                    <tr class="danger text-center" ng-show="!filterData.length"><td colspan="1">No Employee Found</td></tr>        
-                                    <tr ng-click="dropboxitemselected(resource)" 
-                                        ng-repeat="resource in filterData = (resources| filterResources:[search] : pagination)" 
-                                        style="cursor: pointer;" ng-class="isEven($index)">
-                                        <td>{{resource.fullname}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>  
+                            <div class="panel panel-default">
+                                <table class="table table-hover">
+                                    <tbody>
+                                        <tr class="danger text-center" ng-show="!filterData.length"><td colspan="1">No Employee Found</td></tr>        
+                                        <tr ng-click="dropboxitemselected(resource)" 
+                                            ng-repeat="resource in filterData = (resources| filterResources:[search] : pagination)" 
+                                            style="cursor: pointer;" ng-class="isEven($index)">
+                                            <td>{{resource.fullname}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>  
+                            </div>
                             <div class="text-center" ng-if="pagination.totalItems > 5">
                                 <pagination ng-show="pagination.searchSize"  
                                             total-items="pagination.searchSize" 
@@ -53,7 +55,6 @@
                                 </pagination>  
                             </div> 
                         </div>
-
                     </div>
                 </div>
             </div>

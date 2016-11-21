@@ -28,7 +28,9 @@ angular.module('Resource')
                                     function (response) {
                                         if (response) {
                                             if (response.error_description) {
-                                                $scope.error = response.error_description + ". Please logout!";
+                                                if ("Access is denied" !== response.error_description) {
+                                                    $scope.error = response.error_description + ". Please logout!";
+                                                }
                                             } else {
                                                 if (response.resources) {
                                                     // do not refresh the entire structure
@@ -68,7 +70,11 @@ angular.module('Resource')
                                         // token auth error
                                         if (response.error_description) {
                                             $scope.success = null;
-                                            $scope.error = response.error_description + ". Please logout!";
+                                            if ("Access is denied" !== response.error_description) {
+                                                $scope.error = response.error_description + ". Please logout!";
+                                            } else {
+                                                $scope.error = response.error_description + ". Please contact your administrator.";
+                                            }
                                         } else {
                                             // asset type success or error
                                             if (response.success === true) {
@@ -96,13 +102,12 @@ angular.module('Resource')
                         // check if even for row odd and even colors
                         $scope.isEven = function (value) {
                             if (value % 2 === 0) {
-                                return "info";
+                                return "";//"info";
                             } else {
                                 return "active";
                             }
                         };
-
-
+                        
                         $scope.isSystemUser = function (value) {
                             if (value) {
                                 return "glyphicon glyphicon-ok";
@@ -153,7 +158,7 @@ angular.module('Resource')
                                         // token auth error
                                         if (response.error_description) {
                                             $scope.success = null;
-                                            $scope.error = response.error_description + ". Please logout!";
+                                            $scope.error = response.error_description;
                                         } else {
                                             // asset type success or error
                                             $scope.resource = response.resource;
@@ -179,7 +184,9 @@ angular.module('Resource')
                                         // token auth error
                                         if (response.error_description) {
                                             $scope.success = null;
-                                            $scope.error = response.error_description + ". Please logout!";
+                                            if ("Access is denied" !== response.error_description) {
+                                                $scope.error = response.error_description;
+                                            }
                                         } else {
                                             if (response.authorities) {
                                                 // asset type success or error

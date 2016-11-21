@@ -29,7 +29,9 @@ angular.module('Link')
                         $scope.process = function (response) {
                             if (response) {
                                 if (response.error_description) {
-                                    $scope.error = response.error_description + ". Please logout!";
+                                    if ("Access is denied" !== response.error_description) {
+                                        $scope.error = response.error_description + ". Please logout!";
+                                    }
                                 } else {
                                     $scope.links = response.links;
                                     $scope.pagination.viewby = 10;
@@ -41,23 +43,42 @@ angular.module('Link')
 
                                     angular.forEach($scope.links, function (link) {
                                         $scope.loadResource(link,
-                                                function (resource) {
+                                                function (response) {
                                                     // asset type success or error
-                                                    if (resource) {
-                                                        link.linkedResource = resource.firstName + " " + resource.surname;
-                                                        link.resource = resource;
+                                                    if (response.resource) {
+                                                        link.linkedResource = response.resource.firstName + " " + response.resource.surname;
+                                                        link.resource = response.resource;
+                                                    } else {
+                                                        link.linkedResource = "deleted employee";
+                                                        link.resource = null;
+                                                    }
+
+                                                    if (response.error_description) {
+                                                        if ("Access is denied"
+                                                                !== response.error_description) {
+                                                            $scope.error = response.error_description + ". Please logout!";
+                                                        } else {
+                                                            link.linkedResource = "no access";
+                                                            link.resource = null;
+                                                        }
                                                     }
                                                 }
                                         );
 
-                                        if (!link.resource) {
-                                            link.linkedResource = "employee deleted";
-                                            link.resource = null;
-                                        }
 
                                         $scope.loadAsset(link,
-                                                function (asset) {
-                                                    $scope.loadAssetDetails(asset, link);
+                                                function (response) {
+                                                    if (response.asset) {
+                                                        $scope.loadAssetDetails(response.asset, link);
+                                                    }
+
+                                                    if (response.error_description) {
+                                                        if ("Access is denied" !== response.error_description) {
+                                                            $scope.error = response.error_description + ". Please logout!";
+                                                        } else {
+                                                            link.display = "no access";
+                                                        }
+                                                    }
                                                 }
                                         );
 
@@ -106,14 +127,7 @@ angular.module('Link')
                                         link.resourceId,
                                         function (response) {
                                             // token auth error
-                                            if (response.error_description) {
-                                                $scope.error = response.error_description + ". Please logout!";
-                                                callback();
-                                            } else {
-                                                if (response.resource) {
-                                                    callback(response.resource);
-                                                }
-                                            }
+                                            callback(response);
                                         }
                                 );
                                 $scope.loading = false;
@@ -146,16 +160,8 @@ angular.module('Link')
                                         $rootScope.globals.currentUser.access_token,
                                         link.assetId,
                                         function (response) {
-                                            // token auth error
-                                            if (response.error_description) {
-                                                $scope.error = response.error_description + ". Please logout!";
-                                                callback();
-                                            } else {
-                                                // asset type success or error
-                                                if (response.asset) {
-                                                    callback(response.asset);
-                                                }
-                                            }
+                                            // token auth error                                     
+                                            callback(response);
                                         }
                                 );
                             }
@@ -163,38 +169,59 @@ angular.module('Link')
 
                         $scope.loadAssetDetails = function (asset, link) {
                             link.display = "";
-                            $scope.loading = true;
-                            LinkService.getDetail($rootScope.globals.currentUser.access_token, asset.typeId,
-                                    function (response) {
-                                        if (response) {
-                                            if (response.error_description) {
-                                                $scope.error = response.error_description + ". Please logout!";
-                                            } else {
-                                                if (response.type) {
-                                                    $scope.type = response.type;
-                                                    link.display = $scope.type.name + " [";
-                                                    angular.forEach(asset.details, function (field) {
-                                                        angular.forEach($scope.type.details, function (detail) {
-                                                            if (detail.id === field.id) {
-                                                                if (detail.display) {
-                                                                    link.display = link.display + field.value + "-";
+                            if (asset && asset.typeId) {
+                                $scope.loading = true;
+                                LinkService.getDetail($rootScope.globals.currentUser.access_token, asset.typeId,
+                                        function (response) {
+                                            if (response) {
+                                                if (response.error_description) {
+                                                    if ("Access is denied" !== response.error_description) {
+                                                        $scope.error = response.error_description + ". Please logout!";
+                                                    }
+                                                } else {
+                                                    if (response.type) {
+                                                        $scope.type = response.type;
+                                                        var value = "";
+                                                        angular.forEach(asset.details, function (field) {
+                                                            angular.forEach($scope.type.details, function (detail) {
+                                                                if (detail.id === field.id) {
+                                                                    if (field.value) {
+                                                                        if (detail.display) {
+                                                                            if (field.type === 'ASSET_INPUT_DAT_TYPE') {
+                                                                                field.value = $scope.formatDate(new Date(field.value));
+                                                                            }
+                                                                            value = value + field.value + ",";
+                                                                        }
+                                                                    }
                                                                 }
-                                                            }
+                                                            });
                                                         });
-                                                    });
-                                                    link.display = $scope.stripTrailing(link.display, "-") + "]";
+                                                        if (value) {
+                                                            value = " (" + $scope.stripTrailing(value, ",") + ")";
+                                                        }
+                                                        link.display = $scope.type.name + value;
+                                                    }
                                                 }
                                             }
                                             $scope.loading = false;
                                         }
-                                    }
-                            );
+                                );
+                            }
+                        };
+
+                        $scope.formatDate = function (date) {
+                            var year = date.getFullYear();
+                            var month = (1 + date.getMonth()).toString();
+                            month = month.length > 1 ? month : '0' + month;
+                            var day = date.getDate().toString();
+                            day = day.length > 1 ? day : '0' + day;
+                            return year + '-' + month + '-' + day;
                         };
 
                         // check if even for row odd and even colors
                         $scope.isEven = function (value) {
                             if (value % 2 === 0) {
-                                return "info";
+                                return "";//"info";
                             } else {
                                 return "active";
                             }

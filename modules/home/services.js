@@ -59,7 +59,7 @@ angular.module('Home')
 
                         service.deleteAsset = function (token, payload, callback) {
                             service.process(
-                                    url + 'delete?access_token=' + token,
+                                    url + 'asset/delete/?access_token=' + token,
                                     payload,
                                     callback);
                         };
@@ -73,7 +73,7 @@ angular.module('Home')
 
                         service.all = function (token, callback) {
                             service.process(
-                                    url + 'resource/all/?access_token=' + token,
+                                    url + 'resource/get/all?access_token=' + token,
                                     null,
                                     callback);
                         };

@@ -108,48 +108,50 @@
                     <span style="cursor: pointer; float:right;" ng-click="editType(type.id)" data-toggle="tooltip" title="Edit {{type.name}} Layout"><span class="glyphicon glyphicon-edit" ></span>&nbsp;Edit</span>
                 </div>
                 <div collapse="type.newCollapse">
-                    <div class="input-group-addon" ng-if="type.assets.length" >      
+                    <div class="input-group-addon" ng-if="type.assets.length > 1" >      
                         <input type="text" class="form-control" placeholder="Search here" ng-model="type.search">
                     </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>&nbsp;</th>
-                                    <th>&nbsp;</th>
-                                    <th>&nbsp;</th>
-                                    <th>&nbsp;</th>
-                                    <th ng-repeat="detail in type.details">{{detail.name}}</th>
-                                    <th>Assignee</th>
-                                    <th>Last Modified</th>
-                                </tr>
-                            </thead>
-                            <tbody>       
-                                <tr ng-repeat="asset in type.filterData = (type.assets| filterAssetMultiple:[search, type.search] : type)" 
-                                    ng-class="isEven($index)">
-                                    <td style="width: 25px; cursor: pointer;">
-                                        <span ng-if="asset.linkedResource === 'unassigned'" data-toggle="tooltip" title="Remove {{type.name}} Asset" ng-click="removeAsset(asset, type.name, type.id, $index)" class="glyphicon glyphicon-remove"></span>
-                                        <span ng-if="asset.linkedResource !== 'unassigned'" data-toggle="tooltip" title="{{type.name}} is checked out unable to delete!" class="glyphicon glyphicon-lock"></span>
-                                    </td>
-                                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Edit {{type.name}} Asset" ng-click="edit(asset.typeId, asset.id)" class="glyphicon glyphicon-edit"></span></td>
-                                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="View {{type.name}} Audit" ng-click="viewAudit(asset.id, type.name)" class="glyphicon glyphicon-eye-open"></span></td>
-                                    <td ng-if="asset.linkedResource === 'unassigned'" style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check Out {{type.name}} Asset" ng-click="assignAsset(asset, type.name)" class="glyphicon glyphicon-link"></span></td>
-                                    <td ng-if="asset.linkedResource !== 'unassigned'" style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check In {{type.name}} Asset" ng-click="removeLink(asset, type.name)" class="glyphicon glyphicon-flag"></span></td>
+                    <div class="panel panel-default">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                        <th ng-repeat="detail in type.details">{{detail.name}}</th>
+                                        <th>Assignee</th>
+                                        <th>Last Modified</th>
+                                    </tr>
+                                </thead>
+                                <tbody>       
+                                    <tr ng-repeat="asset in type.filterData = (type.assets| filterAssetMultiple:[search, type.search] : type)" 
+                                        ng-class="isEven($index)">
+                                        <td style="width: 25px; cursor: pointer;">
+                                            <span ng-if="asset.linkedResource === 'unassigned'" data-toggle="tooltip" title="Remove {{type.name}}" ng-click="removeAsset(asset, type.name, type.id, $index)" class="glyphicon glyphicon-remove"></span>
+                                            <span ng-if="asset.linkedResource !== 'unassigned'" data-toggle="tooltip" title="{{type.name}} is checked out unable to delete!" class="glyphicon glyphicon-lock"></span>
+                                        </td>
+                                        <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Edit {{type.name}}" ng-click="edit(asset.typeId, asset.id)" class="glyphicon glyphicon-edit"></span></td>
+                                        <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="View {{type.name}} Audit" ng-click="viewAudit(asset.id, type.name)" class="glyphicon glyphicon-eye-open"></span></td>
+                                        <td ng-if="asset.linkedResource === 'unassigned'" style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check Out {{type.name}}" ng-click="assignAsset(asset, type.name)" class="glyphicon glyphicon-link"></span></td>
+                                        <td ng-if="asset.linkedResource !== 'unassigned'" style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check In {{type.name}}" ng-click="removeLink(asset, type.name)" class="glyphicon glyphicon-flag"></span></td>
 
-                                    <td ng-repeat="value in asset.details">
-                                        <span ng-if="value.type === 'ASSET_INPUT_MON_TYPE'" ><span class="glyphicon glyphicon-euro"></span>{{value.value| currency: ""}}</span>
-                                        <span ng-if="value.type === 'ASSET_INPUT_STR_TYPE'" >{{value.value}}</span>
-                                        <span ng-if="value.type === 'ASSET_INPUT_INT_TYPE'" >{{value.value}}</span>
-                                        <span ng-if="value.type === 'ASSET_INPUT_DAT_TYPE'" >{{value.value| date:'yyyy-MM-dd'}}</span>  
-                                    </td>                                   
-                                    <td>{{asset.linkedResource}}</td>
-                                    <td><span ng-if="asset.lastModifiedDate">{{asset.lastModifiedBy}} ({{asset.lastModifiedDate}})</span></td>
-                                </tr>
-                                <tr class="danger text-center" ng-if="!type.filterData.length"><td colspan="{{type.details.length + 6}}">No {{type.name}} Entries Found</td></tr> 
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="text-center">
+                                        <td ng-repeat="value in asset.details">
+                                            <span ng-if="value.type === 'ASSET_INPUT_MON_TYPE'" ><span ng-if="value.value" class="glyphicon glyphicon-euro"></span>{{value.value| currency: ""}}</span>
+                                            <span ng-if="value.type === 'ASSET_INPUT_STR_TYPE'" >{{value.value}}</span>
+                                            <span ng-if="value.type === 'ASSET_INPUT_INT_TYPE'" >{{value.value}}</span>
+                                            <span ng-if="value.type === 'ASSET_INPUT_DAT_TYPE'" >{{value.value| date:'yyyy-MM-dd'}}</span>  
+                                        </td>                                   
+                                        <td>{{asset.linkedResource}}</td>
+                                        <td><span ng-if="asset.lastModifiedDate">{{asset.lastModifiedBy}} ({{asset.lastModifiedDate}})</span></td>
+                                    </tr>
+                                    <tr class="danger text-center" ng-if="!type.filterData.length"><td colspan="{{type.details.length + 6}}">No {{type.name}} Entries Found</td></tr> 
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>  
+                    <div ng-if="type.searchSize > 5" class="text-center">
                         <pagination ng-show="type.searchSize"  
                                     total-items="type.searchSize" 
                                     ng-model="type.currentPage"  

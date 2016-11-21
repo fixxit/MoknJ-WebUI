@@ -5,14 +5,16 @@ angular.module('Template')
                 ['$scope', '$rootScope', 'TypeService', '$modal',
                     function ($scope, $rootScope, TypeService, $modal) {
                         $scope.pagination = {};
-
+ 
                         $scope.loadPage = function () {
                             $scope.loading = true;
                             TypeService.hidden($rootScope.globals.currentUser.access_token,
                                     function (response) {
                                         if (response) {
                                             if (response.error_description) {
-                                                $scope.error = response.error_description + ". Please logout!";
+                                                if ("Access is denied" !== response.error_description) {
+                                                    $scope.error = response.error_description + ". Please logout!";
+                                                }
                                             } else {
                                                 if (response.types) {
                                                     // do not refresh the entire structure
@@ -37,7 +39,7 @@ angular.module('Template')
                         // check if even for row odd and even colors
                         $scope.isEven = function (value) {
                             if (value % 2 === 0) {
-                                return "info";
+                                return "";//"info";
                             } else {
                                 return "active";
                             }
