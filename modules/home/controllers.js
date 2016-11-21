@@ -74,10 +74,18 @@ angular.module('Home')
                         };
 
                         // remove item by index from items
-                        $scope.removeFromList = function (typeId, index) {
+                        $scope.removeAssetFromTemplate = function (typeId, remove) {
                             angular.forEach($scope.types, function (type) {
                                 if (type.id === typeId) {
-                                    type.assets.splice(index, 1);
+                                    alert("found template list");
+                                    var index = 0; 
+                                    angular.forEach(type.assets, function (asset) {        
+                                        if (asset.id === remove.id) {
+                                            alert("found asset!");
+                                            type.assets.splice(index, 1);
+                                        }
+                                        index = index + 1;
+                                    });
                                 }
                             });
                         };
@@ -162,7 +170,7 @@ angular.module('Home')
                                                         } else {
                                                             $scope.getAllAssetForType(type);
                                                         }
-                                                        type.loading = false;           
+                                                        type.loading = false;
                                                     });
                                                     $scope.dataLoading = false;
                                                 } else {
@@ -211,7 +219,7 @@ angular.module('Home')
                             $location.path('/link').search({'assetId': id, 'name': name});
                         };
 
-                        $scope.removeAsset = function (asset, name, typeId, index) {
+                        $scope.removeAsset = function (asset, name, typeId) {
                             $modal.open({
                                 backdrop: true,
                                 templateUrl: '../modules/home/templates/deleteasset.html',
@@ -234,9 +242,6 @@ angular.module('Home')
                                     },
                                     typeId: function () {
                                         return typeId;
-                                    },
-                                    index: function () {
-                                        return index;
                                     }
                                 }
                             });
@@ -318,7 +323,7 @@ angular.module('Home')
 
 angular.module('Home').controller('ModalDeleteAssetCtrl',
         function ($scope, $modalInstance, parentScope, HomeService,
-                asset, name, token, typeId, index) {
+                asset, name, token, typeId) {
             $scope.name = name;
             $scope.message = "Are you sure you want to delete this asset ?";
 
@@ -330,7 +335,8 @@ angular.module('Home').controller('ModalDeleteAssetCtrl',
                                     $scope.error = response.error_description + ". Please logout!";
                                 } else {
                                     if (response.success) {
-                                        parentScope.removeFromList(typeId, index);
+                                        alert(asset.id);
+                                        parentScope.removeAssetFromTemplate(typeId, asset);
                                     } else {
                                         $scope.message = response.message;
                                     }
