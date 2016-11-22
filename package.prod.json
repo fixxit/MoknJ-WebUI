@@ -1,8 +1,11 @@
 {
-    "name": "fixxitassettracckergui",
-    "author": "Riaan Schoeman",
-    "version": "1.0.0",
-    "engine": {
+  "name": "fixxitassettracckergui",
+  "version": "1.0.0",
+  "author": "Riaan Schoeman",
+  "license": "ISC",
+  "description": "fixxit asset traccker gui",
+  "private": true,
+  "engine": {
         "node": "*",
         "npm": "*"
     },
@@ -10,14 +13,14 @@
     "scripts": {
         "start": "node --use_strict server.js"
     },
-    "directories": {
+  "directories": {
         "lib": "js/"
     },
     "files": [
         "index.html",
         "view/"
     ],
-    "devDependencies": {
+  "dependencies": {
         "angular": "1.5.8",
         "angular-route": "1.5.8",
         "angular-cookies": "1.5.8",

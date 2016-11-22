@@ -24,6 +24,7 @@ angular.module('Link')
                             } else {
                                 $scope.getAllLinks();
                             }
+                            $scope.loading = false;
                         };
 
                         $scope.process = function (response) {
@@ -170,9 +171,9 @@ angular.module('Link')
                         $scope.loadAssetDetails = function (asset, link) {
                             link.display = "";
                             if (asset && asset.typeId) {
-                                $scope.loading = true;
                                 LinkService.getDetail($rootScope.globals.currentUser.access_token, asset.typeId,
                                         function (response) {
+                                            $scope.loading = true;
                                             if (response) {
                                                 if (response.error_description) {
                                                     if ("Access is denied" !== response.error_description) {

@@ -5,7 +5,13 @@ angular.module('Asset')
                 ['$http', '$rootScope',
                     function ($http, $rootScope) {
                         var service = {};
-                        var baseURL = $rootScope.globalAppUrl;
+
+                        $http.get('../settings.json').success(
+                                function (response) {
+                                    $rootScope.globalAppUrl = response.api_url;
+                                    $rootScope.auth_user = response.auth_user;
+                                    $rootScope.auth_psw = response.auth_psw;
+                                });
 
                         service.process = function (url, payload, callback) {
                             if (payload) {
@@ -37,21 +43,21 @@ angular.module('Asset')
 
                         service.getDetail = function (token, id, callback) {
                             service.process(
-                                    baseURL + 'type/get/' + id + '?access_token=' + token,
+                                    $rootScope.globalAppUrl + 'type/get/' + id + '?access_token=' + token,
                                     null,
                                     callback);
                         };
 
                         service.get = function (token, id, callback) {
                             service.process(
-                                    baseURL + 'asset/get/' + id + '?access_token=' + token,
+                                    $rootScope.globalAppUrl + 'asset/get/' + id + '?access_token=' + token,
                                     null,
                                     callback);
                         };
 
                         service.save = function (token, id, data, callback) {
                             service.process(
-                                    baseURL + 'asset/add/' + id + '?access_token=' + token,
+                                    $rootScope.globalAppUrl + 'asset/add/' + id + '?access_token=' + token,
                                     data,
                                     callback);
                         };

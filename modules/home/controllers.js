@@ -39,7 +39,6 @@ angular.module('Home')
                                                     asset.details = fields;
                                                     $scope.loadResource(asset);
                                                     type.assets.push(asset);
-                                                    type.loading = false;
                                                 });
 
                                                 type.viewby = 5;
@@ -47,6 +46,7 @@ angular.module('Home')
                                                 type.currentPage = 1;
                                                 type.itemsPerPage = type.viewby;
                                                 type.maxSize = 5; //Number of pager buttons to show
+                                                type.loading = false;
                                             }
                                         }
                                     }
@@ -77,8 +77,8 @@ angular.module('Home')
                         $scope.removeAssetFromTemplate = function (typeId, remove) {
                             angular.forEach($scope.types, function (type) {
                                 if (type.id === typeId) {
-                                    var index = 0; 
-                                    angular.forEach(type.assets, function (asset) {        
+                                    var index = 0;
+                                    angular.forEach(type.assets, function (asset) {
                                         if (asset.id === remove.id) {
                                             type.assets.splice(index, 1);
                                         }
