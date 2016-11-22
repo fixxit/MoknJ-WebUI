@@ -1,64 +1,69 @@
 'use strict';
 
 angular.module('Link')
-        .factory('LinkService',
-                ['$http', '$rootScope',
-                    function ($http, $rootScope) {
+        .factory('ApiLinkCall',
+                ['$http',
+                    function ($http) {
                         var service = {};
-
-                        $http.get('../settings.json').success(
-                                function (response) {
-                                    $rootScope.globalAppUrl = response.api_url;
-                                    $rootScope.auth_user = response.auth_user;
-                                    $rootScope.auth_psw = response.auth_psw;
-                                });
-
                         service.process = function (url, callback) {
-                            $http.post(url)
-                                    .success(
-                                            function (response) {
-                                                callback(response);
-                                            })
-                                    .error(
-                                            function (response) {
-                                                callback(response);
-                                            }
-                                    );
+                            $http.get("../settings.json").success(
+                                    function (response) {
+                                        $http.post(response.api_url + url)
+                                                .success(
+                                                        function (response) {
+                                                            callback(response);
+                                                        })
+                                                .error(
+                                                        function (response) {
+                                                            callback(response);
+                                                        }
+                                                );
+                                    }
+                            );
                         };
 
+                        return service;
+                    }]);
+
+angular.module('Link')
+        .factory('LinkService',
+                ['ApiLinkCall',
+                    function (ApiLinkCall) {
+                        var service = {};
+
                         service.allLinkForAssetId = function (token, id, callback) {
-                            service.process(
-                                    $rootScope.globalAppUrl + 'link/all/' + id + '/asset?access_token=' + token,
+                            ApiLinkCall.process(
+                                    'link/all/' + id + '/asset?access_token=' + token,
                                     callback);
                         };
 
                         service.allLinkForResourceId = function (token, id, callback) {
-                            service.process(
-                                    $rootScope.globalAppUrl + 'link/all/' + id + '/resource?access_token=' + token,
+                            ApiLinkCall.process(
+                                    'link/all/' + id + '/resource?access_token=' + token,
                                     callback);
                         };
 
                         service.allLink = function (token, callback) {
-                            service.process(
-                                    $rootScope.globalAppUrl + 'link/all/?access_token=' + token,
+                            ApiLinkCall.process(
+                                    'link/all/?access_token=' + token,
                                     callback);
                         };
 
                         service.getResource = function (token, id, callback) {
-                            service.process(
-                                    $rootScope.globalAppUrl + 'resource/get/' + id + '?access_token=' + token,
+                            ApiLinkCall.process(
+                                    'resource/get/' + id + '?access_token=' + token,
                                     callback);
                         };
 
                         service.getAsset = function (token, id, callback) {
-                            service.process(
-                                    $rootScope.globalAppUrl + 'asset/get/' + id + '?access_token=' + token,
+                            ApiLinkCall.process(
+                                    'asset/get/' + id + '?access_token=' + token,
                                     callback);
                         };
 
                         service.getDetail = function (token, id, callback) {
-                            service.process(
-                                    $rootScope.globalAppUrl + 'type/get/' + id + '?access_token=' + token,
+                            ApiLinkCall.process(
+                                    'type/get/' + id + '?access_token=' + token,
                                     callback);
                         };
 

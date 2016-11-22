@@ -1,75 +1,89 @@
 'use strict';
 
 angular.module('Type')
-        .factory('TypeService',
-                ['$http', '$rootScope',
-                    function ($http, $rootScope) {
+        .factory('ApiTypeCall',
+                ['$http',
+                    function ($http) {
                         var service = {};
-                        $http.get('../settings.json').success(
-                                function (response) {
-                                    $rootScope.globalAppUrl = response.api_url;
-                                    $rootScope.auth_user = response.auth_user;
-                                    $rootScope.auth_psw = response.auth_psw;
-                                });
-
-                        service.porcess = function (command, callback) {
-                            $http({
-                                method: 'POST',
-                                url: command,
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            }).success(function (response) {
-                                callback(response);
-                            }).error(function (response) {
-                                callback(response);
-                            });
+                        service.process = function (url, payload, callback) {
+                            $http.get("../settings.json").success(
+                                    function (response) {
+                                        if (payload) {
+                                            $http({
+                                                method: 'POST',
+                                                url: response.api_url + url,
+                                                data: JSON.stringify(payload),
+                                                headers: {
+                                                    'Content-Type': 'application/json'
+                                                }
+                                            }).success(function (response) {
+                                                callback(response);
+                                            }).error(function (response) {
+                                                callback(response);
+                                            });
+                                        } else {
+                                            $http.post(response.api_url + url)
+                                                    .success(
+                                                            function (response) {
+                                                                callback(response);
+                                                            })
+                                                    .error(
+                                                            function (response) {
+                                                                callback(response);
+                                                            }
+                                                    );
+                                        }
+                                    }
+                            );
                         };
 
+                        return service;
+                    }]);
+
+angular.module('Type')
+        .factory('TypeService',
+                ['ApiTypeCall',
+                    function (ApiTypeCall) {
+                        var service = {};
+
                         service.save = function (item, token, callback) {
-                            $http({
-                                method: 'POST',
-                                url: $rootScope.globalAppUrl + 'type/add?access_token=' + token,
-                                data: JSON.stringify(item),
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            }).success(function (response) {
-                                callback(response);
-                            }).error(function (response) {
-                                callback(response);
-                            });
+                            ApiTypeCall.process('type/add?access_token=' + token,
+                                    item,
+                                    callback);
+
                         };
 
                         service.getFieldTypes = function (token, callback) {
-                            service.porcess(
-                                    $rootScope.globalAppUrl + 'type/fields?access_token=' + token,
+                            ApiTypeCall.process('type/fields?access_token=' + token,
+                                    null,
                                     callback);
                         };
 
                         service.getType = function (token, id, callback) {
-                            service.porcess(
-                                    $rootScope.globalAppUrl + 'type/get/' + id + '?access_token=' + token,
+                            ApiTypeCall.process('type/get/' + id + '?access_token=' + token,
+                                    null,
                                     callback);
                         };
 
                         service.hidden = function (token, callback) {
-                            service.porcess(
-                                    $rootScope.globalAppUrl + 'type/hidden/?access_token=' + token,
+                            ApiTypeCall.process('type/hidden/?access_token=' + token,
+                                    null,
                                     callback);
 
                         };
 
                         service.unhide = function (token, id, callback) {
-                            service.porcess($rootScope.globalAppUrl + 'type/unhide/' + id
+                            ApiTypeCall.process('type/unhide/' + id
                                     + '?access_token=' + token,
+                                    null,
                                     callback);
                         };
 
                         service.delete = function (token, id, callback) {
-                            service.porcess($rootScope.globalAppUrl + 'type/delete/' + id
+                            ApiTypeCall.process('type/delete/' + id
                                     + '?access_token=' + token
                                     + '&cascade=' + true,
+                                    null,
                                     callback);
                         };
 

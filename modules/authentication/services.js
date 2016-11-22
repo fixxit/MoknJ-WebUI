@@ -1,33 +1,42 @@
 'use strict';
 
 angular.module('Authentication')
-        .factory('AuthenticationService',
-                ['Base64', '$http', '$cookieStore', '$rootScope',
-                    function (Base64, $http, $cookieStore, $rootScope) {
-                        // set default server address.
-                        $http.get('../settings.json').success(
-                                function (response) {
-                                    $rootScope.globalAppUrl = response.api_url;
-                                    $rootScope.auth_user = response.auth_user;
-                                    $rootScope.auth_psw = response.auth_psw;
-                                });
+        .factory('ApiAuthenticationCall',
+                ['$http', 'Base64',
+                    function ($http, Base64) {
+                        var service = {};
+                        service.process = function (url, callback) {
+                            $http.get("../settings.json").success(
+                                    function (response) {
+                                        $http({
+                                            method: 'POST',
+                                            url: response.api_url + url,
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'Authorization': 'Basic ' + Base64.encode(response.auth_user + ':' + response.auth_psw)
+                                            }
+                                        }).success(function (response) {
+                                            callback(response);
+                                        }).error(function (response) {
+                                            callback(response);
+                                        });
+                                    }
+                            );
+                        };
 
+                        return service;
+                    }]);
+
+angular.module('Authentication')
+        .factory('AuthenticationService',
+                ['Base64', '$http', '$cookieStore', '$rootScope', 'ApiAuthenticationCall',
+                    function (Base64, $http, $cookieStore, $rootScope, ApiAuthenticationCall) {
                         var service = {};
                         // SETS BASIC AUTH PARMS                 
                         service.Login = function (username, password, callback) {
-                            $http({
-                                method: 'POST',
-                                url: $rootScope.globalAppUrl + 'oauth/token?grant_type=password&username=' + username + '&password=' + password,
-                                data: {},
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': 'Basic ' + Base64.encode($rootScope.auth_user + ':' + $rootScope.auth_psw)
-                                }
-                            }).success(function (response) {
-                                callback(response);
-                            }).error(function (response) {
-                                callback(response);
-                            });
+                            ApiAuthenticationCall.process(
+                                    'oauth/token?grant_type=password&username=' + username + '&password=' + password,
+                                    callback);
                         };
 
                         service.SetCredentials = function (username, password, access_token,
