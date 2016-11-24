@@ -41,7 +41,7 @@
             <span>
                 <span class="glyphicon glyphicon-list"></span>
                 &nbsp;Hidden Templates&nbsp;
-                <span ng-show="pagination.searchSize">({{pagination.searchSize}})</span>
+                <span class="badge">{{pagination.searchSize}}</span>
             </span>
         </div>
         <table class="table table-hover">
@@ -62,7 +62,7 @@
                     <td>{{type.name}}</td>
                     <td><span ng-repeat="detail in type.details">{{detail.name}},&nbsp;</span></td>
                 </tr>
-                <tr class="danger text-center" ng-if="!filterData.length"><td colspan="4">No Templates Found</td></tr> 
+                <tr class="active text-center" ng-if="!filterData.length"><td colspan="4">No Templates Found</td></tr> 
             </tbody>
         </table>
 

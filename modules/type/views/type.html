@@ -117,7 +117,7 @@
                                 </tr>
                             </thead>
                             <tbody>                
-                                <tr class="danger text-center" ng-show="!items.length"><td colspan="8">No items to display</td></tr>        
+                                <tr class="active text-center" ng-show="!items.length"><td colspan="8">No items to display</td></tr>        
                                 <tr ng-repeat="item in items" ng-class="isEven($index)">
                                     <td style="width: 25px; cursor: pointer;"><span ng-click="remove($index)" class="glyphicon glyphicon-remove-circle"></span></td> 
                                     <td style="width: 25px; cursor: pointer;"><span ng-show="$index != 0" ng-click="move($index, ($index - 1))" class="glyphicon glyphicon-arrow-up"></span></td>

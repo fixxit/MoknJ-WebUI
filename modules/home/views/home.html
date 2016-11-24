@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed" aria-expanded="true">
@@ -67,6 +67,7 @@
         </div>
     </div>
 </nav>
+<br/><br/><br/><br/>
 <div ng-show="error" class="alert alert-danger">{{error}}</div>
 <div ng-show="success" class="alert alert-success">{{success}}</div>
 <div class="container-fluid">
@@ -91,15 +92,17 @@
                     </span> 
                     <span data-toggle="tooltip" title="Expand/Collapse {{type.name}}" style="cursor: pointer;" ng-click="type.newCollapse = !type.newCollapse">
                         <span style="cursor: pointer;" ng-class="isCollapsed(type.newCollapse)"></span>
-                        &nbsp;{{type.name}} 
+                        &nbsp;{{type.name}}
                     </span>  
                     <span>
-                        <!--<span  class="glyphicon glyphicon-flag"></span>-->
-                        (in:{{type.checkedIn}}, 
-                        <!--<span class="glyphicon glyphicon-link"></span>-->
-                        out:{{type.checkedOut}}, 
-                        <!--<span class="glyphicon glyphicon-list"></span>-->
-                        total:{{type.searchSize}})
+                        <span class="badge">in:{{type.checkedIn}}</span>
+                        <span class="badge">out:{{type.checkedOut}}</span>
+                        <span class="badge">total:{{type.searchSize}}</span>
+                        <!--<span class="badge">
+                            in:{{type.checkedIn}},
+                            out:{{type.checkedOut}},
+                            total:{{type.searchSize}}
+                        </span>-->
                     </span>    
                     <span style="cursor: pointer; float:right;" ng-click="newAsset(type.id)" data-toggle="tooltip" title="New {{type.name}}"><span class="glyphicon glyphicon-new-window"></span>&nbsp;New</span>
                     <span style="float:right;">&nbsp;&nbsp;</span>
@@ -146,7 +149,7 @@
                                         <td>{{asset.linkedResource}}</td>
                                         <td><span ng-if="asset.lastModifiedDate">{{asset.lastModifiedBy}} ({{asset.lastModifiedDate}})</span></td>
                                     </tr>
-                                    <tr class="danger text-center" ng-if="!type.filterData.length"><td colspan="{{type.details.length + 6}}">No {{type.name}} Entries Found</td></tr> 
+                                    <tr class="active text-center" ng-if="!type.filterData.length"><td colspan="{{type.details.length + 6}}">No {{type.name}} Entries Found</td></tr> 
                                 </tbody>
                             </table>
                         </div>

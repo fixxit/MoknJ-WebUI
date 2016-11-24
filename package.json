@@ -24,6 +24,6 @@
         "angular-ui-bootstrap": "0.13.4",
         "express": "4.14.0",
         "bootstrap": "3.3.1",
-        "dotenv": "2.0.0"
+        "express-minify": "0.2.0"
     }
 }
