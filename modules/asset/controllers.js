@@ -6,6 +6,11 @@ angular.module('Asset')
                     function ($scope, $rootScope, $location, AssetService) {
                         $scope.assetId = $location.search().assetId;
                         var id = $location.search().id;
+                        $scope.name = '';
+
+                        $scope.dropboxitemselected = function (item, detail) {
+                            detail.value = item;
+                        };
 
                         $scope.loadPage = function (id) {
                             if (id) {
@@ -19,6 +24,19 @@ angular.module('Asset')
                                                 } else {
                                                     if (response.type) {
                                                         $scope.type = response.type;
+
+                                                        angular.forEach($scope.type.details, function (detail) {
+                                                            if (detail.type === 'ASSET_INPUT_DRD_TYPE') {
+                                                                var n = detail.name.indexOf(":");
+                                                                var name = detail.name.substring(0, n);
+                                                                var json = detail.name.substring(n + 1, detail.name.length);
+                                                                detail.name = name;
+                                                                detail.dropdownvalues = JSON.parse(json);
+                                                                detail.value = 'no selection';
+                                                            }
+                                                        });
+
+                                                        $scope.name = $scope.type.name;
                                                         if ($scope.assetId) {
                                                             AssetService.get($rootScope.globals.currentUser.access_token, $scope.assetId,
                                                                     function (response) {
@@ -72,7 +90,7 @@ angular.module('Asset')
                                             || date.getDay() === 6));
                         };
 
-                        $scope.open = function ($event, datePickerIndex) {
+                        $scope.openCal = function ($event, datePickerIndex) {
                             $event.preventDefault();
                             $event.stopPropagation();
                             if ($scope.openDatePickers[datePickerIndex] === true) {
@@ -83,6 +101,17 @@ angular.module('Asset')
                             }
                         };
 
+                        $scope.stripTrailing = function (str, trimStr) {
+                            if (str.substr(0, 1) === trimStr) {
+                                str = str.substring(1);
+                            }
+                            var len = str.length;
+                            if (str.substr(len - 1, 1) === trimStr) {
+                                str = str.substring(0, len - 1);
+                            }
+                            return str;
+                        };
+
                         $scope.save = function () {
                             if (id) {
                                 if (!$scope.assetId) {
@@ -91,41 +120,59 @@ angular.module('Asset')
                                     $scope.type.id = $scope.assetId;
                                 }
 
-                                AssetService.save(
-                                        $rootScope.globals.currentUser.access_token,
-                                        id,
-                                        $scope.type,
-                                        function (response) {
-                                            // token auth error
-                                            if (response.error_description) {
-                                                $scope.success = null;
-                                                if ("Access is denied" !== response.error_description) {
-                                                    $scope.error = response.error_description + ". Please logout!";
-                                                } else {
-                                                     $scope.error = response.error_description + ". Please contact your administrator.";
-                                                }
-                                            } else {
-                                                // asset type success or error
-                                                if (response.success === true) {
-                                                    //success
-                                                    if (!$scope.assetId) {
-                                                        $scope.success = 'Successfully saved asset, save new asset ?';
-                                                    } else {
-                                                        $location.path('/home');
-                                                    }
+                                var missingValue = '';
+                                angular.forEach($scope.type.details, function (detail) {
+                                    console.log(detail.value);
+                                    if (detail.mandatory && (!detail
+                                            || detail.value === ''
+                                            || detail.value === 'no selection')) {
+                                        missingValue = missingValue + detail.name + ',';
+                                    }
+                                });
 
-                                                    $scope.error = null;
-                                                    $scope.dataLoading = false;
-                                                    // Reset all data
-                                                    $scope.reset(false);
-                                                } else {
-                                                    // error 
+                                if (missingValue) {
+                                    missingValue = $scope.stripTrailing(missingValue, ',');
+                                }
+
+                                if (!missingValue) {
+                                    AssetService.save(
+                                            $rootScope.globals.currentUser.access_token,
+                                            id,
+                                            $scope.type,
+                                            function (response) {
+                                                // token auth error
+                                                if (response.error_description) {
                                                     $scope.success = null;
-                                                    $scope.error = response.message;
+                                                    if ("Access is denied" !== response.error_description) {
+                                                        $scope.error = response.error_description + ". Please logout!";
+                                                    } else {
+                                                        $scope.error = response.error_description + ". Please contact your administrator.";
+                                                    }
+                                                } else {
+                                                    // asset type success or error
+                                                    if (response.success === true) {
+                                                        //success
+                                                        if (!$scope.assetId) {
+                                                            $scope.success = 'Successfully saved asset, save new asset ?';
+                                                        } else {
+                                                            $location.path('/home');
+                                                        }
+
+                                                        $scope.error = null;
+                                                        $scope.dataLoading = false;
+                                                        // Reset all data
+                                                        $scope.reset(false);
+                                                    } else {
+                                                        // error 
+                                                        $scope.success = null;
+                                                        $scope.error = response.message;
+                                                    }
                                                 }
                                             }
-                                        }
-                                );
+                                    );
+                                } else {
+                                    $scope.error = 'Please provide values for ' + missingValue;
+                                }
                             }
                         };
 
@@ -136,6 +183,9 @@ angular.module('Asset')
                             }
                             angular.forEach($scope.type.details, function (detail) {
                                 detail.value = null;
+                                if (detail.type === 'ASSET_INPUT_DRD_TYPE') {
+                                    detail.value = 'no selection';
+                                }
                             });
                         };
                     }]);

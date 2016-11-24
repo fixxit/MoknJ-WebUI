@@ -67,12 +67,74 @@ angular.module('Type')
                         $scope.loadPage();
 
                         $scope.edit = function (index) {
+
                             $scope.selectedItem = $scope.items[index].type;
                             $scope.dispname = $scope.items[index].name;
                             $scope.unique = $scope.items[index].unique;
                             $scope.mandatory = $scope.items[index].mandatory;
                             $scope.display = $scope.items[index].display;
                             $scope.selectIndex = index;
+
+                            if ($scope.selectedItem.name === 'ASSET_INPUT_DRD_TYPE') {
+                                var n = $scope.dispname.indexOf(":");
+                                var json = $scope.dispname.substring(n + 1, $scope.dispname.length);
+                                var name = $scope.dispname.substring(0, n);
+
+                                console.log("json : " + json);
+                                $scope.dropdownName = name;
+                                $scope.dropdownvalues = JSON.parse(json);
+                            } else {
+                                $scope.dropdownvalues = null;
+                                $scope.dropdownName = $scope.items[index].name;
+                                $scope.dropdown = null;
+                            }
+                        };
+
+                        // items in the field detail list
+                        $scope.dropdownvalues = [];
+                        $scope.drpbutton = 'Add';
+                        $scope.addDpdValue = function () {
+                            if ($scope.dropdownName) {
+                                if ($scope.dropdown) {
+                                    var index = $scope.dropdownvalues.indexOf($scope.dropdown);
+                                    var hasValue = parseInt(index) >= 0
+                                            || parseInt(index) !== -1;
+                                    if (!hasValue) {
+                                        if ($scope.drpIndex == null) {
+                                            $scope.dropdownvalues.push($scope.dropdown);
+                                        } else {
+                                            $scope.dropdownvalues[$scope.drpIndex] = $scope.dropdown;
+                                        }
+                                        $scope.drpError = null;
+                                        $scope.dropdown = null;
+                                        $scope.drpbutton = 'Add';
+                                        $scope.dispname = $scope.dropdownName + ":" + JSON.stringify($scope.dropdownvalues);
+                                    } else {
+                                        $scope.drpError = 'No duplicate values allowed in dropdown list';
+                                    }
+                                } else {
+                                    $scope.drpError = 'Please give a value for your dropdown list';
+                                }
+                            } else {
+                                $scope.drpError = 'Please give a name for your dropdown';
+                            }
+                        };
+
+                        // remove item by index from items
+                        $scope.removeDrp = function (index) {
+                            if ($scope.dropdownName) {
+                                $scope.dropdownvalues.splice(index, 1);
+                                $scope.dispname = $scope.dropdownName + ":" + JSON.stringify($scope.dropdownvalues);
+                            } else {
+                                $scope.drpError = 'Please give a name for your dropdown';
+                            }
+                        };
+
+                        $scope.drpIndex = null;
+                        $scope.editDrp = function (index) {
+                            $scope.drpIndex = index;
+                            $scope.dropdown = $scope.dropdownvalues[index];
+                            $scope.drpbutton = 'Update';
                         };
 
                         // items in the field detail list
@@ -103,6 +165,9 @@ angular.module('Type')
                                             }
                                     );
                                 }
+                                $scope.dropdownvalues = null;
+                                $scope.dropdownName = null;
+                                $scope.dropdown = null;
                                 $scope.dispname = '';
                                 $scope.selectIndex = null;
                                 $scope.unique = false;
@@ -162,6 +227,10 @@ angular.module('Type')
                             $scope.unique = false;
                             $scope.display = false;
                             $scope.mandatory = false;
+                            $scope.dropdownvalues = null;
+                            $scope.dropdownName = null;
+                            $scope.dropdown = null;
+                            $scope.drpbutton = 'Add';
                             $scope.selectedItem = {'name': 'nosec', 'type': 'no selection'};
                         };
 
@@ -176,6 +245,9 @@ angular.module('Type')
                             $scope.unique = false;
                             $scope.display = false;
                             $scope.mandatory = false;
+                            $scope.dropdownvalues = null;
+                            $scope.dropdownName = null;
+                            $scope.dropdown = null;
                             // include messages
                             if (messages) {
                                 $scope.success = null;

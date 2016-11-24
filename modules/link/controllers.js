@@ -12,7 +12,7 @@ angular.module('Link')
                         $scope.loadPage = function () {
                             $scope.loading = true;
                             if (name) {
-                                $scope.name = name;
+                                $scope.name = 'Audit Trail ' + name;
                             } else {
                                 $scope.name = "Asset Audit Trail";
                             }

@@ -7,7 +7,10 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand">Asset Manager</a>
+            <a class="navbar-brand">
+                <img src="../../../images/logo.png" style="display: inline-block;width:35px;">
+                <span class="badge"style="display: inline-block; font-size:16px;">MoknJ</span>
+            </a>
         </div>
 
         <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
@@ -68,8 +71,10 @@
     </div>
 </nav>
 <br/><br/><br/><br/>
-<div ng-show="error" class="alert alert-danger">{{error}}</div>
-<div ng-show="success" class="alert alert-success">{{success}}</div>
+<div class="container-fluid bg-3">
+    <div ng-show="error" class="alert alert-danger">{{error}}</div>
+    <div ng-show="success" class="alert alert-success">{{success}}</div>
+</div>
 <div class="container-fluid">
     <div ng-show="types.length > 1" class="panel panel-primary">
         <div class="panel-heading">
@@ -144,6 +149,7 @@
                                             <span ng-if="value.type === 'ASSET_INPUT_MON_TYPE'" ><span ng-if="value.value" class="glyphicon glyphicon-euro"></span>{{value.value| currency: ""}}</span>
                                             <span ng-if="value.type === 'ASSET_INPUT_STR_TYPE'" >{{value.value}}</span>
                                             <span ng-if="value.type === 'ASSET_INPUT_INT_TYPE'" >{{value.value}}</span>
+                                            <span ng-if="value.type === 'ASSET_INPUT_DRD_TYPE'" >{{value.value}}</span>
                                             <span ng-if="value.type === 'ASSET_INPUT_DAT_TYPE'" >{{value.value| date:'yyyy-MM-dd'}}</span>  
                                         </td>                                   
                                         <td>{{asset.linkedResource}}</td>

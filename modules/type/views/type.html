@@ -8,9 +8,12 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand">Asset Type Configuration</a>
+            <a class="navbar-brand">
+                <img src="../../../images/logo.png" style="display: inline-block;width:35px;">
+                <span class="badge"style="display: inline-block; font-size:16px;">MoknJ</span>
+            </a>
+            <a class="navbar-brand" style="font-size:15px; font-style: initial;">Asset Type Configuration</a>
         </div>
-
         <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
             <ul class="nav navbar-nav navbar-right">
                 <li>
@@ -20,9 +23,10 @@
         </div>
     </div>
 </nav>
-
-<div ng-show="error" class="alert alert-danger">{{error}}</div>
-<div ng-show="success" class="alert alert-success">{{success}}</div>
+<div class="container-fluid bg-3">
+    <div ng-show="error" class="alert alert-danger">{{error}}</div>
+    <div ng-show="success" class="alert alert-success">{{success}}</div>
+</div>
 <div class="container-fluid bg-3">
     <div class="panel panel-primary">
         <div class="panel-heading">
@@ -44,7 +48,7 @@
                     <input type="text" name="typename" id="typename" class="form-control" ng-model="typename" required />
                     <span ng-show="form.typename.$dirty && form.typename.$error.required" class="help-block">Asset template name is required</span>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="index">Asset Template Order On Home Page</label>
                     <i class="fa fa-key"></i>
@@ -59,7 +63,7 @@
                         <div class="row">
                             <span>&nbsp;</span>
                         </div> 
-                        <div class="form-group">
+                        <div class="form-group" ng-show="selectedItem.name !== 'ASSET_INPUT_DRD_TYPE'">
                             <label for="dispname">Field Display Name</label>
                             <i class="fa fa-key"></i>
                             <input type="text" name="field" id="dispname" class="form-control" ng-model="dispname"  />
@@ -80,7 +84,63 @@
                                 </ul>
                             </div>
                         </div>
+                        <div class="panel panel-default" ng-show="selectedItem.name === 'ASSET_INPUT_DRD_TYPE'">
+                            <div class="panel-heading">
+                                <label for="datatype">Dropdown Setup</label>
+                            </div> 
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <span>&nbsp;</span>
+                                </div> 
 
+                                <div class="form-group">
+                                    <label for="dropdown">Display Name</label>
+                                    <i class="fa fa-key"></i>
+                                    <input type="text" name="dropdownName" id="dropdownName" class="form-control" ng-model="dropdownName" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="dropdown">Value</label>
+                                    <i class="fa fa-key"></i>
+                                    <input type="text" name="dropdown" id="dropdown" class="form-control" ng-model="dropdown" />
+                                </div>
+
+                                <div ng-show="drpError" class="alert alert-danger">{{drpError}}</div>
+                                
+                                <div class="input-group">
+                                    <div class="form-actions">
+                                        <button type="button" ng-click="addDpdValue()" class="btn btn-info">{{drpbutton}}</button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <span>&nbsp;</span>
+                                </div> 
+                                <div class="table-responsive">
+                                    <div class="panel panel-default">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th>Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>                
+                                                <tr class="active text-center" ng-show="!dropdownvalues.length"><td colspan="8">No items to display</td></tr>        
+                                                <tr ng-repeat="dropdownvalue in dropdownvalues" ng-class="isEven($index)">
+                                                    <td style="width: 25px; cursor: pointer;"><span ng-click="removeDrp($index)" class="glyphicon glyphicon-remove-circle"></span></td>    
+                                                    <td style="width: 25px; cursor: pointer;"><span ng-click="editDrp($index)" class="glyphicon glyphicon-wrench"></span></td>
+                                                    <td>{{dropdownvalue}}</td>                                                   
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <span>&nbsp;</span>
+                                </div> 
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label for="datatype">Field Options</label>
                             <div class="checkbox">

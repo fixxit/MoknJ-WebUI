@@ -1,17 +1,5 @@
 var express = require('express');
-var minify = require('express-minify');
 var app = express();
-
-// compress all responses
-
-app.use(minify({
-    js_match: /javascript/,
-    css_match: /css/,
-    uglifyJS: undefined,
-    cssmin: undefined,
-    cache: false,
-    onerror: undefined,
-}));
 
 app.get('/', function (req, res, next) {
     console.log("Getting home page : " + __dirname + '/index.html');

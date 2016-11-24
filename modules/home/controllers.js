@@ -161,6 +161,13 @@ angular.module('Home')
                                                         // filter all or only on type 
                                                         // depending on if typeId
                                                         // is set
+                                                        angular.forEach(type.details, function (detail) {
+                                                            if (detail.type === 'ASSET_INPUT_DRD_TYPE') {
+                                                                var n = detail.name.indexOf(":");
+                                                                var name = detail.name.substring(0, n);
+                                                                detail.name = name;
+                                                            }
+                                                        });
                                                         if (typeId) {
                                                             if (type.id === typeId) {
                                                                 $scope.getAllAssetForType(type);
@@ -172,11 +179,11 @@ angular.module('Home')
                                                     });
                                                     $scope.dataLoading = false;
                                                 } else {
-                                                    $scope.error = "Invalid server response";
+                                                    $scope.error = "Oops! Something weird is going on... This page did not load. Please retry in 5 mins.";
                                                 }
                                             }
                                         } else {
-                                            $scope.error = "Invalid server response";
+                                            $scope.error = "Oops! Something weird is going on... This page did not load. Please retry in 5 mins.";
                                         }
                                     }
                             );
