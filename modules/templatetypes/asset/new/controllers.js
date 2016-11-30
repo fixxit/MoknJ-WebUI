@@ -4,6 +4,7 @@ angular.module('Asset')
         .controller('AssetController',
                 ['$scope', '$rootScope', '$location', 'AssetService',
                     function ($scope, $rootScope, $location, AssetService) {
+                        $scope.menuId = $location.search().menuId ? $location.search().menuId : null;
                         $scope.assetId = $location.search().assetId;
                         var id = $location.search().id;
                         $scope.name = '';
@@ -26,7 +27,7 @@ angular.module('Asset')
                                                         $scope.type = response.type;
 
                                                         angular.forEach($scope.type.details, function (detail) {
-                                                            if (detail.type === 'ASSET_INPUT_DRD_TYPE') {
+                                                            if (detail.type === 'GBL_INPUT_DRP_TYPE') {
                                                                 var n = detail.name.indexOf(":");
                                                                 var name = detail.name.substring(0, n);
                                                                 var json = detail.name.substring(n + 1, detail.name.length);
@@ -183,7 +184,7 @@ angular.module('Asset')
                             }
                             angular.forEach($scope.type.details, function (detail) {
                                 detail.value = null;
-                                if (detail.type === 'ASSET_INPUT_DRD_TYPE') {
+                                if (detail.type === 'GBL_INPUT_DRP_TYPE') {
                                     detail.value = 'no selection';
                                 }
                             });

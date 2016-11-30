@@ -2,6 +2,11 @@ input[data-readonly] {
     pointer-events: none;
 }
 
+img {
+    opacity: 0.6;
+    filter: alpha(opacity=60); /* For IE8 and earlier */
+}
+
 .wrapper {    
     margin-top: 80px;
     margin-bottom: 20px;

@@ -8,16 +8,17 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand">
-                <img src="../../../images/logo.png" style="display: inline-block;width:35px;">
-                <span class="badge"style="display: inline-block; font-size:16px;">MoknJ</span>
+                <img src="../../../images/logo.png" style="display: inline-block;width:25px;">
+                <span class="badge"style="display: inline-block; font-size:16px;">MoknJ</span>&nbsp;
+                <span style="display: inline-block; font-size:16px;">{{name}}</span>
             </a>
-            <a class="navbar-brand" style="font-size:15px; font-style: initial;">{{name}}</a>
         </div>
 
         <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="#/home"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
+                    <a ng-if='menuId' href="#/home?id={{menuId}}"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
+                    <a ng-if='!menuId' href="#/home"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
                 </li>
             </ul>
         </div>

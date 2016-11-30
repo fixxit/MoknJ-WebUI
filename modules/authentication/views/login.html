@@ -2,9 +2,11 @@
     <span>&nbsp;</span>
 </div> 
 <div class="col-xs-offset-2 col-xs-8">
-    <form name="Login_Form" ng-submit="login()" role="form" class="form-signin">   
+    <form name="Login_Form" ng-submit="login()" role="form" class="form-signin"> 
         <h3 class="form-signin-heading">
-            <span class="glyphicon glyphicon-user"></span>&nbsp;Fixxit MoknJ
+            Fixxit  
+            <img src="../../../images/logo.png" style="width:65px;">
+            <span class="badge" style="font-size:19px;">MoknJ</span>
         </h3>
         <hr class="colorgraph"><br>
         <div ng-show="error" class="alert alert-danger">{{error}}</div>
@@ -20,6 +22,7 @@
             <input type="password" name="password" id="password" class="form-control" ng-model="password" required />
             <span ng-show="Login_Form.password.$dirty && Login_Form.password.$error.required" class="help-block">Password is required</span>
         </div>
+        
         <button type="submit" ng-disabled="Login_Form.$invalid || dataLoading" class="btn btn-lg btn-primary btn-block">
             <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
             Login

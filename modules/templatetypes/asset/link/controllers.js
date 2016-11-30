@@ -3,6 +3,7 @@ angular.module('Link')
         .controller('LinkController',
                 ['$scope', '$rootScope', '$location', 'LinkService',
                     function ($scope, $rootScope, $location, LinkService) {
+                        $scope.menuId = $location.search().menuId ? $location.search().menuId : null;
                         $scope.assetId = $location.search().assetId;
                         $scope.resourceId = $location.search().resourceId;
                         $scope.pagination = {};
@@ -188,7 +189,7 @@ angular.module('Link')
                                                                 if (detail.id === field.id) {
                                                                     if (field.value) {
                                                                         if (detail.display) {
-                                                                            if (field.type === 'ASSET_INPUT_DAT_TYPE') {
+                                                                            if (field.type === 'GBL_INPUT_DAT_TYPE') {
                                                                                 field.value = $scope.formatDate(new Date(field.value));
                                                                             }
                                                                             value = value + field.value + ",";

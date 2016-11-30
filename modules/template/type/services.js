@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('Resource')
-        .factory('ApiResourceCall',
+angular.module('Type')
+        .factory('ApiTypeCall',
                 ['$http',
                     function ($http) {
                         var service = {};
@@ -40,43 +40,55 @@ angular.module('Resource')
                         return service;
                     }]);
 
-angular.module('Resource')
-        .factory('ResourceService',
-                ['ApiResourceCall',
-                    function (ApiResourceCall) {
+angular.module('Type')
+        .factory('TypeService',
+                ['ApiTypeCall',
+                    function (ApiTypeCall) {
                         var service = {};
 
-                        service.get = function (token, id, callback) {
-                            ApiResourceCall.process(
-                                    'resource/get/' + id + '?access_token=' + token,
+                        service.save = function (item, token, callback) {
+                            ApiTypeCall.process('type/add?access_token=' + token,
+                                    item,
+                                    callback);
+
+                        };
+
+                        service.getFieldTypes = function (token, callback) {
+                            ApiTypeCall.process('type/fields?access_token=' + token,
                                     null,
                                     callback);
                         };
 
-                        service.save = function (token, data, callback) {
-                            ApiResourceCall.process(
-                                    'resource/add/?access_token=' + token,
-                                    data,
-                                    callback);
-                        };
-
-                        service.authorities = function (token, callback) {
-                            ApiResourceCall.process(
-                                    'resource/authorities?access_token=' + token,
+                        service.getTemplateTypes = function (token, callback) {
+                            ApiTypeCall.process('type/templates?access_token=' + token,
                                     null,
                                     callback);
                         };
 
-                        service.all = function (token, callback) {
-                            ApiResourceCall.process(
-                                    'resource/get/all/?access_token=' + token,
+                        service.getType = function (token, id, callback) {
+                            ApiTypeCall.process('type/get/' + id + '?access_token=' + token,
                                     null,
                                     callback);
                         };
 
-                        service.remove = function (token, id, callback) {
-                            ApiResourceCall.process(
-                                    'resource/delete/' + id + '?access_token=' + token,
+                        service.hidden = function (token, callback) {
+                            ApiTypeCall.process('type/hidden/?access_token=' + token,
+                                    null,
+                                    callback);
+
+                        };
+
+                        service.unhide = function (token, id, callback) {
+                            ApiTypeCall.process('type/unhide/' + id
+                                    + '?access_token=' + token,
+                                    null,
+                                    callback);
+                        };
+
+                        service.delete = function (token, id, callback) {
+                            ApiTypeCall.process('type/delete/' + id
+                                    + '?access_token=' + token
+                                    + '&cascade=' + true,
                                     null,
                                     callback);
                         };

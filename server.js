@@ -1,5 +1,8 @@
 var express = require('express');
 var app = express();
+var favicon = require('serve-favicon');
+
+app.use(favicon(__dirname + '/images/favicon.ico'));
 
 app.get('/', function (req, res, next) {
     console.log("Getting home page : " + __dirname + '/index.html');

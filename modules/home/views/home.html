@@ -8,58 +8,71 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand">
-                <img src="../../../images/logo.png" style="display: inline-block;width:35px;">
+                <img src="../../../images/logo.png" style="display: inline-block;width:25px;">
                 <span class="badge"style="display: inline-block; font-size:16px;">MoknJ</span>
             </a>
         </div>
-
         <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
             <ul class="nav navbar-nav">
                 <li class="dropdown" dropdown>
                     <a href="#" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">
-                        <span class="glyphicon glyphicon-new-window"></span>&nbsp;New<span class="caret"></span>
+                        <span class="glyphicon glyphicon-new-window"></span>&nbsp;Menu<span class="caret"></span>
                     </a>
-                    <ul class="dropdown-menu" role="menu" > 
-                        <li ng-repeat="type in types" >
-                            <a href="#/asset?id={{type.id}}">{{type.name}}</a>
+                    <ul class="dropdown-menu" role="menu" >   
+                        <li ng-show="id">
+                            <a href="#/home">Home</a>
                         </li>
-                        <li ng-show="!types.length">
-                            <a>Click on New Template</a>
+                        <li ng-repeat="menu in menus">
+                            <a ng-if='menu.id !== id' href="#/home?id={{menu.id}}">{{menu.name}}</a>
+                        </li>
+                        <li ng-show="!menus.length">
+                            <a>No Menu's mapped</a>
                         </li>
                     </ul>
-                </li> 
-                <li>
-                    <a href="#/link">
-                        <span class="glyphicon glyphicon-eye-open"></span>
-                        &nbsp;Audit Trail
-                    </a>
-                </li> 
-                <li>
-                    <a href="#/resource">
-                        <span class="glyphicon glyphicon-user"></span>
-                        &nbsp;Employees
-                    </a>
                 </li>
             </ul>
+            <ul class="nav navbar-nav navbar-default" style='text-align: center;'>
+                <li class="active"><a style="display: inline-block; font-size:14px;">{{name}}</a></li>
+            </ul>
+
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown" dropdown>
                     <a href="#" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">
                         <span class="glyphicon glyphicon-wrench"></span>&nbsp;<span class="caret"></span>
                     </a>
-                    <ul class="dropdown-menu" role="menu" >
+                    <ul class="dropdown-menu" role="menu">    
                         <li>
-                            <a href="#/type">New Template
-                                <span class="sr-only">(current)</span>
+                            <a href="{{urls.menu}}">
+                                <span class="glyphicon glyphicon-tasks"></span>
+                                &nbsp;Setup Menu
                             </a>
-                        </li> 
+                        </li>
+                        <li>
+                            <a href="{{urls.user}}">
+                                <span class="glyphicon glyphicon-user"></span>
+                                &nbsp;Setup Users
+                            </a>
+                        </li>
+                        <li> 
+                            <a href="{{urls.template}}">
+                                <span class="glyphicon glyphicon-credit-card"></span>
+                                &nbsp;New Template
+                            </a>
+                        </li>
                         <li role="separator" class="divider"></li>
                         <li>
-                            <a href="#/template">Hidden Templates
+                            <a href="{{urls.hidden}}">Hidden Templates
                                 <span class="sr-only">(current)</span>
                             </a>
                         </li> 
                     </ul>
-                </li>  
+                </li>
+                <li>
+                    <a href="{{urls.link}}">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                        &nbsp;Asset Audit Trail
+                    </a>
+                </li>
                 <li>
                     <a href="#/login">
                         <span class="glyphicon glyphicon-log-out"></span>
@@ -88,88 +101,7 @@
 </div>
 <div class="container-fluid bg-3">
     <div ng-repeat="type in types" class="col-sm-12">
-        <div class="row">
-            <div class="table-responsive panel panel-primary">
-                <div class="panel-heading"> 
-                    <span ng-if="type.loading">
-                        <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
-                        &nbsp;
-                    </span> 
-                    <span data-toggle="tooltip" title="Expand/Collapse {{type.name}}" style="cursor: pointer;" ng-click="type.newCollapse = !type.newCollapse">
-                        <span style="cursor: pointer;" ng-class="isCollapsed(type.newCollapse)"></span>
-                        &nbsp;{{type.name}}
-                    </span>  
-                    <span>
-                        <span class="badge">in:{{type.checkedIn}}</span>
-                        <span class="badge">out:{{type.checkedOut}}</span>
-                        <span class="badge">total:{{type.searchSize}}</span>
-                        <!--<span class="badge">
-                            in:{{type.checkedIn}},
-                            out:{{type.checkedOut}},
-                            total:{{type.searchSize}}
-                        </span>-->
-                    </span>    
-                    <span style="cursor: pointer; float:right;" ng-click="newAsset(type.id)" data-toggle="tooltip" title="New {{type.name}}"><span class="glyphicon glyphicon-new-window"></span>&nbsp;New</span>
-                    <span style="float:right;">&nbsp;&nbsp;</span>
-                    <span style="cursor: pointer; float:right;" ng-click="removeType(type)" data-toggle="tooltip" title="Remove {{type.name}}"><span class="glyphicon glyphicon-remove-sign"></span>&nbsp;Delete</span>
-                    <span style="float:right;">&nbsp;&nbsp;</span>
-                    <span style="cursor: pointer; float:right;" ng-click="editType(type.id)" data-toggle="tooltip" title="Edit {{type.name}} Layout"><span class="glyphicon glyphicon-edit" ></span>&nbsp;Edit</span>
-                </div>
-                <div collapse="type.newCollapse">
-                    <div class="input-group-addon" ng-if="type.assets.length > 1" >      
-                        <input type="text" class="form-control" placeholder="Search here" ng-model="type.search">
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>&nbsp;</th>
-                                        <th>&nbsp;</th>
-                                        <th>&nbsp;</th>
-                                        <th>&nbsp;</th>
-                                        <th ng-repeat="detail in type.details">{{detail.name}}</th>
-                                        <th>Assignee</th>
-                                        <th>Last Modified</th>
-                                    </tr>
-                                </thead>
-                                <tbody>       
-                                    <tr ng-repeat="asset in type.filterData = (type.assets| filterAssetMultiple:[search, type.search] : type)" 
-                                        ng-class="isEven($index)">
-                                        <td style="width: 25px; cursor: pointer;">
-                                            <span ng-if="asset.linkedResource === 'unassigned'" data-toggle="tooltip" title="Remove {{type.name}}" ng-click="removeAsset(asset, type.name, type.id)" class="glyphicon glyphicon-remove"></span>
-                                            <span ng-if="asset.linkedResource !== 'unassigned'" data-toggle="tooltip" title="{{type.name}} is checked out unable to delete!" class="glyphicon glyphicon-lock"></span>
-                                        </td>
-                                        <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Edit {{type.name}}" ng-click="edit(asset.typeId, asset.id)" class="glyphicon glyphicon-edit"></span></td>
-                                        <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="View {{type.name}} Audit" ng-click="viewAudit(asset.id, type.name)" class="glyphicon glyphicon-eye-open"></span></td>
-                                        <td ng-if="asset.linkedResource === 'unassigned'" style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check Out {{type.name}}" ng-click="assignAsset(asset, type.name)" class="glyphicon glyphicon-link"></span></td>
-                                        <td ng-if="asset.linkedResource !== 'unassigned'" style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check In {{type.name}}" ng-click="removeLink(asset, type.name)" class="glyphicon glyphicon-flag"></span></td>
-
-                                        <td ng-repeat="value in asset.details">
-                                            <span ng-if="value.type === 'ASSET_INPUT_MON_TYPE'" ><span ng-if="value.value" class="glyphicon glyphicon-euro"></span>{{value.value| currency: ""}}</span>
-                                            <span ng-if="value.type === 'ASSET_INPUT_STR_TYPE'" >{{value.value}}</span>
-                                            <span ng-if="value.type === 'ASSET_INPUT_INT_TYPE'" >{{value.value}}</span>
-                                            <span ng-if="value.type === 'ASSET_INPUT_DRD_TYPE'" >{{value.value}}</span>
-                                            <span ng-if="value.type === 'ASSET_INPUT_DAT_TYPE'" >{{value.value| date:'yyyy-MM-dd'}}</span>  
-                                        </td>                                   
-                                        <td>{{asset.linkedResource}}</td>
-                                        <td><span ng-if="asset.lastModifiedDate">{{asset.lastModifiedBy}} ({{asset.lastModifiedDate}})</span></td>
-                                    </tr>
-                                    <tr class="active text-center" ng-if="!type.filterData.length"><td colspan="{{type.details.length + 6}}">No {{type.name}} Entries Found</td></tr> 
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>  
-                    <div ng-if="type.searchSize > 5" class="text-center">
-                        <pagination ng-show="type.searchSize"  
-                                    total-items="type.searchSize" 
-                                    ng-model="type.currentPage"  
-                                    class="pagination-sm" 
-                                    boundary-links="true" rotate="false"
-                                    items-per-page="type.itemsPerPage"></pagination> 
-                    </div>  
-                </div>
-            </div>
-        </div>
+        <div ng-if='type.templateType === modules.asset.module' ng-include='modules.asset.url'></div>
+        <div ng-if='type.templateType === modules.employee.module' ng-include='modules.employee.url'></div>
     </div>
 </div>

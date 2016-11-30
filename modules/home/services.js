@@ -53,6 +53,22 @@ angular.module('Home')
                                     callback);
                         };
 
+                        service.getAllMenus = function (token, callback) {
+                            ApiHomeCall.process(
+                                    'menu/all?access_token=' + token,
+                                    null,
+                                    callback);
+                        };
+
+
+                        service.getMenu = function (token, id, callback) {
+                            ApiHomeCall.process(
+                                    'menu/get/' + id +
+                                    '?access_token=' + token,
+                                    null,
+                                    callback);
+                        };
+
                         service.deleteTemplate = function (token, id, cascade, callback) {
                             ApiHomeCall.process(
                                     'type/delete/' + id + '?access_token='

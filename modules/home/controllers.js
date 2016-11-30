@@ -4,7 +4,40 @@ angular.module('Home')
         .controller('HomeController',
                 ['$scope', '$rootScope', '$location', 'HomeService', '$modal',
                     function ($scope, $rootScope, $location, HomeService, $modal) {
+                        $scope.id = $location.search().id ? $location.search().id : null;
+                        $scope.name = "Home";
                         $scope.types = {};
+
+                        $scope.urls = {
+                            'user': '#/user',
+                            'menu': '#/menu',
+                            'template': '#/type',
+                            'hidden': '#/hidden_template',
+                            'link': '#/link'
+                        };
+
+                        $scope.modules = {
+                            'asset': {
+                                'url': '../modules/templatetypes/views/asset/assetTableView.html',
+                                'module': 'GBL_TT_ASSET'
+                            },
+                            'employee': {
+                                'url': '../modules/templatetypes/views/employee/employeeTableView.html',
+                                'module': 'GBL_TT_EMPLOYEE'
+                            }
+                        };
+
+                        $scope.setURLs = function (id) {
+                            if (id) {
+                                $scope.urls = {
+                                    'user': '#/user?menuId=' + id,
+                                    'menu': '#/menu?menuId=' + id,
+                                    'type': '#/type?menuId=' + id,
+                                    'hidden': '#/hidden_template?menuId=' + id,
+                                    'link': '#/link?menuId=' + id
+                                };
+                            }
+                        };
 
                         $scope.getAllAssetForType = function (type) {
                             HomeService.getAllAssetForType(
@@ -23,7 +56,7 @@ angular.module('Home')
                                                             if (detail.id === field.id) {
                                                                 field.type = detail.type;
                                                                 // parse date for filters
-                                                                if (field.type === 'ASSET_INPUT_DAT_TYPE') {
+                                                                if (field.type === 'GBL_INPUT_DAT_TYPE') {
                                                                     field.value = $scope.formatDate(new Date(field.value));
                                                                 }
                                                                 fields.push(field);
@@ -32,7 +65,7 @@ angular.module('Home')
                                                         });
                                                         // add blank value for field which dont exist...
                                                         if (noFieldFound) {
-                                                            var field = {'value': "n/a", 'type': "ASSET_INPUT_STR_TYPE"};
+                                                            var field = {'value': "n/a", 'type': "GBL_INPUT_TXT_TYPE"};
                                                             fields.push(field);
                                                         }
                                                     });
@@ -141,8 +174,26 @@ angular.module('Home')
                             }
                         };
 
-                        $scope.loadPage = function (typeId) {
-                            HomeService.getAllTypes($rootScope.globals.currentUser.access_token,
+
+                        $scope.loadMenus = function () {
+                            HomeService.getAllMenus(
+                                    $rootScope.globals.currentUser.access_token,
+                                    function (response) {
+                                        // token auth error
+                                        if (response.error_description) {
+                                            $scope.error = response.error_description + ". Please logout!";
+                                        } else {
+                                            if (response.menus) {
+                                                $scope.menus = response.menus;
+                                            }
+                                        }
+                                    }
+                            );
+                        };
+
+                        $scope.loadTemplateForMenu = function (typeId) {
+                            HomeService.getMenu($rootScope.globals.currentUser.access_token,
+                                    $scope.id,
                                     function (response) {
                                         if (response) {
                                             if (response.error_description) {
@@ -150,10 +201,11 @@ angular.module('Home')
                                                     $scope.error = response.error_description + ". Please logout!";
                                                 }
                                             } else {
-                                                if (response.types) {
+                                                if (response.menu) {
                                                     // do not refresh the entire structure
+                                                    $scope.name = response.menu.pageName;
                                                     if (!typeId) {
-                                                        $scope.types = response.types;
+                                                        $scope.types = response.menu.templates;
                                                     }
 
                                                     angular.forEach($scope.types, function (type) {
@@ -162,24 +214,28 @@ angular.module('Home')
                                                         // depending on if typeId
                                                         // is set
                                                         angular.forEach(type.details, function (detail) {
-                                                            if (detail.type === 'ASSET_INPUT_DRD_TYPE') {
+                                                            if (detail.type === 'GBL_INPUT_DRP_TYPE') {
                                                                 var n = detail.name.indexOf(":");
                                                                 var name = detail.name.substring(0, n);
                                                                 detail.name = name;
                                                             }
                                                         });
-                                                        if (typeId) {
-                                                            if (type.id === typeId) {
+
+                                                        if (type.templateType === $scope.modules.asset.module) {
+                                                            if (typeId) {
+                                                                if (type.id === typeId) {
+                                                                    $scope.getAllAssetForType(type);
+                                                                }
+                                                            } else {
                                                                 $scope.getAllAssetForType(type);
                                                             }
-                                                        } else {
-                                                            $scope.getAllAssetForType(type);
+                                                        } else if (type.templateType === $scope.modules.employee.module) {
+
                                                         }
+
                                                         type.loading = false;
                                                     });
                                                     $scope.dataLoading = false;
-                                                } else {
-                                                    $scope.error = "Oops! Something weird is going on... This page did not load. Please retry in 5 mins.";
                                                 }
                                             }
                                         } else {
@@ -189,7 +245,13 @@ angular.module('Home')
                             );
                         };
 
-                        $scope.loadPage();
+                        $scope.loadPage = function (typeId) {
+                            $scope.loadMenus();
+                            if ($scope.id) {
+                                $scope.setURLs($scope.id);
+                                $scope.loadTemplateForMenu(typeId);
+                            }
+                        };
 
                         // check if even for row odd and even colors
                         $scope.isEven = function (value) {
@@ -209,25 +271,25 @@ angular.module('Home')
                         };
 
                         $scope.edit = function (id, assetId) {
-                            $location.path('/asset').search({'id': id, 'assetId': assetId});
+                            $location.path('/asset').search({'id': id, 'assetId': assetId, 'menuId': $scope.id});
                         };
 
                         $scope.editType = function (id) {
-                            $location.path('/type').search({'id': id});
+                            $location.path('/type').search({'id': id, 'menuId': $scope.id});
                         };
 
                         $scope.newAsset = function (id) {
-                            $location.path('/asset').search({'id': id});
+                            $location.path('/asset').search({'id': id, 'menuId': $scope.id});
                         };
 
                         $scope.viewAudit = function (id, name) {
-                            $location.path('/link').search({'assetId': id, 'name': name});
+                            $location.path('/link').search({'assetId': id, 'name': name, 'menuId': $scope.id});
                         };
 
                         $scope.removeAsset = function (asset, name, typeId) {
                             $modal.open({
                                 backdrop: true,
-                                templateUrl: '../modules/home/templates/deleteasset.html',
+                                templateUrl: '../modules/templatetypes/asset/delete/deleteasset.html',
                                 controller: 'ModalDeleteAssetCtrl',
                                 resolve: {
                                     parentScope: function () {
@@ -271,11 +333,10 @@ angular.module('Home')
                             });
                         };
 
-
                         $scope.assignAsset = function (asset, name) {
                             $modal.open({
                                 backdrop: true,
-                                templateUrl: '../modules/home/templates/linkasset.html',
+                                templateUrl: '../modules/templatetypes/asset/assign/linkasset.html',
                                 controller: 'ModalAssignAssetCtrl',
                                 size: 'lg',
                                 resolve: {
@@ -301,7 +362,7 @@ angular.module('Home')
                         $scope.removeLink = function (asset, name) {
                             $modal.open({
                                 backdrop: true,
-                                templateUrl: '../modules/home/templates/removelink.html',
+                                templateUrl: '../modules/templatetypes/asset/unassign/removelink.html',
                                 controller: 'ModalRemoveLinkCtrl',
                                 resolve: {
                                     parentScope: function () {
@@ -323,41 +384,8 @@ angular.module('Home')
                             });
                         };
 
+                        $scope.loadPage();
                     }]);
-
-
-angular.module('Home').controller('ModalDeleteAssetCtrl',
-        function ($scope, $modalInstance, parentScope, HomeService,
-                asset, name, token, typeId) {
-            $scope.name = name;
-            $scope.message = "Are you sure you want to delete this asset ?";
-
-            $scope.ok = function () {
-                HomeService.deleteAsset(token, asset,
-                        function (response) {
-                            if (response) {
-                                if (response.error_description) {
-                                    $scope.error = response.error_description + ". Please logout!";
-                                } else {
-                                    if (response.success) {
-                                        parentScope.removeAssetFromTemplate(typeId, asset);
-                                    } else {
-                                        $scope.message = response.message;
-                                    }
-                                }
-                            } else {
-                                $scope.error = "Invalid server response";
-                            }
-                        }
-                );
-                $modalInstance.close();
-            };
-
-
-            $scope.cancel = function () {
-                $modalInstance.dismiss('cancel');
-            };
-        });
 
 angular.module('Home').controller('ModalDeleteTypeCtrl',
         function ($scope, $modalInstance, parentScope, type, token) {
@@ -378,65 +406,6 @@ angular.module('Home').controller('ModalDeleteTypeCtrl',
                 $modalInstance.dismiss('cancel');
             };
         });
-
-angular.module('Home').controller('ModalRemoveLinkCtrl',
-        function ($scope, $modalInstance, parentScope, HomeService, asset, name, token) {
-            $scope.name = 'Check ' + name + " In";
-
-            $scope.ok = function () {
-                $scope.dataLoading = true;
-                $scope.link = {
-                    'resourceId': asset.resourceId,
-                    'assetId': asset.id,
-                    'date': $scope.auditdate,
-                    'checked': false
-                };
-
-                HomeService.addLink(token, $scope.link,
-                        function (response) {
-                            if (response) {
-                                if (response.error_description) {
-                                    $scope.error = response.error_description + ". Please logout!";
-                                } else {
-                                    if (response.success) {
-                                        parentScope.refreshAsset(asset, false);
-                                        $modalInstance.close();
-                                    } else {
-                                        $scope.message = response.message;
-                                    }
-                                }
-                            } else {
-                                $scope.error = "Invalid server response";
-                            }
-                        }
-                );
-            };
-
-            $scope.cancel = function () {
-                $modalInstance.dismiss('cancel');
-            };
-
-            $scope.openDatePickers = [];
-            // Disable weekend selection
-            $scope.disabled = function (date, mode) {
-                return (mode === 'day'
-                        && (date.getDay() === 0
-                                || date.getDay() === 6));
-            };
-
-            $scope.openDate = function ($event, datePickerIndex) {
-                $event.preventDefault();
-                $event.stopPropagation();
-
-                if ($scope.openDatePickers[datePickerIndex] === true) {
-                    $scope.openDatePickers.length = 0;
-                } else {
-                    $scope.openDatePickers.length = 0;
-                    $scope.openDatePickers[datePickerIndex] = true;
-                }
-            };
-        });
-
 
 angular.module('Home').filter('filterAssetMultiple', ['$filter', function ($filter) {
         return function (items, values, type) {
@@ -503,142 +472,4 @@ angular.module('Home').filter('filterResources', ['$filter', function ($filter) 
         };
     }]);
 
-angular.module('Home').controller('ModalAssignAssetCtrl',
-        function ($scope, $modalInstance, parentScope, HomeService, asset, name, token) {
-            $scope.name = 'Check ' + name + " Out";
-            $scope.asset = asset;
-            $scope.resources = [];
-            $scope.selected = 'Select an Resource';
-            $scope.resource = {};
-            $scope.pagination = {};
-
-            // selected item desplayed in div
-            $scope.dropboxitemselected = function (resource) {
-                $scope.selected = resource.fullname;
-                $scope.resource = resource;
-                $scope.resourceCollapse = !$scope.resourceCollapse;
-            };
-
-            $scope.loadPage = function () {
-                HomeService.all(token,
-                        function (response) {
-                            if (response) {
-                                if (response.error_description) {
-                                    $scope.error = response.error_description + ". Please logout!";
-                                } else {
-                                    if (response.resources) {
-                                        // do not refresh the entire structure
-                                        $scope.resources = response.resources;
-
-                                        $scope.pagination.viewby = 5;
-                                        $scope.pagination.totalItems = $scope.resources.length;
-                                        $scope.pagination.currentPage = 1;
-                                        $scope.pagination.itemsPerPage = 5;
-                                        $scope.pagination.maxSize = 5;
-
-                                        angular.forEach($scope.resources, function (entry) {
-                                            entry.fullname = entry.firstName + " " + entry.surname;
-                                        });
-
-                                        $scope.dataLoading = false;
-                                    } else {
-                                        $scope.error = "Invalid server response";
-                                    }
-                                }
-                            } else {
-                                $scope.error = "Invalid server response";
-                            }
-                        }
-                );
-            };
-
-
-            // check if even for row odd and even colors
-            $scope.isEven = function (value) {
-                return parentScope.isEven(value);
-            };
-
-
-            $scope.loadPage();
-            $scope.ok = function () {
-                if ($scope.auditdate == null) {
-                    $scope.showDateIsRequired = true;
-                    $scope.error = "Date is required";
-                } else {
-                    $scope.showDateIsRequired = false;
-                    $scope.error = null;
-                }
-
-                if ('Select an Resource' === $scope.selected) {
-                    $scope.showResourceIsRequired = true;
-                    $scope.error = "Employee is required";
-                } else {
-                    $scope.showResourceIsRequired = false;
-                    $scope.error = null;
-                }
-                if (!$scope.showResourceIsRequired
-                        && !$scope.showDateIsRequired) {
-                    $scope.dataLoading = true;
-                    $scope.link = {
-                        'resourceId': $scope.resource.id,
-                        'assetId': asset.id,
-                        'date': $scope.auditdate,
-                        'checked': true
-                    };
-                    // this setting of the resource is required for refreshAsset
-                    // method which is called by the addLink.
-                    asset.resourceId = $scope.resource.id;
-                    HomeService.addLink(token, $scope.link,
-                            function (response) {
-                                if (response) {
-                                    if (response.error_description) {
-                                        $scope.error = response.error_description + ". Please logout!";
-                                    } else {
-                                        if (response.success) {
-                                            parentScope.refreshAsset(asset, true);
-                                            $modalInstance.close();
-                                        } else {
-                                            $scope.message = response.message;
-                                        }
-                                    }
-                                } else {
-                                    $scope.error = "Invalid server response";
-                                }
-                                $scope.dataLoading = false;
-                            }
-                    );
-                }
-            };
-
-
-            $scope.resourceCollapse = false;
-
-            $scope.changeDiv = function () {
-                $scope.resourceCollapse = !$scope.resourceCollapse;
-            };
-
-            $scope.openDatePickers = [];
-            // Disable weekend selection
-            $scope.disabled = function (date, mode) {
-                return (mode === 'day'
-                        && (date.getDay() === 0
-                                || date.getDay() === 6));
-            };
-
-            $scope.openDate = function ($event, datePickerIndex) {
-                $event.preventDefault();
-                $event.stopPropagation();
-
-                if ($scope.openDatePickers[datePickerIndex] === true) {
-                    $scope.openDatePickers.length = 0;
-                } else {
-                    $scope.openDatePickers.length = 0;
-                    $scope.openDatePickers[datePickerIndex] = true;
-                }
-            };
-
-            $scope.cancel = function () {
-                $modalInstance.dismiss('cancel');
-            };
-        });
 

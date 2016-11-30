@@ -1,0 +1,147 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed" aria-expanded="true">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">
+                <img src="../../../images/logo.png" style="display: inline-block;width:25px;">
+                <span class="badge"style="display: inline-block; font-size:16px;">MoknJ</span>&nbsp;
+                <span style="display: inline-block; font-size:16px;">Menu Configuration</span>
+            </a>
+        </div>
+        <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a ng-if='menuId' href="#/home?id={{menuId}}"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
+                    <a ng-if='!menuId' href="#/home"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid bg-3">
+    <div ng-show="error" class="alert alert-danger">{{error}}</div>
+    <div ng-show="success" class="alert alert-success">{{success}}</div>
+</div>
+
+<div class="container-fluid bg-3">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span ng-if="loading">
+                <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+                &nbsp;
+            </span>
+            Menu
+        </div>
+        <form name="form" ng-submit="submit()" role="form">
+            <div class="container-fluid bg-3">
+                <div class="row">
+                    <span>&nbsp;</span>
+                </div> 
+
+                <div class="form-group">
+                    <label for="typename">Name</label>
+                    <i class="fa fa-key"></i>
+                    <input type="text" name="name" id="name" class="form-control" ng-model="menu.name" required />
+                    <span ng-show="form.name.$dirty && form.name.$error.required" class="help-block">Menu name is required</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="index">Index</label>
+                    <i class="fa fa-key"></i>
+                    <number-only-input input-value="menu.index" input-name="index"/>      
+                </div> 
+
+                <div class="panel panel-default">
+                    <div class="panel-heading" class="panel-heading">
+                        Page
+                    </div>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <span>&nbsp;</span>
+                        </div> 
+                        <div class="form-group">
+                            <label for="typename">Header</label>
+                            <i class="fa fa-key"></i>
+                            <input type="text" name="page" id="page" class="form-control" ng-model="menu.pageName"/>
+                            <span ng-show="form.page.$dirty && form.page.$error.required" class="help-block">Page name is required</span>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading" class="panel-heading">
+                                Add Template
+                            </div>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <span>&nbsp;</span>
+                                </div> 
+                                <div class="form-group">
+                                    <label>Templates</label>
+                                    <select class="form-control" ng-model="template"
+                                            ng-options="type.name for type in types">
+                                        <option value="">Select a template</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <button ng-if="selectIndex == null"  type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Add</button>
+                                    <button ng-if="selectIndex != null"  type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Update</button>
+                                    <button ng-if="selectIndex != null"  type="button" ng-disabled="dataLoading" ng-click="cancel()" class="btn btn-danger">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div ng-show="pageError" class="alert alert-danger">{{pageError}}</div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading" class="panel-heading">
+                                Linked Templates
+                            </div>
+                            <div class="container-fluid">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th>Name</th>
+                                                <th>Module</th>
+                                                <th>Fields</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>                
+                                            <tr class="active text-center" ng-show="!menu.templates.length"><td colspan="6">No templates to display</td></tr>        
+                                            <tr ng-repeat="type in menu.templates" ng-class="isEven($index)">
+                                                <td style="width: 25px; cursor: pointer;"><span ng-click="remove($index)" class="glyphicon glyphicon-remove-circle"></span></td> 
+                                                <td style="width: 25px; cursor: pointer;"><span ng-show="$index != 0" ng-click="move($index, ($index - 1))" class="glyphicon glyphicon-arrow-up"></span></td>
+                                                <td style="width: 25px; cursor: pointer;"><span ng-click="edit($index)" class="glyphicon glyphicon-wrench"></span></td>
+                                                <td>{{type.name}}</td>
+                                                <td>{{type.templateType}}</td>
+                                                <td><span ng-repeat="detail in type.details">{{detail.name}},&nbsp;</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" ng-if="!id" class="btn btn-primary">Submit</button>
+                    <button type="submit" ng-if="id" ng-show="selectIndex == null" class="btn btn-primary">Update</button>
+                    <button type="button" ng-if="!id" ng-click="reset(true)" ng-disabled="dataLoading" class="btn btn-danger">reset</button>     
+                    <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+                </div>
+
+                <div class="row">
+                    <span>&nbsp;</span>
+                </div> 
+            </div> 
+        </form>
+    </div>
+</div>

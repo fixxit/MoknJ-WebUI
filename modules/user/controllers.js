@@ -1,11 +1,10 @@
-/* global resourceId */
-
 'use strict';
 
-angular.module('Resource')
-        .controller('ResourceController',
-                ['$scope', '$rootScope', '$location', 'ResourceService', '$modal',
-                    function ($scope, $rootScope, $location, ResourceService, $modal) {
+angular.module('User')
+        .controller('UserController',
+                ['$scope', '$rootScope', '$location', 'UserService', '$modal',
+                    function ($scope, $rootScope, $location, UserService, $modal) {
+                        $scope.menuId = $location.search().menuId ? $location.search().menuId : null;
                         $scope.isCollapsed = false;
                         $scope.containerCollapsed = false;
                         $scope.resourceId = $location.search().resourceId;
@@ -24,7 +23,7 @@ angular.module('Resource')
 
                             $scope.getAuthorities();
 
-                            ResourceService.all($rootScope.globals.currentUser.access_token,
+                            UserService.all($rootScope.globals.currentUser.access_token,
                                     function (response) {
                                         if (response) {
                                             if (response.error_description) {
@@ -63,7 +62,13 @@ angular.module('Resource')
                                 }
                             });
 
-                            ResourceService.save(
+                            if (!$scope.resource.systemUser) {
+                                $scope.resource.userName = null;
+                                $scope.resource.password = null;
+                                $scope.resource.authorities = [];
+                            }
+
+                            UserService.save(
                                     $rootScope.globals.currentUser.access_token,
                                     $scope.resource,
                                     function (response) {
@@ -107,7 +112,7 @@ angular.module('Resource')
                                 return "active";
                             }
                         };
-                        
+
                         $scope.isSystemUser = function (value) {
                             if (value) {
                                 return "glyphicon glyphicon-ok";
@@ -136,7 +141,7 @@ angular.module('Resource')
                         };
 
                         $scope.deletResource = function (resource, callback) {
-                            ResourceService.remove(
+                            UserService.remove(
                                     $rootScope.globals.currentUser.access_token,
                                     resource.id,
                                     function (response) {
@@ -151,7 +156,7 @@ angular.module('Resource')
 
                         $scope.editResource = function (id) {
                             $scope.resourceId = id;
-                            ResourceService.get(
+                            UserService.get(
                                     $rootScope.globals.currentUser.access_token,
                                     id,
                                     function (response) {
@@ -178,7 +183,7 @@ angular.module('Resource')
                         };
 
                         $scope.getAuthorities = function () {
-                            ResourceService.authorities(
+                            UserService.authorities(
                                     $rootScope.globals.currentUser.access_token,
                                     function (response) {
                                         // token auth error
@@ -210,7 +215,7 @@ angular.module('Resource')
                         $scope.removeResource = function (resource) {
                             $modal.open({
                                 backdrop: true,
-                                templateUrl: '../modules/resource/templates/deleteresource.html',
+                                templateUrl: '../modules/user/templates/deleteuser.html',
                                 controller: 'ModalDeleteResourceCtrl',
                                 resolve: {
                                     parentScope: function () {
@@ -232,7 +237,7 @@ angular.module('Resource')
                         $scope.loadPage($scope.resourceId);
                     }]);
 
-angular.module('Resource').controller('ModalDeleteResourceCtrl',
+angular.module('User').controller('ModalDeleteResourceCtrl',
         function ($scope, $modalInstance, parentScope, resource) {
             $scope.name = resource.firstName + ' ' + resource.surname;
             $scope.accept = false;
@@ -260,7 +265,7 @@ angular.module('Resource').controller('ModalDeleteResourceCtrl',
             };
         });
 
-angular.module('Resource').filter('filterMultiple', ['$filter', function ($filter) {
+angular.module('User').filter('filterMultiple', ['$filter', function ($filter) {
         return function (items, values, pagination) {
             if (values && Array === values.constructor) {
                 var results = items;

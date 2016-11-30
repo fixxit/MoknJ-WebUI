@@ -5,9 +5,10 @@
 // declare modules
 angular.module('Authentication', ['ui.bootstrap']);
 angular.module('Home', ['ui.bootstrap']);
+angular.module('Menu', ['ui.bootstrap']);
 angular.module('Type', ['ui.bootstrap']);
 angular.module('Asset', ['ui.bootstrap']);
-angular.module('Resource', ['ui.bootstrap']);
+angular.module('User', ['ui.bootstrap']);
 angular.module('Link', ['ui.bootstrap']);
 angular.module('Template', ['ui.bootstrap']);
 
@@ -15,9 +16,10 @@ angular.module('Template', ['ui.bootstrap']);
 angular.module('FixxitAssetTrackerUI', [
     'Authentication',
     'Home',
+    'Menu',
     'Type',
     'Asset',
-    'Resource',
+    'User',
     'Link',
     'Template',
     'ngRoute',
@@ -36,37 +38,43 @@ angular.module('FixxitAssetTrackerUI', [
                     templateUrl: 'modules/home/views/home.html'
                 })
 
+                .when('/menu', {
+                    controller: 'MenuController',
+                    templateUrl: 'modules/menu/views/menu.html'
+                })
+
                 .when('/type', {
                     controller: 'TypeController',
-                    templateUrl: 'modules/type/views/type.html'
+                    templateUrl: 'modules/template/type/views/type.html'
                 })
 
-                .when('/asset', {
-                    controller: 'AssetController',
-                    templateUrl: 'modules/asset/views/asset.html'
+                .when('/hidden_template', {
+                    controller: 'TemplateController',
+                    templateUrl: 'modules/template/hidden/views/template.html'
                 })
 
-                .when('/resource', {
-                    controller: 'ResourceController',
-                    templateUrl: 'modules/resource/views/resource.html'
+                .when('/user', {
+                    controller: 'UserController',
+                    templateUrl: 'modules/user/views/user.html'
                 })
 
                 .when('/link', {
                     controller: 'LinkController',
-                    templateUrl: 'modules/link/views/link.html'
+                    templateUrl: 'modules/templatetypes/asset/link/views/link.html'
                 })
-                
-                .when('/template', {
-                    controller: 'TemplateController',
-                    templateUrl: 'modules/template/views/template.html'
+
+                .when('/asset', {
+                    controller: 'AssetController',
+                    templateUrl: 'modules/templatetypes/asset/new/views/asset.html'
                 })
-                
+
+
                 .otherwise({redirectTo: '/login'});
     }])
 
         .run(['$rootScope', '$location', '$cookieStore', '$http', 'AuthenticationService',
             function ($rootScope, $location, $cookieStore, $http, AuthenticationService) {
-                
+
 
                 // keep user logged in after page refresh
                 $rootScope.globals = $cookieStore.get('globals') || {};

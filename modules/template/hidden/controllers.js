@@ -2,10 +2,11 @@
 
 angular.module('Template')
         .controller('TemplateController',
-                ['$scope', '$rootScope', 'TypeService', '$modal',
-                    function ($scope, $rootScope, TypeService, $modal) {
+                ['$scope', '$rootScope', 'TypeService', '$modal', '$location',
+                    function ($scope, $rootScope, TypeService, $modal, $location) {
+                        $scope.menuId = $location.search().menuId ? $location.search().menuId : null;
                         $scope.pagination = {};
- 
+
                         $scope.loadPage = function () {
                             $scope.loading = true;
                             TypeService.hidden($rootScope.globals.currentUser.access_token,
@@ -23,7 +24,7 @@ angular.module('Template')
                                                     $scope.pagination.totalItems = response.types.length;
                                                     $scope.pagination.currentPage = 1;
                                                     $scope.pagination.itemsPerPage = 5;
-                                                    $scope.pagination.maxSize = 5;                                                 
+                                                    $scope.pagination.maxSize = 5;
                                                 } else {
                                                     $scope.error = "Invalid server response";
                                                 }
@@ -48,7 +49,7 @@ angular.module('Template')
                         $scope.deleteTemplete = function (type) {
                             $modal.open({
                                 backdrop: true,
-                                templateUrl: '../modules/template/templates/deletetemplate.html',
+                                templateUrl: '../modules/template/hidden/templates/deletetemplate.html',
                                 controller: 'ModalDeleteTemplateCtrl',
                                 resolve: {
                                     parentScope: function () {
@@ -64,7 +65,7 @@ angular.module('Template')
                         $scope.unhideTemplate = function (type) {
                             $modal.open({
                                 backdrop: true,
-                                templateUrl: '../modules/template/templates/unhidetemplate.html',
+                                templateUrl: '../modules/template/hidden/templates/unhidetemplate.html',
                                 controller: 'ModalUnhideTemplateCtrl',
                                 resolve: {
                                     parentScope: function () {
@@ -94,8 +95,8 @@ angular.module('Template')
                                     }
                             );
                         };
-                        
-                        
+
+
                         $scope.delete = function (type, callback) {
                             TypeService.delete(
                                     $rootScope.globals.currentUser.access_token,
@@ -112,7 +113,7 @@ angular.module('Template')
                                         }
                                     }
                             );
-                        };             
+                        };
 
                         $scope.loadPage();
                     }]);
@@ -133,7 +134,7 @@ angular.module('Template').controller('ModalDeleteTemplateCtrl',
                         parentScope.loadPage();
                     } else {
                         $scope.error = message;
-                         //$scope.error = "Could not un-hide template, internal error!";
+                        //$scope.error = "Could not un-hide template, internal error!";
                     }
                 });
             };
@@ -160,7 +161,7 @@ angular.module('Template').controller('ModalUnhideTemplateCtrl',
                         parentScope.loadPage();
                     } else {
                         $scope.error = message;
-                         //$scope.error = "Could not un-hide template, internal error!";
+                        //$scope.error = "Could not un-hide template, internal error!";
                     }
                 });
 

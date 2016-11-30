@@ -1,0 +1,78 @@
+<div class="row">
+    <div class="table-responsive panel panel-primary">
+        <div class="panel-heading"> 
+            <span ng-if="type.loading">
+                <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+                &nbsp;
+            </span> 
+            <span data-toggle="tooltip" title="Expand/Collapse {{type.name}}" style="cursor: pointer;" ng-click="type.newCollapse = !type.newCollapse">
+                <span style="cursor: pointer;" ng-class="isCollapsed(type.newCollapse)"></span>
+                &nbsp;{{type.name}}
+            </span>  
+            <span>
+                <span class="badge">in:{{type.checkedIn}}</span>
+                <span class="badge">out:{{type.checkedOut}}</span>
+                <span class="badge">total:{{type.searchSize}}</span>
+            </span>    
+            <span style="cursor: pointer; float:right;" ng-click="newAsset(type.id)" data-toggle="tooltip" title="New {{type.name}}"><span class="glyphicon glyphicon-new-window"></span>&nbsp;New</span>
+            <span style="float:right;">&nbsp;&nbsp;</span>
+            <span style="cursor: pointer; float:right;" ng-click="removeType(type)" data-toggle="tooltip" title="Remove {{type.name}}"><span class="glyphicon glyphicon-remove-sign"></span>&nbsp;Delete</span>
+            <span style="float:right;">&nbsp;&nbsp;</span>
+            <span style="cursor: pointer; float:right;" ng-click="editType(type.id)" data-toggle="tooltip" title="Edit {{type.name}} Layout"><span class="glyphicon glyphicon-edit" ></span>&nbsp;Edit</span>
+        </div>
+        <div collapse="type.newCollapse">
+            <div class="input-group-addon" ng-if="type.assets.length > 1" >      
+                <input type="text" class="form-control" placeholder="Search here" ng-model="type.search">
+            </div>
+            <div class="panel panel-default">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th>&nbsp;</th>
+                                <th>&nbsp;</th>
+                                <th>&nbsp;</th>
+                                <th ng-repeat="detail in type.details">{{detail.name}}</th>
+                                <th>Assignee</th>
+                                <th>Last Modified</th>
+                            </tr>
+                        </thead>
+                        <tbody>       
+                            <tr ng-repeat="asset in type.filterData = (type.assets| filterAssetMultiple:[search, type.search] : type)" 
+                                ng-class="isEven($index)">
+                                <td style="width: 25px; cursor: pointer;">
+                                    <span ng-if="asset.linkedResource === 'unassigned'" data-toggle="tooltip" title="Remove {{type.name}}" ng-click="removeAsset(asset, type.name, type.id)" class="glyphicon glyphicon-remove"></span>
+                                    <span ng-if="asset.linkedResource !== 'unassigned'" data-toggle="tooltip" title="{{type.name}} is checked out unable to delete!" class="glyphicon glyphicon-lock"></span>
+                                </td>
+                                <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Edit {{type.name}}" ng-click="edit(asset.typeId, asset.id)" class="glyphicon glyphicon-edit"></span></td>
+                                <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="View {{type.name}} Audit" ng-click="viewAudit(asset.id, type.name)" class="glyphicon glyphicon-eye-open"></span></td>
+                                <td ng-if="asset.linkedResource === 'unassigned'" style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check Out {{type.name}}" ng-click="assignAsset(asset, type.name)" class="glyphicon glyphicon-link"></span></td>
+                                <td ng-if="asset.linkedResource !== 'unassigned'" style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Check In {{type.name}}" ng-click="removeLink(asset, type.name)" class="glyphicon glyphicon-flag"></span></td>
+
+                                <td ng-repeat="value in asset.details">
+                                    <span ng-if="value.type === 'GBL_INPUT_MON_TYPE'" ><span ng-if="value.value" class="glyphicon glyphicon-euro"></span>{{value.value| currency: ""}}</span>
+                                    <span ng-if="value.type === 'GBL_INPUT_TXT_TYPE'" >{{value.value}}</span>
+                                    <span ng-if="value.type === 'GBL_INPUT_INT_TYPE'" >{{value.value}}</span>
+                                    <span ng-if="value.type === 'GBL_INPUT_DRP_TYPE'" >{{value.value}}</span>
+                                    <span ng-if="value.type === 'GBL_INPUT_DAT_TYPE'" >{{value.value| date:'yyyy-MM-dd'}}</span>  
+                                </td>                                   
+                                <td>{{asset.linkedResource}}</td>
+                                <td><span ng-if="asset.lastModifiedDate">{{asset.lastModifiedBy}} ({{asset.lastModifiedDate}})</span></td>
+                            </tr>
+                            <tr class="active text-center" ng-if="!type.filterData.length"><td colspan="{{type.details.length + 6}}">No {{type.name}} Entries Found</td></tr> 
+                        </tbody>
+                    </table>
+                </div>
+            </div>  
+            <div ng-if="type.searchSize > 5" class="text-center">
+                <pagination ng-show="type.searchSize"  
+                            total-items="type.searchSize" 
+                            ng-model="type.currentPage"  
+                            class="pagination-sm" 
+                            boundary-links="true" rotate="false"
+                            items-per-page="type.itemsPerPage"></pagination> 
+            </div>  
+        </div>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('Type')
-        .factory('ApiTypeCall',
+angular.module('Menu')
+        .factory('ApiMenuCall',
                 ['$http',
                     function ($http) {
                         var service = {};
@@ -40,50 +40,23 @@ angular.module('Type')
                         return service;
                     }]);
 
-angular.module('Type')
-        .factory('TypeService',
-                ['ApiTypeCall',
-                    function (ApiTypeCall) {
+angular.module('Menu')
+        .factory('MenuService',
+                ['ApiMenuCall',
+                    function (ApiMenuCall) {
                         var service = {};
 
-                        service.save = function (item, token, callback) {
-                            ApiTypeCall.process('type/add?access_token=' + token,
-                                    item,
-                                    callback);
-
-                        };
-
-                        service.getFieldTypes = function (token, callback) {
-                            ApiTypeCall.process('type/fields?access_token=' + token,
+                        service.getAllTypes = function (token, callback) {
+                            ApiMenuCall.process(
+                                    'type/all?access_token=' + token,
                                     null,
                                     callback);
                         };
 
-                        service.getType = function (token, id, callback) {
-                            ApiTypeCall.process('type/get/' + id + '?access_token=' + token,
-                                    null,
-                                    callback);
-                        };
-
-                        service.hidden = function (token, callback) {
-                            ApiTypeCall.process('type/hidden/?access_token=' + token,
-                                    null,
-                                    callback);
-
-                        };
-
-                        service.unhide = function (token, id, callback) {
-                            ApiTypeCall.process('type/unhide/' + id
-                                    + '?access_token=' + token,
-                                    null,
-                                    callback);
-                        };
-
-                        service.delete = function (token, id, callback) {
-                            ApiTypeCall.process('type/delete/' + id
-                                    + '?access_token=' + token
-                                    + '&cascade=' + true,
-                                    null,
+                        service.saveMenu = function (token, menu, callback) {
+                            ApiMenuCall.process(
+                                    'menu/add?access_token=' + token,
+                                    menu,
                                     callback);
                         };
 

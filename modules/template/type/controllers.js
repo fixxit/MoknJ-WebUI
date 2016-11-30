@@ -7,10 +7,32 @@ angular.module('Type')
                         // Retrieve all field detail data types via type service
                         // REST controller method types /fields
                         $scope.id = $location.search().id;
+                        $scope.menuId = $location.search().menuId ? $location.search().menuId : null;
 
                         $scope.selectedItem = {'name': 'nosec', 'type': 'no selection'};
+                        $scope.modules = [];
+
+                        $scope.loadModules = function () {
+                            TypeService.getTemplateTypes(
+                                    $rootScope.globals.currentUser.access_token,
+                                    function (response) {
+                                        if (response.error_description) {
+                                            $scope.error = response.error_description + ". Please logout!";
+                                        } else {
+
+                                            $scope.loading = true;
+                                            if (response.templateTypes) {
+                                                $scope.modules = response.templateTypes;
+                                            }
+                                            $scope.loading = false;
+                                        }
+                                    }
+                            );
+                        };
+
 
                         $scope.loadPage = function () {
+                            $scope.loadModules();
                             TypeService.getFieldTypes(
                                     $rootScope.globals.currentUser.access_token,
                                     $scope.process
@@ -35,6 +57,8 @@ angular.module('Type')
                                                             $scope.type = response.type;
                                                             $scope.typename = $scope.type.name;
                                                             $scope.index = $scope.type.index;
+                                                            $scope.templateType = $scope.type.templateType;
+
                                                             angular.forEach($scope.type.details, function (detail) {
                                                                 angular.forEach($scope.types, function (type) {
                                                                     if (detail.type === type.name) {
@@ -67,7 +91,6 @@ angular.module('Type')
                         $scope.loadPage();
 
                         $scope.edit = function (index) {
-
                             $scope.selectedItem = $scope.items[index].type;
                             $scope.dispname = $scope.items[index].name;
                             $scope.unique = $scope.items[index].unique;
@@ -84,7 +107,7 @@ angular.module('Type')
                                 $scope.dropdownName = name;
                                 $scope.dropdownvalues = JSON.parse(json);
                             } else {
-                                $scope.dropdownvalues = null;
+                                $scope.dropdownvalues = [];
                                 $scope.dropdownName = $scope.items[index].name;
                                 $scope.dropdown = null;
                             }
@@ -165,7 +188,7 @@ angular.module('Type')
                                             }
                                     );
                                 }
-                                $scope.dropdownvalues = null;
+                                $scope.dropdownvalues = [];
                                 $scope.dropdownName = null;
                                 $scope.dropdown = null;
                                 $scope.dispname = '';
@@ -224,10 +247,11 @@ angular.module('Type')
                             // Reset all data
                             $scope.selectIndex = null;
                             $scope.dispname = '';
+                            $scope.templateType = null;
                             $scope.unique = false;
                             $scope.display = false;
                             $scope.mandatory = false;
-                            $scope.dropdownvalues = null;
+                            $scope.dropdownvalues = [];
                             $scope.dropdownName = null;
                             $scope.dropdown = null;
                             $scope.drpbutton = 'Add';
@@ -242,10 +266,11 @@ angular.module('Type')
                             $scope.items = [];
                             $scope.typename = '';
                             $scope.dispname = '';
+                            $scope.templateType = null;
                             $scope.unique = false;
                             $scope.display = false;
                             $scope.mandatory = false;
-                            $scope.dropdownvalues = null;
+                            $scope.dropdownvalues = [];
                             $scope.dropdownName = null;
                             $scope.dropdown = null;
                             // include messages
@@ -265,8 +290,14 @@ angular.module('Type')
                                     $scope.type.details = [];
                                     $scope.type.name = $scope.typename;
                                     $scope.type.index = $scope.index;
+                                    $scope.type.templateType = $scope.templateType;
                                 } else {
-                                    $scope.type = {'name': $scope.typename, 'details': []};
+                                    $scope.type = {
+                                        'details': [],
+                                        'name': $scope.typename,
+                                        'index': $scope.index,
+                                        'templateType': $scope.templateType
+                                    };
                                 }
                                 // loop items and add items to type.details array
                                 angular.forEach($scope.items, function (value) {
@@ -304,7 +335,7 @@ angular.module('Type')
                                                 $scope.error = response.error_description + ". Please logout!";
                                             } else {
                                                 // asset type success or error
-                                                if (response.success === true) {
+                                                if (response.success) {
                                                     //success
                                                     if (!$scope.id) {
                                                         $scope.success = 'Successfully saved a new asset type, create new type ?';

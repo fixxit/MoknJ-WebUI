@@ -8,16 +8,17 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand">
-                <img src="../../../images/logo.png" style="display: inline-block;width:35px;">
-                <span class="badge"style="display: inline-block; font-size:16px;">MoknJ</span>
+                <img src="../../../images/logo.png" style="display: inline-block;width:25px;">
+                <span class="badge"style="display: inline-block; font-size:16px;">MoknJ</span>&nbsp;
+                <span style="display: inline-block; font-size:16px;">Users</span>
             </a>
-            <a class="navbar-brand" style="font-size:15px; font-style: initial;">Employees</a>
         </div>
 
         <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="#/home"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
+                    <a ng-if='menuId' href="#/home?id={{menuId}}"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
+                    <a ng-if='!menuId' href="#/home"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
                 </li>
             </ul>
         </div>
@@ -27,11 +28,11 @@
 <div ng-show="success" class="alert alert-success">{{success}}</div>
 <div class="container-fluid bg-3">
     <div class="panel panel-primary">
-        <div data-toggle="tooltip" title="Expand/Collapse New/Update Employee" style="cursor: pointer;" class="panel-heading" ng-click="newCollapse = !newCollapse">
+        <div data-toggle="tooltip" title="Expand/Collapse New/Update User" style="cursor: pointer;" class="panel-heading" ng-click="newCollapse = !newCollapse">
             <span ng-show="!newCollapse" class="glyphicon glyphicon-collapse-down"></span>
             <span ng-show="newCollapse"  class="glyphicon glyphicon-collapse-up"></span>
-            <span ng-if="!resourceId">New Employee</span>
-            <span ng-if="resourceId">Update Employee</span>
+            <span ng-if="!resourceId">New User</span>
+            <span ng-if="resourceId">Update User</span>
         </div>
         <form name="form" ng-submit="save()" role="form">
             <div collapse="!newCollapse" class="container-fluid bg-3">
@@ -66,13 +67,6 @@
                     <span ng-show="form.contactNumber.$dirty && form.contactNumber.$error.required" class="help-block">Contact Number is required</span>
                 </div>
 
-                <div class="form-group">
-                    <label for="datatype">Placed at client</label>
-                    <i class="fa fa-key"></i>
-                    <input ng-model="resource.placedAtClient" type="text" name="placedAtClient" id="placedAtClient" class="form-control" required />
-                    <span ng-show="form.placedAtClient.$dirty && form.placedAtClient.$error.required" class="help-block">Placed At Client is required</span>
-                </div>
-
                 <div class="panel panel-primary">
                     <div class="panel-heading" style="cursor: pointer;" class="panel-heading" ng-click="resource.systemUser = !resource.systemUser">
                         <span ng-class="isSystemUser(resource.systemUser)"></span>&nbsp;System User
@@ -89,7 +83,7 @@
                                 </div> 
                                 <div class="container-fluid">
                                     <div class="checkbox" ng-repeat="auth in authorities">    
-                                        <label data-toggle="tooltip" title="give access to read and write too {{auth.name}}s">
+                                        <label data-toggle="tooltip" title="{{auth.name}}s">
                                             <input type="checkbox" ng-model="auth.value"/>{{auth.name}}
                                         </label> 
                                     </div>
@@ -149,7 +143,7 @@
             </span> 
             <span>
                 <span class="glyphicon glyphicon-list"></span>
-                &nbsp;Employees 
+                &nbsp;Users 
                 <span class="badge">{{pagination.searchSize}}</span>
             </span>
         </div>
@@ -162,22 +156,20 @@
                     <th>Surname</th>
                     <th>Email</th>
                     <th>Number</th>
-                    <th>Client</th>
                 </tr>
             </thead>
             <tbody>       
                 <tr ng-repeat="resource in filterData =
                                     (resources| filterMultiple:[search] : pagination)" 
                     ng-class="isEven($index)">
-                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Edit Employee Employee" ng-click="editResource(resource.id)" class="glyphicon glyphicon-edit"></span></td>
-                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Remove Employee Employee" ng-click="removeResource(resource)" class="glyphicon glyphicon-remove"></span></td>
+                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Edit User User" ng-click="editResource(resource.id)" class="glyphicon glyphicon-edit"></span></td>
+                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="Remove User User" ng-click="removeResource(resource)" class="glyphicon glyphicon-remove"></span></td>
                     <td>{{resource.firstName}}</td>
                     <td>{{resource.surname}}</td>
                     <td>{{resource.email}}</td>
                     <td>{{resource.contactNumber}}</td>
-                    <td>{{resource.placedAtClient}}</td>
                 </tr>
-                <tr class="active text-center" ng-if="!filterData.length"><td colspan="7">No Employee Entries Found</td></tr> 
+                <tr class="active text-center" ng-if="!filterData.length"><td colspan="6">No User Entries Found</td></tr> 
             </tbody>
         </table>
 

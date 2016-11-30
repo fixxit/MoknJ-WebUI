@@ -8,21 +8,17 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand">
-                <img src="../../../images/logo.png" style="display: inline-block;width:35px;">
-                <span class="badge"style="display: inline-block; font-size:16px;">MoknJ</span>
-            </a>
-            <a ng-if="!assetId" style="font-size:15px; font-style: initial;" class="navbar-brand">
-                New {{name}}
-            </a>
-            <a ng-if="assetId" style="font-size:15px; font-style: initial;" class="navbar-brand">
-                Update {{name}}
+                <img src="../../../images/logo.png" style="display: inline-block;width:25px;">
+                <span class="badge" style="display: inline-block; font-size:16px;">MoknJ</span>&nbsp;
+                <span ng-if="!assetId" style="display: inline-block; font-size:16px;">New {{name}}</span>
+                <span ng-if="assetId" style="display: inline-block; font-size:16px;">Update {{name}}</span>
             </a>
         </div>
-
         <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="#/home"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
+                    <a ng-if='menuId' href="#/home?id={{menuId}}"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
+                    <a ng-if='!menuId' href="#/home"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
                 </li>
             </ul>
         </div>
@@ -44,12 +40,12 @@
                 </div> 
                 <div class="form-group" ng-repeat="detail in type.details">
                     <label for="datatype">{{detail.name}}</label>
-                    <div class="form-group" ng-if="detail.type === 'ASSET_INPUT_STR_TYPE'">
+                    <div class="form-group" ng-if="detail.type === 'GBL_INPUT_TXT_TYPE'">
                         <input ng-if="!detail.mandatory" ng-model="detail.value" type="text" name="field_{{detail.id}}" id="field_{{detail.id}}" class="form-control" />
                         <input ng-if="detail.mandatory" ng-model="detail.value" type="text" name="field_{{detail.id}}" id="field_{{detail.id}}" class="form-control" required/>
                     </div>
 
-                    <div class="form-group" ng-if="detail.type === 'ASSET_INPUT_DAT_TYPE'">      
+                    <div class="form-group" ng-if="detail.type === 'GBL_INPUT_DAT_TYPE'">      
                         <p class="input-group">
                             <input ng-if="!detail.mandatory" type="text" name="field_date_{{detail.id}}" id="field_date_{{detail.id}}" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="detail.value" is-open="openDatePickers[index]"  date-disabled="disabled(date, mode)" close-text="Close" readonly/>                      
                             <input ng-if="detail.mandatory" type="text" name="field_date_{{detail.id}}" id="field_date_{{detail.id}}" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="detail.value" is-open="openDatePickers[index]"  date-disabled="disabled(date, mode)" close-text="Close" required data-readonly/>                           
@@ -59,7 +55,7 @@
                         </p> 
                     </div> 
 
-                    <div class="input-group" ng-if="detail.type === 'ASSET_INPUT_MON_TYPE'" > 
+                    <div class="input-group" ng-if="detail.type === 'GBL_INPUT_MON_TYPE'" > 
                         <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-euro"></span></span>
                         <p ng-if="!detail.mandatory">
                         <money-only-input input-value="detail.value" input-name="'field_num_' + detail.id"/>
@@ -69,7 +65,7 @@
                         </p>
                     </div>
 
-                    <div class="form-group" ng-if="detail.type === 'ASSET_INPUT_INT_TYPE'" > 
+                    <div class="form-group" ng-if="detail.type === 'GBL_INPUT_INT_TYPE'" > 
                         <p ng-if="!detail.mandatory">
                         <number-only-input input-value="detail.value" input-name="'field_num_' + detail.id"/>
                         </p>
@@ -78,7 +74,7 @@
                         </p>
                     </div>
 
-                    <div class="form-group" ng-if="detail.type === 'ASSET_INPUT_DRD_TYPE'">
+                    <div class="form-group" ng-if="detail.type === 'GBL_INPUT_DRP_TYPE'">
                         <div class="dropdown" ng-class='{open: open}'>
                             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" ng-click='open = !open'>
                                 {{detail.value}}
