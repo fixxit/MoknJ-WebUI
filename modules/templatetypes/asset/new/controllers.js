@@ -156,7 +156,11 @@ angular.module('Asset')
                                                         if (!$scope.assetId) {
                                                             $scope.success = 'Successfully saved asset, save new asset ?';
                                                         } else {
-                                                            $location.path('/home');
+                                                            if ($scope.menuId) {
+                                                                $location.path('/home').search({'id': $scope.menuId});
+                                                            } else {
+                                                                $location.path('/home');
+                                                            }
                                                         }
 
                                                         $scope.error = null;

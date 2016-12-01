@@ -2,13 +2,43 @@
 
 angular.module('Menu')
         .controller('MenuController',
-                ['$scope', '$rootScope', '$location', 'MenuService',
-                    function ($scope, $rootScope, $location, MenuService) {
+                ['$scope', '$rootScope', '$location', 'MenuService', '$modal',
+                    function ($scope, $rootScope, $location, MenuService, $modal) {
                         $scope.menuId = $location.search().menuId ? $location.search().menuId : null;
+                        $scope.new = $location.search().new ? $location.search().new : null;
                         $scope.menu = {'templates': []};
+                        $scope.pagination = {};
+
+                        $scope.newCollapse = false;
+                        $scope.menus = [];
 
                         $scope.loadPage = function () {
                             $scope.loadTemplates();
+                            $scope.loadMenus();
+                            if ($scope.new) {
+                                $scope.newCollapse = true;
+                            }
+                        };
+
+                        $scope.loadMenus = function () {
+                            MenuService.getAllMenus(
+                                    $rootScope.globals.currentUser.access_token,
+                                    function (response) {
+                                        // token auth error
+                                        if (response.error_description) {
+                                            $scope.error = response.error_description + ". Please logout!";
+                                        } else {
+                                            if (response.menus) {
+                                                $scope.menus = response.menus;
+                                                $scope.pagination.totalItems = response.menus.length;
+                                                $scope.pagination.currentPage = 1;
+                                                $scope.pagination.itemsPerPage = 5;
+                                                $scope.pagination.maxSize = 5;
+                                                $scope.pagination.viewby = 5;
+                                            }
+                                        }
+                                    }
+                            );
                         };
 
                         $scope.loadTemplates = function () {
@@ -84,22 +114,34 @@ angular.module('Menu')
                             $scope.pageError = null;
                         };
 
-                        $scope.isOkOrRemove = function (unique) {
-                            if (unique) {
-                                return "glyphicon glyphicon-ok";
-                            } else {
-                                return "glyphicon glyphicon-remove";
-                            }
-                        };
-
                         // reset input boxes
                         $scope.reset = function (messages) {
                             $scope.menu = {'templates': []};
+                            $scope.id = null;
                             // include messages
                             if (messages) {
                                 $scope.success = null;
                                 $scope.error = null;
                             }
+                        };
+
+                        $scope.editMenu = function (id) {
+                            $scope.id = id;
+                            MenuService.getMenu(
+                                    $rootScope.globals.currentUser.access_token,
+                                    id,
+                                    function (response) {
+                                        // token auth error
+                                        if (response.error_description) {
+                                            $scope.success = null;
+                                            $scope.error = response.error_description;
+                                        } else {
+                                            // Menu success or error
+                                            $scope.menu = response.menu;
+                                            $scope.newCollapse = true;
+                                        }
+                                    }
+                            );
                         };
 
                         $scope.submit = function () {
@@ -120,6 +162,7 @@ angular.module('Menu')
                                                 $scope.error = null;
                                                 $scope.dataLoading = false;
                                                 // Reset all data
+                                                $scope.loadMenus();
                                                 $scope.reset();
                                             } else {
                                                 // error 
@@ -131,5 +174,60 @@ angular.module('Menu')
                             );
                         };
 
+                        // check if even for row odd and even colors
+                        $scope.isEven = function (value) {
+                            if (value % 2 === 0) {
+                                return "";//"info";
+                            } else {
+                                return "active";
+                            }
+                        };
+
+                        // check if even for row odd and even colors
+                        $scope.isExpanded = function () {
+                            if (!$scope.newCollapse) {
+                                return "glyphicon glyphicon-collapse-down";//"info";
+                            } else {
+                                return "glyphicon glyphicon-collapse-up";
+                            }
+                        };
+
+                        $scope.deleteMenu = function (menu, callback) {
+                            MenuService.deleteMenu(
+                                    $rootScope.globals.currentUser.access_token,
+                                    menu.id,
+                                    function (response) {
+                                        if (response.error_description) {
+                                            callback(false, response.error_description);
+                                        } else {
+                                            callback(true);
+                                        }
+                                    }
+                            );
+                        };
+
+                        // remove item by index from items
+                        $scope.removeFromList = function (menu) {
+                            var index = $scope.menus.indexOf(menu);
+                            $scope.menus.splice(index, 1);
+                        };
+
+                        $scope.removeMenu = function (menu) {
+                            $modal.open({
+                                backdrop: true,
+                                templateUrl: '../modules/menu/templates/deletemenu.html',
+                                controller: 'ModalDeleteMenuCtrl',
+                                resolve: {
+                                    parentScope: function () {
+                                        return $scope;
+                                    },
+                                    menu: function () {
+                                        return menu;
+                                    }
+                                }
+                            });
+                        };
+
                         $scope.loadPage();
                     }]);
+

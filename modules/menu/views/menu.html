@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed" aria-expanded="true">
@@ -23,6 +23,8 @@
         </div>
     </div>
 </nav>
+<br/><br/><br/><br/>
+
 <div class="container-fluid bg-3">
     <div ng-show="error" class="alert alert-danger">{{error}}</div>
     <div ng-show="success" class="alert alert-success">{{success}}</div>
@@ -30,15 +32,18 @@
 
 <div class="container-fluid bg-3">
     <div class="panel panel-primary">
-        <div class="panel-heading">
+        <div data-toggle="tooltip" title="Expand/Collapse New/Update User" style="cursor: pointer;" class="panel-heading" ng-click="newCollapse = !newCollapse">
+            <span ng-class="isExpanded()"></span>
             <span ng-if="loading">
                 <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
                 &nbsp;
             </span>
-            Menu
+
+            <span ng-if="!id">New Menu</span>
+            <span ng-if="id">Update Menu</span>
         </div>
         <form name="form" ng-submit="submit()" role="form">
-            <div class="container-fluid bg-3">
+            <div collapse="!newCollapse" class="container-fluid bg-3">
                 <div class="row">
                     <span>&nbsp;</span>
                 </div> 
@@ -87,9 +92,9 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <button ng-if="selectIndex == null"  type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Add</button>
-                                    <button ng-if="selectIndex != null"  type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Update</button>
-                                    <button ng-if="selectIndex != null"  type="button" ng-disabled="dataLoading" ng-click="cancel()" class="btn btn-danger">Cancel</button>
+                                    <button ng-if="!selectIndex" type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Add</button>
+                                    <button ng-if="selectIndex" type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Update</button>
+                                    <button ng-if="selectIndex" type="button" ng-disabled="dataLoading" ng-click="cancel()" class="btn btn-danger">Cancel</button>
                                 </div>
                             </div>
                         </div>
@@ -106,8 +111,7 @@
                                         <thead>
                                             <tr>
                                                 <th></th>
-                                                <th></th>
-                                                <th></th>
+                                                <th></th>            
                                                 <th>Name</th>
                                                 <th>Module</th>
                                                 <th>Fields</th>
@@ -117,8 +121,7 @@
                                             <tr class="active text-center" ng-show="!menu.templates.length"><td colspan="6">No templates to display</td></tr>        
                                             <tr ng-repeat="type in menu.templates" ng-class="isEven($index)">
                                                 <td style="width: 25px; cursor: pointer;"><span ng-click="remove($index)" class="glyphicon glyphicon-remove-circle"></span></td> 
-                                                <td style="width: 25px; cursor: pointer;"><span ng-show="$index != 0" ng-click="move($index, ($index - 1))" class="glyphicon glyphicon-arrow-up"></span></td>
-                                                <td style="width: 25px; cursor: pointer;"><span ng-click="edit($index)" class="glyphicon glyphicon-wrench"></span></td>
+                                                <td style="width: 25px; cursor: pointer;"><span ng-show="$index !== 0" ng-click="move($index, ($index - 1))" class="glyphicon glyphicon-arrow-up"></span></td>
                                                 <td>{{type.name}}</td>
                                                 <td>{{type.templateType}}</td>
                                                 <td><span ng-repeat="detail in type.details">{{detail.name}},&nbsp;</span></td>
@@ -133,7 +136,7 @@
 
                 <div class="form-actions">
                     <button type="submit" ng-if="!id" class="btn btn-primary">Submit</button>
-                    <button type="submit" ng-if="id" ng-show="selectIndex == null" class="btn btn-primary">Update</button>
+                    <button type="submit" ng-if="id" ng-show="!selectIndex" class="btn btn-primary">Update</button>
                     <button type="button" ng-if="!id" ng-click="reset(true)" ng-disabled="dataLoading" class="btn btn-danger">reset</button>     
                     <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
                 </div>
@@ -143,5 +146,56 @@
                 </div> 
             </div> 
         </form>
+    </div>
+</div>
+<div class="container-fluid bg-3"  ng-show='!new'>
+    <div class="table-responsive panel panel-primary">
+        <div class="panel-heading">
+            <span ng-if="loading">
+                <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+                &nbsp;
+            </span> 
+            <span>
+                <span class="glyphicon glyphicon-list"></span>
+                &nbsp;Menu's 
+                <span class="badge">{{pagination.searchSize}}</span>
+            </span>
+        </div>
+        <div class="input-group-addon">
+            <search-menus input-value="search" page-value="pagination"/>
+        </div>  
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>Name</th>
+                    <th>Header</th>
+                </tr>
+            </thead>
+            <tbody>       
+                <tr ng-repeat="menu in filterData =
+                            (menus| filterMenus:search:pagination)" 
+                    ng-class="isEven($index)">
+                    <td style="width:25px; cursor:pointer;"><span data-toggle="tooltip" title="Edit Menu" ng-click="editMenu(menu.id)" class="glyphicon glyphicon-edit"></span></td>
+                    <td style="width:25px; cursor:pointer;"><span data-toggle="tooltip" title="Remove Menu" ng-click="removeMenu(menu)" class="glyphicon glyphicon-remove"></span></td>
+                    <td>{{menu.name}}</td>
+                    <td>{{menu.pageName}}</td>
+                </tr>
+                <tr class="active text-center" ng-if="!filterData.length"><td colspan="4">No Menu Entries Found</td></tr> 
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <pagination
+                total-items="pagination.searchSize" 
+                ng-model="pagination.currentPage"  
+                class="pagination-sm" 
+                boundary-links="true" rotate="false"
+                items-per-page="pagination.itemsPerPage">      
+            </pagination> 
+        </div> 
+
     </div>
 </div>

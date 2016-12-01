@@ -56,7 +56,6 @@ angular.module('Type')
                                                         if (response.type) {
                                                             $scope.type = response.type;
                                                             $scope.typename = $scope.type.name;
-                                                            $scope.index = $scope.type.index;
                                                             $scope.templateType = $scope.type.templateType;
 
                                                             angular.forEach($scope.type.details, function (detail) {
@@ -98,7 +97,7 @@ angular.module('Type')
                             $scope.display = $scope.items[index].display;
                             $scope.selectIndex = index;
 
-                            if ($scope.selectedItem.name === 'ASSET_INPUT_DRD_TYPE') {
+                            if ($scope.selectedItem.name === 'GBL_INPUT_DRP_TYPE') {
                                 var n = $scope.dispname.indexOf(":");
                                 var json = $scope.dispname.substring(n + 1, $scope.dispname.length);
                                 var name = $scope.dispname.substring(0, n);
@@ -289,13 +288,11 @@ angular.module('Type')
                                 if ($scope.type) {
                                     $scope.type.details = [];
                                     $scope.type.name = $scope.typename;
-                                    $scope.type.index = $scope.index;
                                     $scope.type.templateType = $scope.templateType;
                                 } else {
                                     $scope.type = {
                                         'details': [],
                                         'name': $scope.typename,
-                                        'index': $scope.index,
                                         'templateType': $scope.templateType
                                     };
                                 }
@@ -340,7 +337,11 @@ angular.module('Type')
                                                     if (!$scope.id) {
                                                         $scope.success = 'Successfully saved a new asset type, create new type ?';
                                                     } else {
-                                                        $location.path('/home');
+                                                        if ($scope.menuId) {
+                                                            $location.path('/home').search({'id': $scope.menuId});
+                                                        } else {
+                                                            $location.path('/home');
+                                                        }
                                                     }
 
                                                     $scope.error = null;

@@ -19,8 +19,8 @@
                         <span class="glyphicon glyphicon-new-window"></span>&nbsp;Menu<span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu" >   
-                        <li ng-show="id">
-                            <a href="#/home">Home</a>
+                        <li ng-show="id && menus.length">
+                            <a href="#/home">Home (Back)</a>
                         </li>
                         <li ng-repeat="menu in menus">
                             <a ng-if='menu.id !== id' href="#/home?id={{menu.id}}">{{menu.name}}</a>
@@ -28,11 +28,18 @@
                         <li ng-show="!menus.length">
                             <a>No Menu's mapped</a>
                         </li>
+                        <li role="separator" class="divider"></li>
+                        <li>
+                            <a href="{{urls.create_menu}}">
+                                <span class="glyphicon glyphicon-tasks"></span>
+                                &nbsp;Create Menu
+                            </a>
+                        </li>
                     </ul>
                 </li>
             </ul>
-            <ul class="nav navbar-nav navbar-default" style='text-align: center;'>
-                <li class="active"><a style="display: inline-block; font-size:14px;">{{name}}</a></li>
+            <ul class="nav navbar-nav nav-pills">
+                <li><a style="font-size:14px;">{{name}}</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
@@ -61,17 +68,31 @@
                         </li>
                         <li role="separator" class="divider"></li>
                         <li>
-                            <a href="{{urls.hidden}}">Hidden Templates
-                                <span class="sr-only">(current)</span>
+                            <a href="{{urls.hidden}}">
+                                <span class="glyphicon glyphicon-eye-close"></span>
+                                &nbsp;Hidden Templates
                             </a>
                         </li> 
                     </ul>
                 </li>
-                <li>
-                    <a href="{{urls.link}}">
-                        <span class="glyphicon glyphicon-eye-open"></span>
-                        &nbsp;Asset Audit Trail
+
+                <li class="dropdown" dropdown>
+                    <a href="#" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">
+                        <span class="glyphicon glyphicon-eye-open"></span>&nbsp;
+                        Audit History<span class="caret"></span>
                     </a>
+                    <ul class="dropdown-menu" role="menu">    
+                        <li>
+                            <a href="{{urls.link}}">
+                                Asset
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{urls.link}}">
+                                Employee
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     <a href="#/login">
@@ -95,7 +116,7 @@
             &nbsp;Global Search
         </div> 
         <div class="input-group-addon">
-            <input type="text" class="form-control" placeholder="Search" ng-model="search"/>   
+            <global-type-search input-value="search" types="types"/>
         </div>
     </div>
 </div>

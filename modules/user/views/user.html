@@ -69,7 +69,10 @@
 
                 <div class="panel panel-primary">
                     <div class="panel-heading" style="cursor: pointer;" class="panel-heading" ng-click="resource.systemUser = !resource.systemUser">
-                        <span ng-class="isSystemUser(resource.systemUser)"></span>&nbsp;System User
+                        <span ng-class="isSystemUser(resource.systemUser)"></span>
+                        &nbsp;
+                        (<span ng-if='!resource.systemUser'>Activate</span><span ng-if='resource.systemUser'>Deactivate</span>)
+                        System User
                     </div>
                     <div class="container-fluid" ng-if="resource.systemUser">
                         <div class="row">

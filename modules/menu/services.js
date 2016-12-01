@@ -53,10 +53,33 @@ angular.module('Menu')
                                     callback);
                         };
 
+                        service.getMenu = function (token, id, callback) {
+                            ApiMenuCall.process(
+                                    'menu/get/' + id +
+                                    '?access_token=' + token,
+                                    null,
+                                    callback);
+                        };
+
+                        service.deleteMenu = function (token, id, callback) {
+                            ApiMenuCall.process(
+                                    'menu/delete/' + id +
+                                    '?access_token=' + token,
+                                    null,
+                                    callback);
+                        };
+
                         service.saveMenu = function (token, menu, callback) {
                             ApiMenuCall.process(
                                     'menu/add?access_token=' + token,
                                     menu,
+                                    callback);
+                        };
+
+                        service.getAllMenus = function (token, callback) {
+                            ApiMenuCall.process(
+                                    'menu/all?access_token=' + token,
+                                    null,
                                     callback);
                         };
 
