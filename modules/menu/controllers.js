@@ -6,6 +6,7 @@ angular.module('Menu')
                     function ($scope, $rootScope, $location, MenuService, $modal) {
                         $scope.menuId = $location.search().menuId ? $location.search().menuId : null;
                         $scope.new = $location.search().new ? $location.search().new : null;
+                        $scope.type = $location.search().type ? $location.search().type : null;
                         $scope.menu = {'templates': []};
                         $scope.pagination = {};
 
@@ -90,13 +91,16 @@ angular.module('Menu')
                         $scope.add = function () {
                             if ($scope.template) {
                                 var index = $scope.menu.templates.indexOf($scope.template);
-                                var hasValue = parseInt(index) >= 0
-                                        || parseInt(index) !== -1;
+                                var hasValue = (parseInt(index) >= 0
+                                        || parseInt(index) !== -1)
+                                        && $scope.selectIndex == null;
                                 if (!hasValue) {
+                                    $scope.template.allowScopeChallenge = $scope.allowScopeChallenge;
                                     if ($scope.selectIndex == null) {
                                         $scope.menu.templates.push($scope.template);
                                     } else {
                                         $scope.menu.templates[$scope.selectIndex] = $scope.template;
+                                        $scope.selectIndex = null;
                                     }
                                     $scope.pageError = null;
                                     $scope.template = null;
@@ -112,6 +116,7 @@ angular.module('Menu')
                         $scope.cancel = function () {
                             $scope.template = null;
                             $scope.pageError = null;
+                            $scope.selectIndex = null;
                         };
 
                         // reset input boxes
@@ -138,6 +143,18 @@ angular.module('Menu')
                                         } else {
                                             // Menu success or error
                                             $scope.menu = response.menu;
+                                            if ($scope.menu.templates) {
+                                                angular.forEach($scope.menu.templates, function (template) {
+                                                    if ($scope.types) {
+                                                        angular.forEach($scope.types, function (type) {
+                                                            if (template.id === type.id) {
+                                                                var index = $scope.types.indexOf(type);
+                                                                $scope.types[index] = template;
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
                                             $scope.newCollapse = true;
                                         }
                                     }
@@ -145,6 +162,9 @@ angular.module('Menu')
                         };
 
                         $scope.submit = function () {
+                            if ($scope.type) {
+                                $scope.menu.menuType = $scope.type;
+                            }
                             // send type data to ajax call.
                             // rest controller method add url /add
                             MenuService.saveMenu($rootScope.globals.currentUser.access_token,

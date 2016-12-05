@@ -91,10 +91,22 @@
                                         <option value="">Select a template</option>
                                     </select>
                                 </div>
+
+                                <div class="form-group" ng-show="template">
+                                    <label for="datatype">Template Rules</label>
+                                    <div class="checkbox">
+                                        <label data-toggle="tooltip" 
+                                               title="Limits this template view scope over all entries..." >
+                                            <input type="checkbox" ng-model="allowScopeChallenge">
+                                            Limit template view capacity to only show entries which is created on menu page
+                                        </label>
+                                    </div>
+                                </div>  
+
                                 <div class="form-group">
-                                    <button ng-if="!selectIndex" type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Add</button>
-                                    <button ng-if="selectIndex" type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Update</button>
-                                    <button ng-if="selectIndex" type="button" ng-disabled="dataLoading" ng-click="cancel()" class="btn btn-danger">Cancel</button>
+                                    <button ng-if="selectIndex == null" type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Add</button>
+                                    <button ng-if="selectIndex != null" type="button" ng-disabled="dataLoading" ng-click="add()" class="btn btn-primary">Update</button>
+                                    <button ng-if="selectIndex != null" type="button" ng-disabled="dataLoading" ng-click="cancel()" class="btn btn-danger">Cancel</button>
                                 </div>
                             </div>
                         </div>
@@ -111,20 +123,26 @@
                                         <thead>
                                             <tr>
                                                 <th></th>
-                                                <th></th>            
+                                                <th></th> 
+                                                <th></th>
                                                 <th>Name</th>
                                                 <th>Module</th>
                                                 <th>Fields</th>
+                                                <th>Scope Challenge</th>
                                             </tr>
                                         </thead>
                                         <tbody>                
-                                            <tr class="active text-center" ng-show="!menu.templates.length"><td colspan="6">No templates to display</td></tr>        
+                                            <tr class="active text-center" ng-show="!menu.templates.length"><td colspan="7">No templates to display</td></tr>        
                                             <tr ng-repeat="type in menu.templates" ng-class="isEven($index)">
                                                 <td style="width: 25px; cursor: pointer;"><span ng-click="remove($index)" class="glyphicon glyphicon-remove-circle"></span></td> 
                                                 <td style="width: 25px; cursor: pointer;"><span ng-show="$index !== 0" ng-click="move($index, ($index - 1))" class="glyphicon glyphicon-arrow-up"></span></td>
+                                                <td style="width: 25px; cursor: pointer;"><span ng-click="edit($index)" class="glyphicon glyphicon-wrench"></span></td>
                                                 <td>{{type.name}}</td>
                                                 <td>{{type.templateType}}</td>
                                                 <td><span ng-repeat="detail in type.details">{{detail.name}},&nbsp;</span></td>
+                                                <td>
+                                                    <input type="checkbox" ng-model="type.allowScopeChallenge">
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>  
@@ -136,7 +154,7 @@
 
                 <div class="form-actions">
                     <button type="submit" ng-if="!id" class="btn btn-primary">Submit</button>
-                    <button type="submit" ng-if="id" ng-show="!selectIndex" class="btn btn-primary">Update</button>
+                    <button type="submit" ng-if="id" ng-show="selectIndex == null" class="btn btn-primary">Update</button>
                     <button type="button" ng-if="!id" ng-click="reset(true)" ng-disabled="dataLoading" class="btn btn-danger">reset</button>     
                     <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
                 </div>
@@ -171,7 +189,7 @@
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
                     <th>Name</th>
-                    <th>Header</th>
+                    <th>Header</th>   
                 </tr>
             </thead>
             <tbody>       

@@ -101,28 +101,38 @@
                                     <i class="fa fa-key"></i>
                                     <input type="text" name="dropdownName" id="dropdownName" class="form-control" ng-model="dropdownName" />
                                 </div>
-
-                                <div class="form-group">
-                                    <label for="dropdown">Value</label>
-                                    <i class="fa fa-key"></i>
-                                    <input type="text" name="dropdown" id="dropdown" class="form-control" ng-model="dropdown" />
-                                </div>
-
-                                <div ng-show="drpError" class="alert alert-danger">{{drpError}}</div>
-
-                                <div class="input-group">
-                                    <div class="form-actions">
-                                        <button type="button" ng-click="addDpdValue()" class="btn btn-info">{{drpbutton}}</button>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" class="panel-heading">
+                                        Dropdown Value
                                     </div>
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <span>&nbsp;</span>
+                                        </div> 
+                                        <div class="form-group">
+                                            <label for="dropdown">Value</label>
+                                            <i class="fa fa-key"></i>
+                                            <input type="text" name="dropdown" id="dropdown" class="form-control" ng-model="dropdown" />
+                                        </div>
+
+                                        <div ng-show="drpError" class="alert alert-danger">{{drpError}}</div>
+
+                                        <div class="input-group">
+                                            <div class="form-actions">
+                                                <button type="button" ng-click="addDpdValue()" class="btn btn-info">{{drpbutton}}</button>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <span>&nbsp;</span>
+                                        </div> 
+                                    </div> 
                                 </div>
-                                <div class="row">
-                                    <span>&nbsp;</span>
-                                </div> 
                                 <div class="table-responsive">
                                     <div class="panel panel-default">
                                         <table class="table table-hover">
                                             <thead>
                                                 <tr>
+                                                    <th></th>
                                                     <th></th>
                                                     <th></th>
                                                     <th>Value</th>
@@ -132,6 +142,7 @@
                                                 <tr class="active text-center" ng-show="!dropdownvalues.length"><td colspan="8">No items to display</td></tr>        
                                                 <tr ng-repeat="dropdownvalue in dropdownvalues" ng-class="isEven($index)">
                                                     <td style="width: 25px; cursor: pointer;"><span ng-click="removeDrp($index)" class="glyphicon glyphicon-remove-circle"></span></td>    
+                                                    <td style="width: 25px; cursor: pointer;"><span ng-show="$index != 0" ng-click="moveDrp($index, ($index - 1))" class="glyphicon glyphicon-arrow-up"></span></td>
                                                     <td style="width: 25px; cursor: pointer;"><span ng-click="editDrp($index)" class="glyphicon glyphicon-wrench"></span></td>
                                                     <td>{{dropdownvalue}}</td>                                                   
                                                 </tr>

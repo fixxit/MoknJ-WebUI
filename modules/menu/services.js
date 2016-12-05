@@ -83,5 +83,12 @@ angular.module('Menu')
                                     callback);
                         };
 
+                        service.getAllModules = function (token, callback) {
+                            ApiMenuCall.process(
+                                    'menu/types?access_token=' + token,
+                                    null,
+                                    callback);
+                        };
+
                         return service;
                     }]);

@@ -77,9 +77,10 @@ angular.module('Home')
                                     callback);
                         };
 
-                        service.getAllAssetForType = function (token, id, callback) {
+                        service.getAllAssetForType = function (token, templateId, menuId, callback) {
                             ApiHomeCall.process(
-                                    'asset/get/all/' + id + '?access_token=' + token,
+                                    'asset/get/all/' + templateId +
+                                    '/' + menuId + '?access_token=' + token,
                                     null,
                                     callback);
                         };

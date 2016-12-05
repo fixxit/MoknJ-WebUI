@@ -16,9 +16,9 @@
             <ul class="nav navbar-nav">
                 <li class="dropdown" dropdown>
                     <a href="#" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">
-                        <span class="glyphicon glyphicon-new-window"></span>&nbsp;Menu<span class="caret"></span>
+                        <span class="glyphicon glyphicon-chevron-down"></span>&nbsp;Asset Menu
                     </a>
-                    <ul class="dropdown-menu" role="menu" >   
+                    <ul class="dropdown-menu" role="menu">   
                         <li ng-show="id && menus.length">
                             <a href="#/home">Home (Back)</a>
                         </li>
@@ -30,7 +30,7 @@
                         </li>
                         <li role="separator" class="divider"></li>
                         <li>
-                            <a href="{{urls.create_menu}}">
+                            <a href="{{urls.create_menu_asset}}">
                                 <span class="glyphicon glyphicon-tasks"></span>
                                 &nbsp;Create Menu
                             </a>
@@ -38,6 +38,33 @@
                     </ul>
                 </li>
             </ul>
+
+            <ul class="nav navbar-nav">
+                <li class="dropdown" dropdown>
+                    <a href="#" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">
+                        <span class="glyphicon glyphicon-chevron-down"></span>&nbsp;Employee Menu
+                    </a>
+                    <ul class="dropdown-menu" role="menu">   
+                        <li ng-show="id && menus.length">
+                            <a href="#/home">Home (Back)</a>
+                        </li>
+                        <li ng-repeat="menu in menus">
+                            <a ng-if='menu.id !== id' href="#/home?id={{menu.id}}">{{menu.name}}</a>
+                        </li>
+                        <li ng-show="!menus.length">
+                            <a>No Menu's mapped</a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li>
+                            <a href="{{urls.create_menu_employee}}">
+                                <span class="glyphicon glyphicon-tasks"></span>
+                                &nbsp;Create Menu
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
             <ul class="nav navbar-nav nav-pills">
                 <li><a style="font-size:14px;">{{name}}</a></li>
             </ul>

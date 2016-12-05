@@ -11,7 +11,8 @@ angular.module('Home')
                         $scope.urls = {
                             'user': '#/user',
                             'menu': '#/menu',
-                            'create_menu': '#/menu?new=true',
+                            'create_menu_employee': '#/menu?new=true&type=emp',
+                            'create_menu_asset': '#/menu?new=true&type=ast',
                             'template': '#/type',
                             'hidden': '#/hidden_template',
                             'link': '#/link'
@@ -33,7 +34,8 @@ angular.module('Home')
                                 $scope.urls = {
                                     'user': '#/user?menuId=' + id,
                                     'menu': '#/menu?menuId=' + id,
-                                    'create_menu': '#/menu?new=true&menuId=' + id,
+                                    'create_menu_employee': '#/menu?new=true&type=GBL_MT_EMPLOYEE&menuId=' + id,
+                                    'create_menu_asset': '#/menu?new=true&type=GBL_MT_ASSET&menuId=' + id,
                                     'template': '#/type?menuId=' + id,
                                     'hidden': '#/hidden_template?menuId=' + id,
                                     'link': '#/link?menuId=' + id
@@ -45,6 +47,7 @@ angular.module('Home')
                             HomeService.getAllAssetForType(
                                     $rootScope.globals.currentUser.access_token,
                                     type.id,
+                                    $scope.id,
                                     function (response) {
                                         if (response) {
                                             if (response.assets) {
@@ -266,9 +269,9 @@ angular.module('Home')
 
                         $scope.isCollapsed = function (newCollapse) {
                             if (newCollapse) {
-                                return "glyphicon glyphicon-collapse-down";
+                                return "glyphicon glyphicon-resize-full";
                             } else {
-                                return "glyphicon glyphicon-collapse-up";
+                                return "glyphicon glyphicon-resize-small";
                             }
                         };
 

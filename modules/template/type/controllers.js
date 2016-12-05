@@ -8,9 +8,16 @@ angular.module('Type')
                         // REST controller method types /fields
                         $scope.id = $location.search().id;
                         $scope.menuId = $location.search().menuId ? $location.search().menuId : null;
-
                         $scope.selectedItem = {'name': 'nosec', 'type': 'no selection'};
                         $scope.modules = [];
+                        // items in the field detail list
+                        $scope.dropdownvalues = [];
+                        $scope.drpbutton = 'Add';
+                        // items in the field detail list
+                        $scope.items = [];
+                        $scope.drpIndex = null;
+                        // type object
+                        $scope.type = {};
 
                         $scope.loadModules = function () {
                             TypeService.getTemplateTypes(
@@ -19,7 +26,6 @@ angular.module('Type')
                                         if (response.error_description) {
                                             $scope.error = response.error_description + ". Please logout!";
                                         } else {
-
                                             $scope.loading = true;
                                             if (response.templateTypes) {
                                                 $scope.modules = response.templateTypes;
@@ -29,7 +35,6 @@ angular.module('Type')
                                     }
                             );
                         };
-
 
                         $scope.loadPage = function () {
                             $scope.loadModules();
@@ -87,8 +92,6 @@ angular.module('Type')
                             $scope.loading = false;
                         };
 
-                        $scope.loadPage();
-
                         $scope.edit = function (index) {
                             $scope.selectedItem = $scope.items[index].type;
                             $scope.dispname = $scope.items[index].name;
@@ -112,9 +115,23 @@ angular.module('Type')
                             }
                         };
 
-                        // items in the field detail list
-                        $scope.dropdownvalues = [];
-                        $scope.drpbutton = 'Add';
+                        // Move item up or down in the array index
+                        $scope.moveDrp = function (old_index, new_index) {
+                            while (old_index < 0) {
+                                old_index += $scope.dropdownvalues.length;
+                            }
+                            while (new_index < 0) {
+                                new_index += $scope.dropdownvalues.length;
+                            }
+                            if (new_index >= this.length) {
+                                var k = new_index - $scope.dropdownvalues.length;
+                                while ((k--) + 1) {
+                                    $scope.dropdownvalues.push(undefined);
+                                }
+                            }
+                            $scope.dropdownvalues.splice(new_index, 0, $scope.dropdownvalues.splice(old_index, 1)[0]);
+                        };
+
                         $scope.addDpdValue = function () {
                             if ($scope.dropdownName) {
                                 if ($scope.dropdown) {
@@ -131,6 +148,7 @@ angular.module('Type')
                                         $scope.dropdown = null;
                                         $scope.drpbutton = 'Add';
                                         $scope.dispname = $scope.dropdownName + ":" + JSON.stringify($scope.dropdownvalues);
+                                        $scope.drpIndex = null;
                                     } else {
                                         $scope.drpError = 'No duplicate values allowed in dropdown list';
                                     }
@@ -152,15 +170,11 @@ angular.module('Type')
                             }
                         };
 
-                        $scope.drpIndex = null;
                         $scope.editDrp = function (index) {
                             $scope.drpIndex = index;
                             $scope.dropdown = $scope.dropdownvalues[index];
                             $scope.drpbutton = 'Update';
                         };
-
-                        // items in the field detail list
-                        $scope.items = [];
                         // selected item desplayed in div
                         $scope.dropboxitemselected = function (item) {
                             $scope.selectedItem = item;
@@ -170,6 +184,10 @@ angular.module('Type')
                             // input check
                             if ($scope.selectedItem.name !== 'nosec'
                                     && ($scope.dispname && $scope.dispname.trim() !== '')) {
+                                if ($scope.selectedItem.name === 'GBL_INPUT_DRP_TYPE') {
+                                    $scope.dispname = $scope.dropdownName + ":" + JSON.stringify($scope.dropdownvalues);
+                                }
+
                                 if ($scope.selectIndex != null) {
                                     $scope.items[$scope.selectIndex].type = $scope.selectedItem;
                                     $scope.items[$scope.selectIndex].name = $scope.dispname;
@@ -240,7 +258,6 @@ angular.module('Type')
                             }
                         };
 
-
                         // reset input boxes
                         $scope.cancel = function () {
                             // Reset all data
@@ -256,7 +273,6 @@ angular.module('Type')
                             $scope.drpbutton = 'Add';
                             $scope.selectedItem = {'name': 'nosec', 'type': 'no selection'};
                         };
-
 
                         // reset input boxes
                         $scope.reset = function (messages) {
@@ -280,87 +296,93 @@ angular.module('Type')
                             $scope.selectedItem = {'name': 'nosec', 'type': 'no selection'};
                         };
 
-                        // type array
-                        $scope.type = {};
                         $scope.submit = function () {
-                            if ($scope.items.length > 0) {
-                                // define type array with details
-                                if ($scope.type) {
-                                    $scope.type.details = [];
-                                    $scope.type.name = $scope.typename;
-                                    $scope.type.templateType = $scope.templateType;
-                                } else {
-                                    $scope.type = {
-                                        'details': [],
-                                        'name': $scope.typename,
-                                        'templateType': $scope.templateType
-                                    };
-                                }
-                                // loop items and add items to type.details array
-                                angular.forEach($scope.items, function (value) {
-                                    if (value.id) {
-                                        $scope.type.details.push(
-                                                {
-                                                    'id': value.id,
-                                                    'type': value.type.name,
-                                                    'name': value.name,
-                                                    'unique': value.unique,
-                                                    'mandatory': value.mandatory,
-                                                    'display': value.display
-                                                }
-                                        );
+                            if ($scope.templateType) {
+                                if ($scope.items.length > 0) {
+                                    // define type array with details
+                                    if ($scope.type) {
+                                        $scope.type.details = [];
+                                        $scope.type.name = $scope.typename;
+                                        $scope.type.templateType = $scope.templateType;
                                     } else {
-                                        $scope.type.details.push(
-                                                {
-                                                    'type': value.type.name,
-                                                    'name': value.name,
-                                                    'unique': value.unique,
-                                                    'mandatory': value.mandatory,
-                                                    'display': value.display
-                                                }
-                                        );
+                                        $scope.type = {
+                                            'details': [],
+                                            'name': $scope.typename,
+                                            'templateType': $scope.templateType
+                                        };
                                     }
-                                });
-
-                                // send type data to ajax call.
-                                // rest controller method add url /add
-                                TypeService.save(
-                                        $scope.type, $rootScope.globals.currentUser.access_token, function (response) {
-                                            // token auth error
-                                            if (response.error_description) {
-                                                $scope.success = null;
-                                                $scope.error = response.error_description + ". Please logout!";
-                                            } else {
-                                                // asset type success or error
-                                                if (response.success) {
-                                                    //success
-                                                    if (!$scope.id) {
-                                                        $scope.success = 'Successfully saved a new asset type, create new type ?';
-                                                    } else {
-                                                        if ($scope.menuId) {
-                                                            $location.path('/home').search({'id': $scope.menuId});
-                                                        } else {
-                                                            $location.path('/home');
-                                                        }
+                                    // loop items and add items to type.details array
+                                    angular.forEach($scope.items, function (value) {
+                                        if (value.id) {
+                                            $scope.type.details.push(
+                                                    {
+                                                        'id': value.id,
+                                                        'type': value.type.name,
+                                                        'name': value.name,
+                                                        'unique': value.unique,
+                                                        'mandatory': value.mandatory,
+                                                        'display': value.display
                                                     }
+                                            );
+                                        } else {
+                                            $scope.type.details.push(
+                                                    {
+                                                        'type': value.type.name,
+                                                        'name': value.name,
+                                                        'unique': value.unique,
+                                                        'mandatory': value.mandatory,
+                                                        'display': value.display
+                                                    }
+                                            );
+                                        }
+                                    });
 
-                                                    $scope.error = null;
-                                                    $scope.dataLoading = false;
-                                                    // Reset all data
-                                                    $scope.reset();
-                                                } else {
-                                                    // error 
+                                    // send type data to ajax call.
+                                    // rest controller method add url /add
+                                    TypeService.save(
+                                            $scope.type, $rootScope.globals.currentUser.access_token, function (response) {
+                                                // token auth error
+                                                if (response.error_description) {
                                                     $scope.success = null;
-                                                    $scope.error = response.message;
+                                                    $scope.error = response.error_description + ". Please logout!";
+                                                } else {
+                                                    // asset type success or error
+                                                    if (response.success) {
+                                                        //success
+                                                        if (!$scope.id) {
+                                                            $scope.success = 'Successfully saved a new asset type, create new type ?';
+                                                        } else {
+                                                            if ($scope.menuId) {
+                                                                $location.path('/home').search({'id': $scope.menuId});
+                                                            } else {
+                                                                $location.path('/home');
+                                                            }
+                                                        }
+
+                                                        $scope.error = null;
+                                                        $scope.dataLoading = false;
+                                                        // Reset all data
+                                                        $scope.reset();
+                                                    } else {
+                                                        // error 
+                                                        $scope.success = null;
+                                                        $scope.error = response.message;
+                                                    }
                                                 }
                                             }
-                                        }
-                                );
+                                    );
+                                } else {
+                                    // No field details included...
+                                    $scope.success = null;
+                                    $scope.error = "no asset type fields provided";
+                                }
                             } else {
-                                // No field details included...
+                                // No module/template type selected...
                                 $scope.success = null;
-                                $scope.error = "no asset type fields provided";
+                                $scope.error = "no module selected for this template";
                             }
                         };
+
+                        $scope.loadPage();
                     }]);
 
