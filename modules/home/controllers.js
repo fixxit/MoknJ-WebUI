@@ -7,12 +7,14 @@ angular.module('Home')
                         $scope.id = $location.search().id ? $location.search().id : null;
                         $scope.name = "Home";
                         $scope.types = {};
+                        $scope.selectedType = null;
+                        $scope.selectedResources = [];
 
                         $scope.urls = {
                             'user': '#/user',
                             'menu': '#/menu',
-                            'create_menu_employee': '#/menu?new=true&type=emp',
-                            'create_menu_asset': '#/menu?new=true&type=ast',
+                            'create_menu_employee': '#/menu?new=true&type=GBL_MT_EMPLOYEE',
+                            'create_menu_asset': '#/menu?new=true&type=GBL_MT_ASSET',
                             'template': '#/type',
                             'hidden': '#/hidden_template',
                             'link': '#/link'
@@ -161,6 +163,23 @@ angular.module('Home')
                             }
                         };
 
+                        $scope.loadAllResources = function () {
+                            HomeService.all(
+                                    $rootScope.globals.currentUser.access_token,
+                                    function (response) {
+                                        // token auth error
+                                        if (response.error_description) {
+                                            $scope.error = response.error_description + ". Please logout!";
+                                        } else {
+                                            if (response.resources) {
+                                                // asset type success or error
+                                                $scope.resources = response.resources;
+                                            }
+                                        }
+                                    }
+                            );
+                        };
+
                         $scope.deleteTemplate = function (id, cascade, token, callback) {
                             if (id) {
                                 HomeService.deleteTemplate(
@@ -208,6 +227,7 @@ angular.module('Home')
                                             } else {
                                                 if (response.menu) {
                                                     // do not refresh the entire structure
+                                                    $scope.module = response.menu.menuType;
                                                     $scope.name = response.menu.pageName;
                                                     if (!typeId) {
                                                         $scope.types = response.menu.templates;
@@ -285,6 +305,10 @@ angular.module('Home')
 
                         $scope.newAsset = function (id) {
                             $location.path('/asset').search({'id': id, 'menuId': $scope.id});
+                        };
+
+                        $scope.newEmploye = function (id) {
+                            $location.path('/employee').search({'id': id, 'menuId': $scope.id});
                         };
 
                         $scope.viewAudit = function (id, name) {
@@ -387,6 +411,44 @@ angular.module('Home')
                                     }
                                 }
                             });
+                        };
+
+                        $scope.setType = function (type) {
+                            if (type === $scope.selectedType) {
+                                $scope.selectedType = null;
+                            } else {
+                                $scope.selectedType = type;
+                            }
+                        };
+
+                        $scope.isSelectedType = function (type) {
+                            if (type === $scope.selectedType) {
+                                return "list-group-item active"
+                            } else {
+                                return "list-group-item";
+                            }
+                        };
+
+
+                        $scope.selectResource = function (resource) {
+                            var index = $scope.selectedResources.indexOf(resource);
+                            var hasValue = (parseInt(index) >= 0
+                                    || parseInt(index) !== -1);
+                            if (!hasValue) {
+                                $scope.selectedResources.push(resource);
+                            } else {
+                                $scope.selectedResources.splice(index, 1);
+                            }
+                        };
+
+                        $scope.isSelectedResource = function (resource) {
+                            var cls = "list-group-item";
+                            angular.forEach($scope.selectedResources, function (value) {
+                                if (value.id === resource.id) {
+                                    cls = "list-group-item active"
+                                }
+                            });
+                            return cls;
                         };
 
                         $scope.loadPage();

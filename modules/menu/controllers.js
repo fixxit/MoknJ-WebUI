@@ -16,6 +16,8 @@ angular.module('Menu')
                         $scope.loadPage = function () {
                             $scope.loadTemplates();
                             $scope.loadMenus();
+                            $scope.loadModules();
+
                             if ($scope.new) {
                                 $scope.newCollapse = true;
                             }
@@ -33,9 +35,9 @@ angular.module('Menu')
                                                 $scope.menus = response.menus;
                                                 $scope.pagination.totalItems = response.menus.length;
                                                 $scope.pagination.currentPage = 1;
-                                                $scope.pagination.itemsPerPage = 5;
-                                                $scope.pagination.maxSize = 5;
-                                                $scope.pagination.viewby = 5;
+                                                $scope.pagination.itemsPerPage = 10;
+                                                $scope.pagination.maxSize = 10;
+                                                $scope.pagination.viewby = 10;
                                             }
                                         }
                                     }
@@ -53,6 +55,34 @@ angular.module('Menu')
                                             } else {
                                                 if (response.types) {
                                                     $scope.types = response.types;
+                                                }
+                                            }
+                                        }
+                                    }
+                            );
+                        };
+
+
+                        $scope.loadModules = function () {
+                            MenuService.getAllModules($rootScope.globals.currentUser.access_token,
+                                    function (response) {
+                                        if (response) {
+                                            if (response.error_description) {
+                                                if ("Access is denied" !== response.error_description) {
+                                                    $scope.error = response.error_description + ". Please logout!";
+                                                }
+                                            } else {
+                                                if (response.menuTypes) {
+                                                    $scope.menuTypes = response.menuTypes;
+
+                                                    if ($scope.type) {
+                                                        angular.forEach($scope.menuTypes, function (menu) {
+                                                            if ($scope.type === menu.name) {
+                                                                var index = $scope.menuTypes.indexOf(menu);
+                                                                $scope.menu.menuType = $scope.menuTypes[index];
+                                                            }
+                                                        });
+                                                    }
                                                 }
                                             }
                                         }
@@ -86,6 +116,7 @@ angular.module('Menu')
                         $scope.edit = function (index) {
                             $scope.selectIndex = index;
                             $scope.template = $scope.menu.templates[index];
+                            // $scope.allowScopeChallenge = $scope.template.allowScopeChallenge;
                         };
 
                         $scope.add = function () {
@@ -143,6 +174,7 @@ angular.module('Menu')
                                         } else {
                                             // Menu success or error
                                             $scope.menu = response.menu;
+
                                             if ($scope.menu.templates) {
                                                 angular.forEach($scope.menu.templates, function (template) {
                                                     if ($scope.types) {
@@ -154,6 +186,16 @@ angular.module('Menu')
                                                         });
                                                     }
                                                 });
+
+                                                if ($scope.menuTypes) {
+                                                    angular.forEach($scope.menuTypes, function (menu) {
+                                                        if ($scope.menu.menuType === menu.name) {
+                                                            var index = $scope.menuTypes.indexOf(menu);
+                                                            $scope.menu.menuType = $scope.menuTypes[index];
+                                                        }
+                                                    });
+                                                }
+
                                             }
                                             $scope.newCollapse = true;
                                         }
@@ -162,9 +204,9 @@ angular.module('Menu')
                         };
 
                         $scope.submit = function () {
-                            if ($scope.type) {
-                                $scope.menu.menuType = $scope.type;
-                            }
+                            $scope.menu.menuType = $scope.menu.menuType.name;
+                            console.log("menu : " + JSON.stringify($scope.menu));
+
                             // send type data to ajax call.
                             // rest controller method add url /add
                             MenuService.saveMenu($rootScope.globals.currentUser.access_token,

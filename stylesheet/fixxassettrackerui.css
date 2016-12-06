@@ -14,7 +14,6 @@ input[data-readonly] {
 .row.no-gutter [class*='col-']:not(:last-child) {
     padding-right:0;
     padding-left:0;
-    border: solid;
 }
 
 .row.no-gutter {

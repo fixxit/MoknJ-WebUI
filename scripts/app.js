@@ -8,6 +8,7 @@ angular.module('Home', ['ui.bootstrap']);
 angular.module('Menu', ['ui.bootstrap']);
 angular.module('Type', ['ui.bootstrap']);
 angular.module('Asset', ['ui.bootstrap']);
+angular.module('Employee', ['ui.bootstrap']);
 angular.module('User', ['ui.bootstrap']);
 angular.module('Link', ['ui.bootstrap']);
 angular.module('Template', ['ui.bootstrap']);
@@ -19,6 +20,7 @@ angular.module('FixxitAssetTrackerUI', [
     'Menu',
     'Type',
     'Asset',
+    'Employee',
     'User',
     'Link',
     'Template',
@@ -68,6 +70,10 @@ angular.module('FixxitAssetTrackerUI', [
                     templateUrl: 'modules/templatetypes/asset/new/views/asset.html'
                 })
 
+                .when('/employee', {
+                    controller: 'EmployeeController',
+                    templateUrl: 'modules/templatetypes/employee/new/views/employee.html'
+                })
 
                 .otherwise({redirectTo: '/login'});
     }])

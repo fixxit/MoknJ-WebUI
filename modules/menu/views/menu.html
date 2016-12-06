@@ -61,6 +61,14 @@
                     <number-only-input input-value="menu.index" input-name="index"/>      
                 </div> 
 
+                <div class="form-group" ng-show="!type">
+                    <label>Module</label>
+                    <select class="form-control" ng-model="menu.menuType"
+                            ng-options="module as module.type for module in menuTypes">
+                        <option value="">Select a module</option>
+                    </select>
+                </div>
+
                 <div class="panel panel-default">
                     <div class="panel-heading" class="panel-heading">
                         Page
@@ -76,7 +84,7 @@
                             <span ng-show="form.page.$dirty && form.page.$error.required" class="help-block">Page name is required</span>
                         </div>
 
-                        <div class="panel panel-default">
+                        <div class="panel panel-default" ng-show="menu.menuType">
                             <div class="panel-heading" class="panel-heading">
                                 Add Template
                             </div>
@@ -87,7 +95,7 @@
                                 <div class="form-group">
                                     <label>Templates</label>
                                     <select class="form-control" ng-model="template"
-                                            ng-options="type.name for type in types">
+                                            ng-options="type.name for type in types| filter:{ templateType : menu.menuType.template }">
                                         <option value="">Select a template</option>
                                     </select>
                                 </div>
@@ -126,7 +134,6 @@
                                                 <th></th> 
                                                 <th></th>
                                                 <th>Name</th>
-                                                <th>Module</th>
                                                 <th>Fields</th>
                                                 <th>Scope Challenge</th>
                                             </tr>
@@ -138,7 +145,6 @@
                                                 <td style="width: 25px; cursor: pointer;"><span ng-show="$index !== 0" ng-click="move($index, ($index - 1))" class="glyphicon glyphicon-arrow-up"></span></td>
                                                 <td style="width: 25px; cursor: pointer;"><span ng-click="edit($index)" class="glyphicon glyphicon-wrench"></span></td>
                                                 <td>{{type.name}}</td>
-                                                <td>{{type.templateType}}</td>
                                                 <td><span ng-repeat="detail in type.details">{{detail.name}},&nbsp;</span></td>
                                                 <td>
                                                     <input type="checkbox" ng-model="type.allowScopeChallenge">

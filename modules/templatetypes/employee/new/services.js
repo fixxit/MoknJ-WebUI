@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('Menu')
-        .factory('ApiMenuCall',
+angular.module('Employee')
+        .factory('ApiEmployeeCall',
                 ['$http',
                     function ($http) {
                         var service = {};
@@ -40,55 +40,33 @@ angular.module('Menu')
                         return service;
                     }]);
 
-angular.module('Menu')
-        .factory('MenuService',
-                ['ApiMenuCall',
-                    function (ApiMenuCall) {
+angular.module('Employee')
+        .factory('EmployeeService',
+                ['ApiEmployeeCall',
+                    function (ApiEmployeeCall) {
                         var service = {};
 
-                        service.getAllTypes = function (token, callback) {
-                            ApiMenuCall.process(
-                                    'type/all?access_token=' + token,
+                        service.getDetail = function (token, id, callback) {
+                            ApiEmployeeCall.process(
+                                    'type/get/' + id + '?access_token=' + token,
                                     null,
                                     callback);
                         };
 
-                        service.getMenu = function (token, id, callback) {
-                            ApiMenuCall.process(
-                                    'menu/get/' + id +
-                                    '?access_token=' + token,
+                        service.get = function (token, id, callback) {
+                            ApiEmployeeCall.process(
+                                    'employee/get/' + id + '?access_token=' + token,
                                     null,
                                     callback);
                         };
 
-                        service.deleteMenu = function (token, id, callback) {
-                            ApiMenuCall.process(
-                                    'menu/delete/' + id +
-                                    '?access_token=' + token,
-                                    null,
+                        service.save = function (token, id, data, callback) {
+                            ApiEmployeeCall.process(
+                                    'employee/add/' + id + '?access_token=' + token,
+                                    data,
                                     callback);
                         };
 
-                        service.saveMenu = function (token, menu, callback) {
-                            ApiMenuCall.process(
-                                    'menu/add?access_token=' + token,
-                                    menu,
-                                    callback);
-                        };
-
-                        service.getAllMenus = function (token, callback) {
-                            ApiMenuCall.process(
-                                    'menu/all?access_token=' + token,
-                                    null,
-                                    callback);
-                        };
-
-                        service.getAllModules = function (token, callback) {
-                            ApiMenuCall.process(
-                                    'menu/module/types?access_token=' + token,
-                                    null,
-                                    callback);
-                        };
 
                         return service;
                     }]);
