@@ -5,7 +5,7 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
             $scope.name = 'Check ' + name + " Out";
             $scope.asset = asset;
             $scope.resources = [];
-            $scope.selected = 'Select an Resource';
+            $scope.selected = 'Select a Employee';
             $scope.resource = {};
             $scope.pagination = {};
 

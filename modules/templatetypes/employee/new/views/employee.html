@@ -1,16 +1,137 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
-</html>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed" aria-expanded="true">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">
+                <img src="../../../images/logo.png" style="display: inline-block;width:25px;">
+                <span class="badge" style="display: inline-block; font-size:16px;">MoknJ</span>&nbsp;
+                <span ng-if="!employeeId" style="display: inline-block; font-size:16px;">New {{name}}</span>
+                <span ng-if="employeeId" style="display: inline-block; font-size:16px;">Update {{name}}</span>
+            </a>
+        </div>
+        <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a ng-if='menuId' href="#/home?id={{menuId}}"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
+                    <a ng-if='!menuId' href="#/home"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid bg-3">
+    <div ng-show="error && !success" class="alert alert-danger">{{error}}</div>
+    <div ng-show="success && !error" class="alert alert-success">{{success}}</div>
+</div>
+<div class="container-fluid bg-3">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <lable>{{type.name}}</lable>
+        </div>
+        <form name="form" ng-submit="save()" role="form">
+            <div class="container-fluid bg-3">
+                <div class="row">
+                    <span>&nbsp;</span>
+                </div> 
+                <div class="form-group" ng-if="!type.resourceId">
+                    <label for="datatype">Employee</label>
+                    <i class="fa fa-key"></i>
+                    <p class="input-group">
+                        <input ng-model="selected" type="text" name="resource" id="resource" class="form-control" readonly/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="changeDiv()"><span class="caret"></span></button>
+                        </span>
+                    </p>
+                    <div collapse="!resourceCollapse" class="panel panel-default">
+                        <input type="text" class="form-control" placeholder="Search" ng-model="search"/>   
+                        <div class="list-group">
+                            <a class="list-group-item" ng-show="!filterData.length">No Employee Found</a>
+                            <a class="list-group-item" ng-repeat="resource in filterData = (resources| filterResources:[search] : pagination)" 
+                               style="cursor: pointer;" ng-class="isEven($index)" ng-click="dropboxResourceSelected(resource)">
+                                {{resource.fullname}}
+                            </a>
+                        </div>
+                        <div class="text-center" ng-if="pagination.totalItems > 5">
+                            <pagination ng-show="pagination.searchSize"  
+                                        total-items="pagination.searchSize" 
+                                        ng-model="pagination.currentPage"  
+                                        class="pagination-sm" 
+                                        boundary-links="false" rotate="false"
+                                        items-per-page="pagination.itemsPerPage">      
+                            </pagination>  
+                        </div> 
+                    </div>
+                </div>
+
+                <div class="form-group" ng-repeat="detail in type.details">
+                    <label for="datatype">{{detail.name}}</label>
+                    <div class="form-group" ng-if="detail.type === 'GBL_INPUT_TXT_TYPE'">
+                        <input ng-if="!detail.mandatory" ng-model="detail.value" type="text" name="field_{{detail.id}}" id="field_{{detail.id}}" class="form-control" />
+                        <input ng-if="detail.mandatory" ng-model="detail.value" type="text" name="field_{{detail.id}}" id="field_{{detail.id}}" class="form-control" required/>
+                    </div>
+
+                    <div class="form-group" ng-if="detail.type === 'GBL_INPUT_DAT_TYPE'">      
+                        <p class="input-group">
+                            <input ng-if="!detail.mandatory" type="text" name="field_date_{{detail.id}}" id="field_date_{{detail.id}}" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="detail.value" is-open="openDatePickers[$index]"  date-disabled="disabled(date, mode)" close-text="Close" readonly/>                      
+                            <input ng-if="detail.mandatory" type="text" name="field_date_{{detail.id}}" id="field_date_{{detail.id}}" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="detail.value" is-open="openDatePickers[$index]"  date-disabled="disabled(date, mode)" close-text="Close" required data-readonly/>                           
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="openCal($event, $index)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </p> 
+                    </div> 
+
+                    <div class="input-group" ng-if="detail.type === 'GBL_INPUT_MON_TYPE'" > 
+                        <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-euro"></span></span>
+                        <p ng-if="!detail.mandatory">
+                        <money-only-input input-value="detail.value" input-name="'field_num_' + detail.id"/>
+                        </p>
+                        <p ng-if="detail.mandatory">
+                        <money-only-input-required input-value="detail.value" input-name="'field_num_' + detail.id"/>
+                        </p>
+                    </div>
+
+                    <div class="form-group" ng-if="detail.type === 'GBL_INPUT_INT_TYPE'" > 
+                        <p ng-if="!detail.mandatory">
+                        <number-only-input input-value="detail.value" input-name="'field_num_' + detail.id"/>
+                        </p>
+                        <p ng-if="detail.mandatory">
+                        <number-only-input-required input-value="detail.value" input-name="'field_num_' + detail.id"/>
+                        </p>
+                    </div>
+
+                    <div class="form-group" ng-if="detail.type === 'GBL_INPUT_DRP_TYPE'">
+                        <div class="dropdown" ng-class='{open: open}'>
+                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" ng-click='open = !open'>
+                                {{detail.value}}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li ng-repeat="t in detail.dropdownvalues" ng-click="$parent.open = !$parent.open" style="cursor: pointer;">
+                                    <a ng-click="dropboxitemselected(t, detail)" >{{t}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <span ng-if="detail.mandatory" ng-show="((!detail.value) || (detail.value.trim() === '') || (detail.value.trim() === 'no selection'))" class="help-block">{{detail.name}} is required</span>
+                </div>
+
+                <div class="input-group">
+                    <div class="form-actions">
+                        <button type="submit" ng-if="!employeeId" class="btn btn-primary">Submit</button>
+                        <button type="submit" ng-if="employeeId" class="btn btn-primary">Update</button>
+                        <button type="button" ng-if="!employeeId" ng-click="reset()" ng-disabled="dataLoading" class="btn btn-danger">reset</button>
+                        <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+                    </div>
+                </div>
+                <div class="row">
+                    <span>&nbsp;</span>
+                </div> 
+            </div>
+        </form>
+    </div>

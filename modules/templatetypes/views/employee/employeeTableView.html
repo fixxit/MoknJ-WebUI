@@ -2,109 +2,111 @@
     <div class="table-responsive panel panel-primary">
         <div class="panel-heading container-fluid panel-container"> 
             <div class="col-xs-3 text-left">
-                <span ng-if="type.loading">
+                <span style="cursor: pointer;" data-toggle="tooltip" title="Expand/Collapse {{selectedType.name}}" ng-click="newCollapse = !newCollapse">{{name}}</span> 
+            </div>
+            <div class="col-xs-6 text-center">
+                <span ng-if="loading">
                     <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
                     &nbsp;
                 </span> 
-                <span ng-show="selectedType" style="cursor:pointer;" ng-click="newEmploye(selectedType.id)" data-toggle="tooltip" title="New {{selectedType.name}}">
-                    <span class="glyphicon glyphicon-new-window"></span>&nbsp;New&nbsp;"{{selectedType.name}}"&nbsp;
-                </span>
-            </div>
-            <div class="col-xs-6 text-center">
-                <span style="cursor: pointer;" data-toggle="tooltip" title="Expand/Collapse {{selectedType.name}}" ng-click="selectedType.newCollapse = !selectedType.newCollapse">{{selectedType.name}}</span> 
             </div>
             <div class="col-xs-3 text-right">
-                <span data-toggle="tooltip" title="Expand/Collapse {{selectedType.name}}" style="cursor: pointer;" ng-click="selectedType.newCollapse = !selectedType.newCollapse">
-                    <span ng-class="isCollapsed(type.newCollapse)"></span>
+                <span data-toggle="tooltip" title="Expand/Collapse {{selectedType.name}}" style="cursor: pointer;" ng-click="newCollapse = !newCollapse">
+                    <span ng-class="isCollapsed(newCollapse)"></span>
                 </span>
             </div>
         </div>
-        <div class="container-fluid" 
-             collapse="selectedType.newCollapse">
+        <div  collapse="newCollapse">
             <div class="col-sm-2"> 
-                <div>
-                    <h4>Menu</h4>
-                </div>  
-                <div class="list-group">
-                    <div ng-repeat="type in types" 
-                         ng-show='type.templateType === modules.employee.module'
-                         ng-class="isSelectedType(type)">
-                        <span style="cursor:pointer;" ng-click="setType(type)">{{type.name}}</span>
-                        <span style="cursor:pointer;" ng-show="!type.newCollapse" class="dropdown" dropdown>
-                            <span href="#" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">
-                                <span class="caret"></span>
-                            </span>
-                            <ul class="dropdown-menu" role="menu">    
-                                <li style="cursor:pointer;">
-                                    <a ng-click="editType(type.id)">
+                <h4>Menu</h4>
+                <div class="DivToScroll">
+                    <div class="DivWithScroll">
+                        <div ng-repeat="type in types" class="list-group">
+                            <div ng-show='type.templateType === modules.employee.module'>
+                                <span ng-class="isSelectedType(type)" >
+                                    <span class="caret"></span>
+                                    <span style="cursor:pointer;" ng-click="setType(type)">&nbsp;{{type.name}}</span>
+                                </span>
+                                <div ng-show="type.newCollapse">
+                                    <a style="cursor:pointer;"  class="list-group-item" ng-click="newEmploye(type.id)">
+                                        <span class="glyphicon glyphicon-new-window"></span>
+                                        &nbsp;New
+                                    </a>
+                                    <a style="cursor:pointer;"  class="list-group-item" ng-click="editType(type.id)">
                                         <span class="glyphicon glyphicon-edit"></span>
                                         &nbsp;Edit
                                     </a>
-                                </li>
-                                <li style="cursor:pointer;">
-                                    <a ng-click="removeType(type)">
+                                    <a style="cursor:pointer;"  class="list-group-item" ng-click="removeType(type)">
                                         <span class="glyphicon glyphicon-remove-sign"></span>
                                         &nbsp;Delete
                                     </a>
-                                </li>
-                            </ul>
-                        </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
             <div class="col-sm-2">
-                <div>
-                    <input type="text" class="form-control" placeholder="Search" ng-model="resourceSearch"/> 
-                </div>
-                <div class="list-group" ng-init="loadAllResources()">
-                    <div style="cursor:pointer;" 
-                         ng-repeat="resource in resources| filter :resourceSearch" 
-                         ng-class="isSelectedResource(resource)" 
-                         ng-click="selectResource(resource)">
-                        {{resource.firstName}}&nbsp;{{resource.surname}}
+                <h4>Employee Filter</h4>
+                <div class="panel panel-default">
+                    <div class="DivToScroll">
+                        <input type="text" class="form-control" placeholder="Search" ng-model="resourceSearch"/>
+                        <div class="DivWithScroll">
+                            <div class="list-group">
+                                <a style="cursor:pointer;" 
+                                   ng-repeat="resource in resources| filter :resourceSearch" 
+                                   ng-class="isSelectedResource(resource)" 
+                                   ng-click="selectResource(resource)">
+                                    {{resource.firstName}}&nbsp;{{resource.surname}}
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-sm-8" style="border-left: 1px solid;">
-                <div ng-show="selectedType">
-                    <input type="text" class="form-control" placeholder="Search" ng-model="search"/> 
+            <div class="col-sm-8">
+                <h4>{{selectedType.name}} <span ng-if="selectedType" class="badge">{{filterData.length}}</span></h4>
+                <div class="panel panel-default" ng-show="selectedType" >
+                    <div class="DivToScroll">
+                        <input type="text" class="form-control" placeholder="Search" ng-model="search"/>
+                        <div class="DivWithScroll">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                        <th ng-repeat="detail in selectedType.details">{{detail.name}}</th>
+                                        <th>Employee</th>
+                                        <th>Last Modified</th>
+                                    </tr>
+                                </thead>
+                                <tbody>  
+                                    <tr ng-repeat="employee in filterData = (selectedType.employees| filter :search)" ng-class="isEven($index)" >
+                                        <td style="width: 25px; cursor: pointer;">
+                                            <span data-toggle="tooltip" title="Remove {{type.name}}" ng-click="removeEmployee(employee, type.name, type.id)" class="glyphicon glyphicon-remove"></span>
+                                        <td style="width: 25px; cursor: pointer;">
+                                            <span data-toggle="tooltip" title="Edit {{selectedType.name}}" ng-click="editEmployee(employee.typeId, employee.id)" class="glyphicon glyphicon-edit"></span>
+                                        </td>
+                                        <td style="width: 25px; cursor: pointer;">
+                                            <span data-toggle="tooltip" title="View {{selectedType.name}} Audit" ng-click="viewAudit(employee.id, selectedType.name)" class="glyphicon glyphicon-eye-open"></span>
+                                        </td>
+                                        <td ng-repeat="value in employee.details">
+                                            <span ng-if="value.type === 'GBL_INPUT_MON_TYPE'" ><span ng-if="value.value" class="glyphicon glyphicon-euro"></span>{{value.value| currency: ""}}</span>
+                                            <span ng-if="value.type === 'GBL_INPUT_TXT_TYPE'" >{{value.value}}</span>
+                                            <span ng-if="value.type === 'GBL_INPUT_INT_TYPE'" >{{value.value}}</span>
+                                            <span ng-if="value.type === 'GBL_INPUT_DRP_TYPE'" >{{value.value}}</span>
+                                            <span ng-if="value.type === 'GBL_INPUT_DAT_TYPE'" >{{value.value| date:'yyyy-MM-dd'}}</span>  
+                                        </td>                                   
+                                        <td>{{employee.linkedResource}}</td>
+                                        <td><span ng-if="employee.lastModifiedDate">{{employee.lastModifiedBy}} ({{employee.lastModifiedDate}})</span></td>
+                                    </tr>
+                                    <tr class="active text-center" ng-if="!selectedType.employees.length"><td colspan="{{selectedType.details.length + 5}}">No {{selectedType.name}} Entries Found</td></tr> 
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="table-responsive" ng-show="selectedType">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>&nbsp;</th>
-                                <th>&nbsp;</th>
-                                <th>&nbsp;</th>
-                                <th ng-repeat="detail in selectedType.details">{{detail.name}}</th>
-                                <th>Last Modified</th>
-                            </tr>
-                            <tr class="active text-center" ng-if="!selectedType.filterData.length"><td colspan="{{selectedType.details.length + 4}}">No {{selectedType.name}} Entries Found</td></tr> 
-                            <tr class="text-center" ng-if="!selectedType.filterData.length"><td colspan="{{selectedType.details.length + 4}}">No {{selectedType.name}} Entries Found</td></tr> 
-                            <tr class="active text-center" ng-if="!selectedType.filterData.length"><td colspan="{{selectedType.details.length + 4}}">No {{selectedType.name}} Entries Found</td></tr> 
-                            <tr class="text-center" ng-if="!selectedType.filterData.length"><td colspan="{{selectedType.details.length + 4}}">No {{selectedType.name}} Entries Found</td></tr> 
-                            <tr class="active text-center" ng-if="!selectedType.filterData.length"><td colspan="{{selectedType.details.length + 4}}">No {{selectedType.name}} Entries Found</td></tr> 
-                            <tr class="text-center" ng-if="!selectedType.filterData.length"><td colspan="{{selectedType.details.length + 4}}">No {{selectedType.name}} Entries Found</td></tr>
-                            <tr class="active text-center" ng-if="!selectedType.filterData.length"><td colspan="{{selectedType.details.length + 4}}">No {{selectedType.name}} Entries Found</td></tr> 
-                            <tr class="text-center" ng-if="!selectedType.filterData.length"><td colspan="{{selectedType.details.length + 4}}">No {{selectedType.name}} Entries Found</td></tr> 
-                            <tr class="active text-center" ng-if="!selectedType.filterData.length"><td colspan="{{selectedType.details.length + 4}}">No {{selectedType.name}} Entries Found</td></tr> 
-                            <tr class="text-center" ng-if="!selectedType.filterData.length"><td colspan="{{selectedType.details.length + 4}}">No {{selectedType.name}} Entries Found</td></tr> 
-                            <tr class="active text-center" ng-if="!selectedType.filterData.length"><td colspan="{{selectedType.details.length + 4}}">No {{selectedType.name}} Entries Found</td></tr> 
-                            <tr class="text-center" ng-if="!selectedType.filterData.length"><td colspan="{{selectedType.details.length + 4}}">No {{selectedType.name}} Entries Found</td></tr> 
-                            <tr class="active text-center" ng-if="!selectedType.filterData.length"><td colspan="{{selectedType.details.length + 4}}">No {{selectedType.name}} Entries Found</td></tr> 
-                        </thead>
-                    </table>
-                </div>
-                <div class="text-center" ng-show="selectedType">
-                    <pagination
-                        total-items="type.searchSize" 
-                        ng-model="type.currentPage"  
-                        class="pagination-sm" 
-                        boundary-links="true" rotate="false"
-                        items-per-page="type.itemsPerPage"></pagination> 
-                </div>  
             </div>
         </div>
     </div>

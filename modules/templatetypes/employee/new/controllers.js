@@ -4,16 +4,18 @@ angular.module('Employee')
         .controller('EmployeeController',
                 ['$scope', '$rootScope', '$location', 'EmployeeService',
                     function ($scope, $rootScope, $location, EmployeeService) {
+                        var id = $location.search().id;
                         $scope.menuId = $location.search().menuId ? $location.search().menuId : null;
                         $scope.employeeId = $location.search().employeeId;
-                        var id = $location.search().id;
                         $scope.name = '';
-
-                        $scope.dropboxitemselected = function (item, detail) {
-                            detail.value = item;
-                        };
+                        $scope.resources = [];
+                        $scope.selected = 'Select a Employee';
+                        $scope.resource = null;
+                        $scope.pagination = {};
+                        $scope.resourceCollapse = false;
 
                         $scope.loadPage = function (id) {
+                            $scope.getAllResources();
                             if (id) {
                                 EmployeeService.getDetail($rootScope.globals.currentUser.access_token, id,
                                         function (response) {
@@ -54,6 +56,7 @@ angular.module('Employee')
                                                                                             }
                                                                                         });
                                                                                     });
+
                                                                                     $scope.type.resourceId = response.employee.resourceId;
                                                                                     $scope.type.menuScopeIds = response.employee.menuScopeIds;
                                                                                     $scope.dataLoading = false;
@@ -80,8 +83,54 @@ angular.module('Employee')
                             }
                         };
 
+                        // selected item desplayed in div
+                        $scope.dropboxResourceSelected = function (resource) {
+                            $scope.selected = resource.fullname;
+                            $scope.resource = resource;
+                            $scope.resourceCollapse = !$scope.resourceCollapse;
+                        };
 
-                        $scope.loadPage(id);
+
+                        $scope.changeDiv = function () {
+                            $scope.resourceCollapse = !$scope.resourceCollapse;
+                        };
+
+                        $scope.getAllResources = function () {
+                            EmployeeService.allResources($rootScope.globals.currentUser.access_token,
+                                    function (response) {
+                                        if (response) {
+                                            if (response.error_description) {
+                                                $scope.error = response.error_description + ". Please logout!";
+                                            } else {
+                                                if (response.resources) {
+                                                    // do not refresh the entire structure
+                                                    $scope.resources = response.resources;
+
+                                                    $scope.pagination.viewby = 5;
+                                                    $scope.pagination.totalItems = $scope.resources.length;
+                                                    $scope.pagination.currentPage = 1;
+                                                    $scope.pagination.itemsPerPage = 5;
+                                                    $scope.pagination.maxSize = 5;
+
+                                                    angular.forEach($scope.resources, function (entry) {
+                                                        entry.fullname = entry.firstName + " " + entry.surname;
+                                                    });
+
+                                                    $scope.dataLoading = false;
+                                                } else {
+                                                    $scope.error = "Invalid server response";
+                                                }
+                                            }
+                                        } else {
+                                            $scope.error = "Invalid server response";
+                                        }
+                                    }
+                            );
+                        }
+
+                        $scope.dropboxitemselected = function (item, detail) {
+                            detail.value = item;
+                        };
 
                         $scope.openDatePickers = [];
 
@@ -128,13 +177,20 @@ angular.module('Employee')
 
                                 var missingValue = '';
                                 angular.forEach($scope.type.details, function (detail) {
-                                    console.log(detail.value);
                                     if (detail.mandatory && (!detail
                                             || detail.value === ''
                                             || detail.value === 'no selection')) {
                                         missingValue = missingValue + detail.name + ',';
                                     }
                                 });
+
+                                if ($scope.resource) {
+                                    $scope.type.resourceId = $scope.resource.id;
+                                } else {
+                                    if (!$scope.type.resourceId) {
+                                        missingValue = missingValue + "employee,";
+                                    }
+                                }
 
                                 if (missingValue) {
                                     missingValue = $scope.stripTrailing(missingValue, ',');
@@ -174,6 +230,7 @@ angular.module('Employee')
                                                         $scope.reset(false);
                                                     } else {
                                                         // error 
+                                                        $scope.type.resourceId = null;
                                                         $scope.success = null;
                                                         $scope.error = response.message;
                                                     }
@@ -191,6 +248,9 @@ angular.module('Employee')
                             if (clear) {
                                 $scope.success = null;
                             }
+                            $scope.resource = null;
+                            $scope.type.resourceId = null;
+                            $scope.selected = 'Select a Employee';
                             angular.forEach($scope.type.details, function (detail) {
                                 detail.value = null;
                                 if (detail.type === 'GBL_INPUT_DRP_TYPE') {
@@ -198,5 +258,8 @@ angular.module('Employee')
                                 }
                             });
                         };
+
+
+                        $scope.loadPage(id);
                     }]);
 

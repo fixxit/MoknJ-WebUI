@@ -22,6 +22,25 @@ input[data-readonly] {
     display: flex;
 }
 
+.slide.ng-enter {
+    transition:0.5s linear all;
+    transform:translateY(-100px);
+}
+
+.slide.ng-enter.ng-enter-active {
+    transform:translateY(0);
+}
+
+.DivToScroll{   
+    padding: 2px 2px 2px;
+}
+
+.DivWithScroll{
+    height:375px;
+    overflow:scroll;
+    overflow-y:auto;
+    overflow-x:hidden;
+}
 
 img {
     opacity: 0.6;

@@ -4,14 +4,14 @@
 
 // declare modules
 angular.module('Authentication', ['ui.bootstrap']);
-angular.module('Home', ['ui.bootstrap']);
-angular.module('Menu', ['ui.bootstrap']);
-angular.module('Type', ['ui.bootstrap']);
-angular.module('Asset', ['ui.bootstrap']);
-angular.module('Employee', ['ui.bootstrap']);
-angular.module('User', ['ui.bootstrap']);
-angular.module('Link', ['ui.bootstrap']);
-angular.module('Template', ['ui.bootstrap']);
+angular.module('Home', ['ui.bootstrap', 'ngAnimate']);
+angular.module('Menu', ['ui.bootstrap', 'ngAnimate']);
+angular.module('Type', ['ui.bootstrap', 'ngAnimate']);
+angular.module('Asset', ['ui.bootstrap', 'ngAnimate']);
+angular.module('Employee', ['ui.bootstrap', 'ngAnimate']);
+angular.module('User', ['ui.bootstrap', 'ngAnimate']);
+angular.module('Link', ['ui.bootstrap', 'ngAnimate']);
+angular.module('Template', ['ui.bootstrap', 'ngAnimate']);
 
 // new modles copme here
 angular.module('FixxitAssetTrackerUI', [

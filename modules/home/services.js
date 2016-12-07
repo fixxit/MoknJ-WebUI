@@ -85,6 +85,14 @@ angular.module('Home')
                                     callback);
                         };
 
+                        service.getAllEmployeeForType = function (token, templateId, menuId, callback) {
+                            ApiHomeCall.process(
+                                    'employee/get/all/' + templateId +
+                                    '/' + menuId + '?access_token=' + token,
+                                    null,
+                                    callback);
+                        };
+
                         service.deleteAsset = function (token, payload, callback) {
                             ApiHomeCall.process(
                                     'asset/delete/?access_token=' + token,

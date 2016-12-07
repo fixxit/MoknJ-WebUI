@@ -47,16 +47,16 @@
 
                     <div class="form-group" ng-if="detail.type === 'GBL_INPUT_DAT_TYPE'">      
                         <p class="input-group">
-                            <input ng-if="!detail.mandatory" type="text" name="field_date_{{detail.id}}" id="field_date_{{detail.id}}" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="detail.value" is-open="openDatePickers[index]"  date-disabled="disabled(date, mode)" close-text="Close" readonly/>                      
-                            <input ng-if="detail.mandatory" type="text" name="field_date_{{detail.id}}" id="field_date_{{detail.id}}" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="detail.value" is-open="openDatePickers[index]"  date-disabled="disabled(date, mode)" close-text="Close" required data-readonly/>                           
+                            <input ng-if="!detail.mandatory" type="text" name="field_date_{{detail.id}}" id="field_date_{{detail.id}}" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="detail.value" is-open="openDatePickers[$index]"  date-disabled="disabled(date, mode)" close-text="Close" readonly/>                      
+                            <input ng-if="detail.mandatory" type="text" name="field_date_{{detail.id}}" id="field_date_{{detail.id}}" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="detail.value" is-open="openDatePickers[$index]"  date-disabled="disabled(date, mode)" close-text="Close" required data-readonly/>                           
                             <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="openCal($event, index)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                <button type="button" class="btn btn-default" ng-click="openCal($event, $index)"><i class="glyphicon glyphicon-calendar"></i></button>
                             </span>
                         </p> 
                     </div> 
 
                     <div class="input-group" ng-if="detail.type === 'GBL_INPUT_MON_TYPE'" > 
-                        <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-euro"></span></span>
+                        <span class="input-group-addon" id="basic-addon"><span class="glyphicon glyphicon-euro"></span></span>
                         <p ng-if="!detail.mandatory">
                         <money-only-input input-value="detail.value" input-name="'field_num_' + detail.id"/>
                         </p>

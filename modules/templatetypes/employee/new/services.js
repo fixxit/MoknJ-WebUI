@@ -67,6 +67,12 @@ angular.module('Employee')
                                     callback);
                         };
 
+                        service.allResources = function (token, callback) {
+                            ApiEmployeeCall.process(
+                                    'resource/get/all?access_token=' + token,
+                                    null,
+                                    callback);
+                        };
 
                         return service;
                     }]);

@@ -45,52 +45,92 @@ angular.module('Home')
                             }
                         };
 
-                        $scope.getAllAssetForType = function (type) {
-                            HomeService.getAllAssetForType(
-                                    $rootScope.globals.currentUser.access_token,
-                                    type.id,
-                                    $scope.id,
-                                    function (response) {
-                                        if (response) {
-                                            if (response.assets) {
-                                                type.loading = true;
-                                                type.assets = [];
-                                                angular.forEach(response.assets, function (asset) {
-                                                    var fields = [];
-                                                    angular.forEach(type.details, function (detail) {
-                                                        var noFieldFound = true;
-                                                        angular.forEach(asset.details, function (field) {
-                                                            if (detail.id === field.id) {
-                                                                field.type = detail.type;
-                                                                // parse date for filters
-                                                                if (field.type === 'GBL_INPUT_DAT_TYPE') {
-                                                                    field.value = $scope.formatDate(new Date(field.value));
-                                                                }
-                                                                fields.push(field);
-                                                                noFieldFound = false;
-                                                            }
-                                                        });
-                                                        // add blank value for field which dont exist...
-                                                        if (noFieldFound) {
-                                                            var field = {'value': "n/a", 'type': "GBL_INPUT_TXT_TYPE"};
-                                                            fields.push(field);
-                                                        }
-                                                    });
-                                                    asset.details = fields;
-                                                    $scope.loadResource(asset);
-                                                    type.assets.push(asset);
-                                                });
-
-                                                type.viewby = 5;
-                                                type.totalItems = response.assets.length;
-                                                type.currentPage = 1;
-                                                type.itemsPerPage = type.viewby;
-                                                type.maxSize = 5; //Number of pager buttons to show
-                                                type.loading = false;
-                                            }
+                        $scope.getTemplateEnties = function (type) {
+                            if (type.templateType === $scope.modules.asset.module) {
+                                HomeService.getAllAssetForType(
+                                        $rootScope.globals.currentUser.access_token,
+                                        type.id,
+                                        $scope.id,
+                                        function (response) {
+                                            $scope.getModuleDetails(type, response);
                                         }
+                                );
+                            } else if (type.templateType === $scope.modules.employee.module) {
+                                HomeService.getAllEmployeeForType(
+                                        $rootScope.globals.currentUser.access_token,
+                                        type.id,
+                                        $scope.id,
+                                        function (response) {
+                                            $scope.getModuleDetails(type, response);
+                                        }
+                                );
+                            }
+                        };
+
+
+                        $scope.getFieldDetails = function (entries, type, values) {
+                            if (entries) {
+                                angular.forEach(entries, function (entry) {
+                                    var fields = [];
+                                    angular.forEach(type.details, function (detail) {
+                                        var noFieldFound = true;
+                                        angular.forEach(entry.details, function (field) {
+                                            if (detail.id === field.id) {
+                                                field.type = detail.type;
+                                                // parse date for filters
+                                                if (field.type === 'GBL_INPUT_DAT_TYPE') {
+                                                    field.value = $scope.formatDate(new Date(field.value));
+                                                }
+                                                fields.push(field);
+                                                noFieldFound = false;
+                                            }
+                                        });
+                                        // add blank value for field which dont exist...
+                                        if (noFieldFound) {
+                                            var field = {'value': "n/a", 'type': "GBL_INPUT_TXT_TYPE"};
+                                            fields.push(field);
+                                        }
+                                    });
+                                    entry.details = fields;
+                                    values.push(entry);
+                                });
+                            }
+                        }
+
+                        $scope.getModuleDetails = function (type, response) {
+                            if (response) {
+                                if (type.templateType === $scope.modules.asset.module) {
+                                    if (response.assets) {
+                                        type.loading = true;
+                                        type.assets = [];
+                                        type.totalItems = response.assets.length;
+                                        $scope.getFieldDetails(response.assets, type, type.assets);
+                                        type.viewby = 5;
+                                        type.currentPage = 1;
+                                        type.itemsPerPage = type.viewby;
+                                        type.maxSize = 5; //Number of pager buttons to show
+                                        type.loading = false;
+                                        angular.forEach(response.assets, function (asset) {
+                                            $scope.loadResource(asset);
+                                        });
                                     }
-                            );
+                                } else if (type.templateType === $scope.modules.employee.module) {
+                                    if (response.employees) {
+                                        type.loading = true;
+                                        type.employees = [];
+                                        type.totalItems = response.employees.length;
+                                        $scope.getFieldDetails(response.employees, type, type.employees);
+                                        type.viewby = 10;
+                                        type.currentPage = 1;
+                                        type.itemsPerPage = type.viewby;
+                                        type.maxSize = 10; //Number of pager buttons to show
+                                        type.loading = false;
+                                        angular.forEach(response.employees, function (employee) {
+                                            $scope.loadResource(employee);
+                                        });
+                                    }
+                                }
+                            }
                         };
 
                         $scope.refreshAsset = function (asset, load_resource) {
@@ -246,16 +286,12 @@ angular.module('Home')
                                                             }
                                                         });
 
-                                                        if (type.templateType === $scope.modules.asset.module) {
-                                                            if (typeId) {
-                                                                if (type.id === typeId) {
-                                                                    $scope.getAllAssetForType(type);
-                                                                }
-                                                            } else {
-                                                                $scope.getAllAssetForType(type);
+                                                        if (typeId) {
+                                                            if (type.id === typeId) {
+                                                                $scope.getTemplateEnties(type);
                                                             }
-                                                        } else if (type.templateType === $scope.modules.employee.module) {
-
+                                                        } else {
+                                                            $scope.getTemplateEnties(type);
                                                         }
 
                                                         type.loading = false;
@@ -272,6 +308,7 @@ angular.module('Home')
 
                         $scope.loadPage = function (typeId) {
                             $scope.loadMenus();
+                            $scope.loadAllResources();
                             if ($scope.id) {
                                 $scope.setURLs($scope.id);
                                 $scope.loadTemplateForMenu(typeId);
@@ -297,6 +334,10 @@ angular.module('Home')
 
                         $scope.edit = function (id, assetId) {
                             $location.path('/asset').search({'id': id, 'assetId': assetId, 'menuId': $scope.id});
+                        };
+
+                        $scope.editEmployee = function (id, employeeId) {
+                            $location.path('/employee').search({'id': id, 'employeeId': employeeId, 'menuId': $scope.id});
                         };
 
                         $scope.editType = function (id) {
@@ -414,11 +455,19 @@ angular.module('Home')
                         };
 
                         $scope.setType = function (type) {
-                            if (type === $scope.selectedType) {
-                                $scope.selectedType = null;
-                            } else {
+                            if (!$scope.selectedType) {
                                 $scope.selectedType = type;
+                                $scope.selectedType.newCollapse = true;
+                            } else {
+                                $scope.selectedType.newCollapse = false;
+                                if (type === $scope.selectedType) {
+                                    $scope.selectedType = null;
+                                } else {
+                                    $scope.selectedType = type;
+                                    $scope.selectedType.newCollapse = true;
+                                }
                             }
+
                         };
 
                         $scope.isSelectedType = function (type) {
