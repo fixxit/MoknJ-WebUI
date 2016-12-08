@@ -17,7 +17,7 @@
         <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a ng-if='menuId' href="#/home?id={{menuId}}"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
+                    <a ng-if='menuId' href="#/home?id={{menuId}}&templateId={{id}}"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
                     <a ng-if='!menuId' href="#/home"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
                 </li>
             </ul>
@@ -30,7 +30,7 @@
 </div>
 <div class="container-fluid bg-3">
     <div class="panel panel-primary">
-        <div class="panel-heading">
+        <div data-toggle="tooltip" title="Expand/Collapse New/Update" style="cursor: pointer;" class="panel-heading" ng-click="newCollapse = !newCollapse">
             <span ng-if="loading">
                 <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
                 &nbsp;
@@ -38,7 +38,7 @@
             Template
         </div>
         <form name="form" ng-submit="submit()" role="form">
-            <div class="container-fluid bg-3">
+            <div class="container-fluid bg-3" collapse="!newCollapse">
                 <div class="row">
                     <span>&nbsp;</span>
                 </div> 
@@ -222,5 +222,57 @@
                 </div> 
             </div> 
         </form>
+    </div>
+</div>
+<div class="container-fluid bg-3"  ng-show='!new'>
+    <div class="table-responsive panel panel-primary">
+        <div class="panel-heading">
+            <span ng-show="loading">
+                <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+                &nbsp;
+            </span>
+            <span>
+                <span class="glyphicon glyphicon-list"></span>
+                &nbsp;Templates&nbsp;
+                <span class="badge">{{pagination.searchSize}}</span>
+            </span>
+        </div>
+        <div class="input-group-addon">
+            <search-menus input-value="search" page-value="pagination"/>
+        </div>  
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>Template</th>
+                    <th>Module</th>
+                    <th>Fields</th>
+                </tr>
+            </thead>
+            <tbody>       
+                <tr ng-repeat="template in filterData =
+                            (templates| filterMultiple:[search] : pagination)" 
+                    ng-class="isEven($index)">
+                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="edit template" ng-click="editTemplate(template)" class="glyphicon glyphicon-edit"></span></td>
+                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="delete template" ng-click="deleteTemplete(template)" class="glyphicon glyphicon-remove"></span></td>
+                    <td>{{template.name}}</td>
+                    <td>{{template.templateType}}</td>
+                    <td><span ng-repeat="detail in template.details">{{detail.name}},&nbsp;</span></td>
+                </tr>
+                <tr class="active text-center" ng-if="!filterData.length"><td colspan="5">No Templates Found</td></tr> 
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <pagination ng-show="pagination.searchSize"  
+                        total-items="pagination.searchSize" 
+                        ng-model="pagination.currentPage"  
+                        class="pagination-sm" 
+                        boundary-links="true" rotate="false"
+                        items-per-page="pagination.itemsPerPage">      
+            </pagination> 
+        </div> 
     </div>
 </div>

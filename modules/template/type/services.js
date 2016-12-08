@@ -53,6 +53,12 @@ angular.module('Type')
 
                         };
 
+                        service.getAllTemplates = function (token, callback) {
+                            ApiTypeCall.process('type/all?access_token=' + token,
+                                    null,
+                                    callback);
+                        };
+
                         service.getFieldTypes = function (token, callback) {
                             ApiTypeCall.process('type/fields?access_token=' + token,
                                     null,

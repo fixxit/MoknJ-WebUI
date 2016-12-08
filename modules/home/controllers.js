@@ -366,8 +366,15 @@ angular.module('Home')
                             $location.path('/employee').search({'id': id, 'employeeId': employeeId, 'menuId': $scope.id});
                         };
 
-                        $scope.editType = function (id) {
-                            $location.path('/type').search({'id': id, 'menuId': $scope.id});
+                        $scope.editType = function (id, origin) {
+                            $location.path('/type').search(
+                                    {
+                                        'id': id,
+                                        'menuId': $scope.id,
+                                        'new': true,
+                                        'origin': origin
+                                    }
+                            );
                         };
 
                         $scope.newAsset = function (id) {

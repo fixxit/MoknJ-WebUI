@@ -7,7 +7,9 @@ angular.module('Type')
                         // Retrieve all field detail data types via type service
                         // REST controller method types /fields
                         $scope.id = $location.search().id;
+                        $scope.new = $location.search().new ? $location.search().new : null;
                         $scope.menuId = $location.search().menuId ? $location.search().menuId : null;
+                        $scope.origin = $location.search().origin ? $location.search().origin : null;
                         $scope.selectedItem = {'name': 'nosec', 'type': 'no selection'};
                         $scope.modules = [];
                         // items in the field detail list
@@ -18,34 +20,90 @@ angular.module('Type')
                         $scope.drpIndex = null;
                         // type object
                         $scope.type = {};
+                        // Pagination 
+                        $scope.pagination = {};
 
-                        $scope.loadModules = function () {
+                        $scope.loadPage = function () {
+                            $scope.loading = true;
+                            $scope.loadModules(function (modules) {
+                                $scope.modules = modules;
+                                $scope.loadTemplates(modules);
+                            });
+
+                            TypeService.getFieldTypes(
+                                    $rootScope.globals.currentUser.access_token,
+                                    $scope.process
+                                    );
+
+                            if ($scope.new) {
+                                $scope.newCollapse = true;
+                            }
+                        };
+
+                        $scope.loadModules = function (callback) {
                             TypeService.getTemplateTypes(
                                     $rootScope.globals.currentUser.access_token,
                                     function (response) {
                                         if (response.error_description) {
                                             $scope.error = response.error_description + ". Please logout!";
                                         } else {
-                                            $scope.loading = true;
-                                            if (response.templateTypes) {
-                                                $scope.modules = response.templateTypes;
-                                            }
-                                            $scope.loading = false;
+                                            callback(response.templateTypes);
                                         }
                                     }
                             );
                         };
 
-                        $scope.loadPage = function () {
-                            $scope.loadModules();
+                        $scope.loadTemplates = function (modules) {
+                            TypeService.getAllTemplates($rootScope.globals.currentUser.access_token,
+                                    function (response) {
+                                        if (response) {
+                                            if (response.error_description) {
+                                                if ("Access is denied" !== response.error_description) {
+                                                    $scope.error = response.error_description + ". Please logout!";
+                                                }
+                                            } else {
+                                                if (response.types) {
+                                                    // do not refresh the entire structure
+                                                    $scope.templates = response.types;
+                                                    // Set module names
+                                                    angular.forEach(modules, function (module) {
+                                                        angular.forEach($scope.templates, function (template) {
+                                                            if (template.templateType === module.name) {
+                                                                template.templateType = module.type;
+                                                            }
+                                                        });
+                                                    });
+
+                                                    $scope.pagination.viewby = 5;
+                                                    $scope.pagination.totalItems = response.types.length;
+                                                    $scope.pagination.currentPage = 1;
+                                                    $scope.pagination.itemsPerPage = 5;
+                                                    $scope.pagination.maxSize = 5;
+                                                } else {
+                                                    $scope.error = "Invalid server response";
+                                                }
+                                            }
+                                        } else {
+                                            $scope.error = "Invalid server response";
+                                        }
+                                        $scope.loading = false;
+                                    }
+                            );
+                        }
+
+                        $scope.editTemplate = function (template) {
+                            $scope.loading = true;
+                            $scope.editvalue = true;
+                            $scope.reset();
+                            $scope.id = template.id;
                             TypeService.getFieldTypes(
                                     $rootScope.globals.currentUser.access_token,
                                     $scope.process
                                     );
+                            $scope.newCollapse = true;
                         };
 
                         $scope.process = function (loadpageResponse) {
-                            $scope.loading = true;
                             if (loadpageResponse) {
                                 if (loadpageResponse.error_description) {
                                     $scope.error = loadpageResponse.error_description + ". Please logout!";
@@ -57,7 +115,6 @@ angular.module('Type')
                                                     $rootScope.globals.currentUser.access_token,
                                                     $scope.id,
                                                     function (response) {
-                                                        $scope.loading = true;
                                                         if (response.type) {
                                                             $scope.type = response.type;
                                                             $scope.typename = $scope.type.name;
@@ -80,7 +137,6 @@ angular.module('Type')
                                                                 });
                                                             });
                                                         }
-                                                        $scope.loading = false;
                                                     }
                                             );
                                         }
@@ -241,23 +297,6 @@ angular.module('Type')
                             $scope.items.splice(new_index, 0, $scope.items.splice(old_index, 1)[0]);
                         };
 
-                        // check if even for row odd and even colors
-                        $scope.isEven = function (value) {
-                            if (value % 2 === 0) {
-                                return "";//"info";
-                            } else {
-                                return "active";
-                            }
-                        };
-
-                        $scope.isOkOrRemove = function (unique) {
-                            if (unique) {
-                                return "glyphicon glyphicon-ok";
-                            } else {
-                                return "glyphicon glyphicon-remove";
-                            }
-                        };
-
                         // reset input boxes
                         $scope.cancel = function () {
                             // Reset all data
@@ -346,23 +385,44 @@ angular.module('Type')
                                                     $scope.success = null;
                                                     $scope.error = response.error_description + ". Please logout!";
                                                 } else {
-                                                    // asset type success or error
+                                                    // template type success or error
                                                     if (response.success) {
-                                                        //success
-                                                        if (!$scope.id) {
-                                                            $scope.success = 'Successfully saved a new asset type, create new type ?';
-                                                        } else {
-                                                            if ($scope.menuId) {
-                                                                $location.path('/home').search({'id': $scope.menuId});
+                                                        if (!$scope.editvalue) {
+                                                            //success
+                                                            if (!$scope.id) {
+                                                                $scope.success = 'Successfully saved a new template, create new type ?';
                                                             } else {
-                                                                $location.path('/home');
+                                                                if ($scope.menuId) {
+                                                                    if ($scope.origin === 'employee') {
+                                                                        $location.path('/home').search(
+                                                                                {
+                                                                                    'id': $scope.menuId,
+                                                                                    'templateId': $scope.id
+                                                                                }
+                                                                        );
+                                                                    } else {
+                                                                        $location.path('/home').search(
+                                                                                {'id': $scope.menuId}
+                                                                        );
+                                                                    }
+                                                                } else {
+                                                                    $location.path('/home');
+                                                                }
                                                             }
-                                                        }
 
-                                                        $scope.error = null;
-                                                        $scope.dataLoading = false;
-                                                        // Reset all data
-                                                        $scope.reset();
+                                                            $scope.error = null;
+                                                            $scope.dataLoading = false;
+                                                            // Reset all data
+                                                            $scope.reset();
+                                                        } else {
+                                                            $scope.newCollapse = false;
+                                                            $scope.success = 'Successfully updated template!';
+                                                            $scope.error = null;
+                                                            $scope.dataLoading = false;
+                                                            $scope.id = null;
+                                                            // Reset all data
+                                                            $scope.reset();
+                                                        }
                                                     } else {
                                                         // error 
                                                         $scope.success = null;
@@ -374,12 +434,39 @@ angular.module('Type')
                                 } else {
                                     // No field details included...
                                     $scope.success = null;
-                                    $scope.error = "no asset type fields provided";
+                                    $scope.error = "no template type fields provided";
                                 }
                             } else {
                                 // No module/template type selected...
                                 $scope.success = null;
                                 $scope.error = "no module selected for this template";
+                            }
+                        };
+
+
+                        // check if even for row odd and even colors
+                        $scope.isEven = function (value) {
+                            if (value % 2 === 0) {
+                                return "";//"info";
+                            } else {
+                                return "active";
+                            }
+                        };
+
+                        $scope.isOkOrRemove = function (unique) {
+                            if (unique) {
+                                return "glyphicon glyphicon-ok";
+                            } else {
+                                return "glyphicon glyphicon-remove";
+                            }
+                        };
+
+                        // check if even for row odd and even colors
+                        $scope.isExpanded = function () {
+                            if (!$scope.newCollapse) {
+                                return "glyphicon glyphicon-collapse-down";//"info";
+                            } else {
+                                return "glyphicon glyphicon-collapse-up";
                             }
                         };
 

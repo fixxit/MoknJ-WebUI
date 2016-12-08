@@ -61,7 +61,7 @@
             <tbody>       
                 <tr ng-repeat="type in filterData =
                                     (types| filterMultiple:[search] : pagination)" 
-                    ng-class="isEven($index)">
+                    ng-class="isEven($index)">            
                     <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="change to visible" ng-click="unhideTemplate(type)" class="glyphicon glyphicon-eye-open"></span></td>
                     <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="delete" ng-click="deleteTemplete(type)" class="glyphicon glyphicon-trash"></span></td>
                     <td>{{type.name}}</td>
