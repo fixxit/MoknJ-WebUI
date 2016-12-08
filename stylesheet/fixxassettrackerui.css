@@ -36,10 +36,15 @@ input[data-readonly] {
 }
 
 .DivWithScroll{
-    height:375px;
+    max-height: 500px;
+    min-height: 375px;
     overflow:scroll;
     overflow-y:auto;
     overflow-x:hidden;
+}
+
+div#employee {
+    height: 100vh;
 }
 
 img {

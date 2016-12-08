@@ -6,13 +6,15 @@ angular.module('Employee')
                     function ($scope, $rootScope, $location, EmployeeService) {
                         var id = $location.search().id;
                         $scope.menuId = $location.search().menuId ? $location.search().menuId : null;
-                        $scope.employeeId = $location.search().employeeId;
+                        $scope.employeeId = $location.search().employeeId ? $location.search().employeeId : null;
+                        $scope.resourceId = $location.search().resourceId ? $location.search().resourceId : null;
                         $scope.name = '';
                         $scope.resources = [];
                         $scope.selected = 'Select a Employee';
                         $scope.resource = null;
                         $scope.pagination = {};
                         $scope.resourceCollapse = false;
+                        $scope.id = id;
 
                         $scope.loadPage = function (id) {
                             $scope.getAllResources();
@@ -27,6 +29,10 @@ angular.module('Employee')
                                                 } else {
                                                     if (response.type) {
                                                         $scope.type = response.type;
+
+                                                        if ($scope.resourceId) {
+                                                            $scope.type.resourceId = $scope.resourceId;
+                                                        }
 
                                                         angular.forEach($scope.type.details, function (detail) {
                                                             if (detail.type === 'GBL_INPUT_DRP_TYPE') {
@@ -218,7 +224,13 @@ angular.module('Employee')
                                                             $scope.success = 'Successfully saved employee, save new employee ?';
                                                         } else {
                                                             if ($scope.menuId) {
-                                                                $location.path('/home').search({'id': $scope.menuId});
+                                                                $location.path('/home').search(
+                                                                        {
+                                                                            'id': $scope.menuId,
+                                                                            'templateId': $scope.id,
+                                                                            'resourceId': $scope.type.resourceId
+                                                                        }
+                                                                );
                                                             } else {
                                                                 $location.path('/home');
                                                             }
@@ -230,7 +242,9 @@ angular.module('Employee')
                                                         $scope.reset(false);
                                                     } else {
                                                         // error 
-                                                        $scope.type.resourceId = null;
+                                                        if (!$scope.resourceId) {
+                                                            $scope.type.resourceId = null;
+                                                        }
                                                         $scope.success = null;
                                                         $scope.error = response.message;
                                                     }
@@ -248,9 +262,15 @@ angular.module('Employee')
                             if (clear) {
                                 $scope.success = null;
                             }
-                            $scope.resource = null;
-                            $scope.type.resourceId = null;
-                            $scope.selected = 'Select a Employee';
+
+                            if ($scope.resourceId) {
+                                $scope.type.resourceId = $scope.resourceId;
+                            } else {
+                                $scope.type.resourceId = null;
+                                $scope.selected = 'Select a Employee';
+                                $scope.resource = null;
+                            }
+
                             angular.forEach($scope.type.details, function (detail) {
                                 detail.value = null;
                                 if (detail.type === 'GBL_INPUT_DRP_TYPE') {

@@ -1,54 +1,9 @@
-<div class="row">
-    <div class="table-responsive panel panel-primary">
-        <div class="panel-heading container-fluid panel-container"> 
-            <div class="col-xs-3 text-left">
-                <span style="cursor: pointer;" data-toggle="tooltip" title="Expand/Collapse {{selectedType.name}}" ng-click="newCollapse = !newCollapse">{{name}}</span> 
-            </div>
-            <div class="col-xs-6 text-center">
-                <span ng-if="loading">
-                    <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
-                    &nbsp;
-                </span> 
-            </div>
-            <div class="col-xs-3 text-right">
-                <span data-toggle="tooltip" title="Expand/Collapse {{selectedType.name}}" style="cursor: pointer;" ng-click="newCollapse = !newCollapse">
-                    <span ng-class="isCollapsed(newCollapse)"></span>
-                </span>
-            </div>
-        </div>
-        <div  collapse="newCollapse">
-            <div class="col-sm-2"> 
-                <h4>Menu</h4>
-                <div class="DivToScroll">
-                    <div class="DivWithScroll">
-                        <div ng-repeat="type in types" class="list-group">
-                            <div ng-show='type.templateType === modules.employee.module'>
-                                <span ng-class="isSelectedType(type)" >
-                                    <span class="caret"></span>
-                                    <span style="cursor:pointer;" ng-click="setType(type)">&nbsp;{{type.name}}</span>
-                                </span>
-                                <div ng-show="type.newCollapse">
-                                    <a style="cursor:pointer;"  class="list-group-item" ng-click="newEmploye(type.id)">
-                                        <span class="glyphicon glyphicon-new-window"></span>
-                                        &nbsp;New
-                                    </a>
-                                    <a style="cursor:pointer;"  class="list-group-item" ng-click="editType(type.id)">
-                                        <span class="glyphicon glyphicon-edit"></span>
-                                        &nbsp;Edit
-                                    </a>
-                                    <a style="cursor:pointer;"  class="list-group-item" ng-click="removeType(type)">
-                                        <span class="glyphicon glyphicon-remove-sign"></span>
-                                        &nbsp;Delete
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="container-fluid" >
+    <div class="panel-group">
+        <div collapse="newCollapse">
             <div class="col-sm-2">
-                <h4>Employee Filter</h4>
-                <div class="panel panel-default">
+                <h4>Employees</h4>
+                <div class="panel panel-default" >
                     <div class="DivToScroll">
                         <input type="text" class="form-control" placeholder="Search" ng-model="resourceSearch"/>
                         <div class="DivWithScroll">
@@ -64,8 +19,41 @@
                     </div>
                 </div>
             </div>
+            <div class="col-sm-2"> 
+                <h4>Menu</h4>
+                <div class="DivToScroll">
+                    <div class="DivWithScroll">
+                        <div ng-repeat="type in types" class="list-group">
+                            <div ng-show='type.templateType === modules.employee.module'>
+                                <span style="cursor:pointer;" ng-class="isSelectedType(type)"  ng-click="setType(type)">
+                                    <span class="caret"></span>
+                                    &nbsp;{{type.name}}
+                                </span>
+                                <div ng-show="type.newCollapse">     
+                                    <a style="cursor:pointer;"  class="list-group-item" ng-click="editType(type.id)">
+                                        <span class="glyphicon glyphicon-edit"></span>
+                                        &nbsp;Edit Template
+                                    </a>
+                                    <a style="cursor:pointer;"  class="list-group-item" ng-click="removeType(type)">
+                                        <span class="glyphicon glyphicon-remove-sign"></span>
+                                        &nbsp;Delete Template
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-sm-8">
-                <h4>{{selectedType.name}} <span ng-if="selectedType" class="badge">{{filterData.length}}</span></h4>
+                <h4>
+                    <span style="cursor:pointer;" ng-show="selectedType" class="badge" ng-click="newEmploye(selectedType.id)">
+                        <span class="glyphicon glyphicon-new-window"></span>
+                        &nbsp;New&nbsp;
+                        <span ng-show="selectedResource">"{{selectedResource.firstName}}&nbsp;{{selectedResource.surname}}"</span>
+                    </span>
+                    {{selectedType.name}} 
+                    <span ng-show="selectedType" class="badge">{{filterData.length}}</span>
+                </h4>
                 <div class="panel panel-default" ng-show="selectedType" >
                     <div class="DivToScroll">
                         <input type="text" class="form-control" placeholder="Search" ng-model="search"/>
@@ -82,9 +70,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>  
-                                    <tr ng-repeat="employee in filterData = (selectedType.employees| filter :search)" ng-class="isEven($index)" >
+                                    <tr ng-repeat="employee in filterData = (selectedType.employees| filter :search | filter:{ resourceId : selectedResource.id })" ng-class="isEven($index)" >
                                         <td style="width: 25px; cursor: pointer;">
-                                            <span data-toggle="tooltip" title="Remove {{type.name}}" ng-click="removeEmployee(employee, type.name, type.id)" class="glyphicon glyphicon-remove"></span>
+                                            <span data-toggle="tooltip" title="Remove {{selectedType.name}}" ng-click="removeEmployee(employee, selectedType.name, selectedType.id)" class="glyphicon glyphicon-remove"></span>
                                         <td style="width: 25px; cursor: pointer;">
                                             <span data-toggle="tooltip" title="Edit {{selectedType.name}}" ng-click="editEmployee(employee.typeId, employee.id)" class="glyphicon glyphicon-edit"></span>
                                         </td>

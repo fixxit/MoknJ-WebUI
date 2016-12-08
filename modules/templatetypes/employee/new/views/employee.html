@@ -17,8 +17,8 @@
         <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a ng-if='menuId' href="#/home?id={{menuId}}"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
-                    <a ng-if='!menuId' href="#/home"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
+                    <a ng-if='menuId' href="#/home?id={{menuId}}&templateId={{id}}&resourceId={{resourceId}}"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
+                    <a ng-if='!menuId' href="#/home?templateId={{id}}"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
                 </li>
             </ul>
         </div>

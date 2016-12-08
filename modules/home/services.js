@@ -100,6 +100,13 @@ angular.module('Home')
                                     callback);
                         };
 
+                        service.deleteEmployee = function (token, payload, callback) {
+                            ApiHomeCall.process(
+                                    'employee/delete/?access_token=' + token,
+                                    payload,
+                                    callback);
+                        };
+
                         service.addLink = function (token, payload, callback) {
                             ApiHomeCall.process(
                                     'link/add?access_token=' + token,

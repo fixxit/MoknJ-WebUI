@@ -5,10 +5,12 @@ angular.module('Home')
                 ['$scope', '$rootScope', '$location', 'HomeService', '$modal',
                     function ($scope, $rootScope, $location, HomeService, $modal) {
                         $scope.id = $location.search().id ? $location.search().id : null;
+                        $scope.templateId = $location.search().templateId ? $location.search().templateId : null;
+                        $scope.resourceId = $location.search().resourceId ? $location.search().resourceId : null;
                         $scope.name = "Home";
                         $scope.types = {};
                         $scope.selectedType = null;
-                        $scope.selectedResources = [];
+                        $scope.selectedResource = null;
 
                         $scope.urls = {
                             'user': '#/user',
@@ -66,7 +68,6 @@ angular.module('Home')
                                 );
                             }
                         };
-
 
                         $scope.getFieldDetails = function (entries, type, values) {
                             if (entries) {
@@ -168,6 +169,21 @@ angular.module('Home')
                             });
                         };
 
+                        // remove employee by index from employees
+                        $scope.removeEmployeeFromTemplate = function (typeId, remove) {
+                            angular.forEach($scope.types, function (type) {
+                                if (type.id === typeId) {
+                                    var index = 0;
+                                    angular.forEach(type.employees, function (employee) {
+                                        if (employee.id === remove.id) {
+                                            type.employees.splice(index, 1);
+                                        }
+                                        index = index + 1;
+                                    });
+                                }
+                            });
+                        };
+
                         $scope.formatDate = function (date) {
                             var year = date.getFullYear();
                             var month = (1 + date.getMonth()).toString();
@@ -214,6 +230,12 @@ angular.module('Home')
                                             if (response.resources) {
                                                 // asset type success or error
                                                 $scope.resources = response.resources;
+                                                // Checks if the resource was selected.
+                                                angular.forEach($scope.resources, function (resource) {
+                                                    if ($scope.resourceId == resource.id) {
+                                                        $scope.selectedResource = resource;
+                                                    }
+                                                });
                                             }
                                         }
                                     }
@@ -237,7 +259,6 @@ angular.module('Home')
                                 );
                             }
                         };
-
 
                         $scope.loadMenus = function () {
                             HomeService.getAllMenus(
@@ -278,6 +299,11 @@ angular.module('Home')
                                                         // filter all or only on type 
                                                         // depending on if typeId
                                                         // is set
+                                                        if ($scope.templateId == type.id) {
+                                                            $scope.selectedType = type;
+                                                            $scope.selectedType.newCollapse = true;
+                                                        }
+
                                                         angular.forEach(type.details, function (detail) {
                                                             if (detail.type === 'GBL_INPUT_DRP_TYPE') {
                                                                 var n = detail.name.indexOf(":");
@@ -349,7 +375,19 @@ angular.module('Home')
                         };
 
                         $scope.newEmploye = function (id) {
-                            $location.path('/employee').search({'id': id, 'menuId': $scope.id});
+                            if ($scope.selectedResource) {
+                                $location.path('/employee').search(
+                                        {
+                                            'id': id,
+                                            'menuId': $scope.id,
+                                            'resourceId': $scope.selectedResource.id
+                                        }
+                                );
+                            } else {
+                                $location.path('/employee').search(
+                                        {'id': id, 'menuId': $scope.id}
+                                );
+                            }
                         };
 
                         $scope.viewAudit = function (id, name) {
@@ -370,6 +408,34 @@ angular.module('Home')
                                     },
                                     asset: function () {
                                         return asset;
+                                    },
+                                    name: function () {
+                                        return name;
+                                    },
+                                    token: function () {
+                                        return $rootScope.globals.currentUser.access_token;
+                                    },
+                                    typeId: function () {
+                                        return typeId;
+                                    }
+                                }
+                            });
+                        };
+
+                        $scope.removeEmployee = function (employee, name, typeId) {
+                            $modal.open({
+                                backdrop: true,
+                                templateUrl: '../modules/templatetypes/employee/delete/deleteemployee.html',
+                                controller: 'ModalDeleteEmployeeCtrl',
+                                resolve: {
+                                    parentScope: function () {
+                                        return $scope;
+                                    },
+                                    HomeService: function () {
+                                        return HomeService;
+                                    },
+                                    employee: function () {
+                                        return employee;
                                     },
                                     name: function () {
                                         return name;
@@ -480,48 +546,25 @@ angular.module('Home')
 
 
                         $scope.selectResource = function (resource) {
-                            var index = $scope.selectedResources.indexOf(resource);
-                            var hasValue = (parseInt(index) >= 0
-                                    || parseInt(index) !== -1);
-                            if (!hasValue) {
-                                $scope.selectedResources.push(resource);
+                            if (resource === $scope.selectedResource) {
+                                $scope.selectedResource = null;
                             } else {
-                                $scope.selectedResources.splice(index, 1);
+                                $scope.selectedResource = resource;
                             }
                         };
 
                         $scope.isSelectedResource = function (resource) {
-                            var cls = "list-group-item";
-                            angular.forEach($scope.selectedResources, function (value) {
-                                if (value.id === resource.id) {
-                                    cls = "list-group-item active"
-                                }
-                            });
-                            return cls;
+                            if (resource === $scope.selectedResource) {
+                                return "list-group-item active"
+                            } else {
+                                return "list-group-item";
+                            }
                         };
 
                         $scope.loadPage();
                     }]);
 
 
-angular.module('Home').controller('ModalDeleteTypeCtrl',
-        function ($scope, $modalInstance, parentScope, type, token) {
-            $scope.name = type.name;
-            $scope.cascade = false;
 
-            $scope.ok = function () {
-                $scope.dataLoading = true;
-                parentScope.deleteTemplate(type.id, $scope.cascade, token,
-                        function () {
-                            parentScope.loadPage();
-                            $modalInstance.close();
-                        }
-                );
-            };
-
-            $scope.cancel = function () {
-                $modalInstance.dismiss('cancel');
-            };
-        });
 
 
