@@ -2,8 +2,8 @@
 
 angular.module('Type')
         .controller('TypeController',
-                ['$scope', '$rootScope', '$location', 'TypeService',
-                    function ($scope, $rootScope, $location, TypeService) {
+                ['$scope', '$rootScope', '$location', 'TypeService', '$modal',
+                    function ($scope, $rootScope, $location, TypeService, $modal) {
                         // Retrieve all field detail data types via type service
                         // REST controller method types /fields
                         $scope.id = $location.search().id;
@@ -22,6 +22,42 @@ angular.module('Type')
                         $scope.type = {};
                         // Pagination 
                         $scope.pagination = {};
+                        // logic for navigation between pages...
+                        $scope.urlScope = {
+                            'url': '/home',
+                            'return_parms': null
+                        };
+                        // logic for navigation between pages...
+                        $scope.initialiseUrlParms = function () {
+                            if ($scope.menuId) {
+                                if ($scope.origin === 'employee') {
+                                    $scope.urlScope.return_parms = {
+                                        'id': $scope.menuId,
+                                        'templateId': $scope.id
+                                    };
+                                } else if ($scope.origin === 'asset') {
+                                    $scope.urlScope.return_parms = {
+                                        'id': $scope.menuId
+                                    };
+                                } else {
+                                    $scope.urlScope.return_parms = {
+                                        'id': $scope.menuId
+                                    };
+                                }
+                            }
+                        };
+
+                        // Execeutes the url
+                        $scope.executeURL = function () {
+                            $scope.initialiseUrlParms();
+                            // execute location change!
+                            if (!$scope.urlScope.return_parms) {
+                                $location.path($scope.urlScope.url);
+                            } else {
+                                $location.path($scope.urlScope.url)
+                                        .search($scope.urlScope.return_parms);
+                            }
+                        };
 
                         $scope.loadPage = function () {
                             $scope.loading = true;
@@ -74,11 +110,11 @@ angular.module('Type')
                                                         });
                                                     });
 
-                                                    $scope.pagination.viewby = 5;
+                                                    $scope.pagination.viewby = 10;
                                                     $scope.pagination.totalItems = response.types.length;
                                                     $scope.pagination.currentPage = 1;
-                                                    $scope.pagination.itemsPerPage = 5;
-                                                    $scope.pagination.maxSize = 5;
+                                                    $scope.pagination.itemsPerPage = 10;
+                                                    $scope.pagination.maxSize = 10;
                                                 } else {
                                                     $scope.error = "Invalid server response";
                                                 }
@@ -391,23 +427,9 @@ angular.module('Type')
                                                             //success
                                                             if (!$scope.id) {
                                                                 $scope.success = 'Successfully saved a new template, create new type ?';
+                                                                $scope.loadTemplates();
                                                             } else {
-                                                                if ($scope.menuId) {
-                                                                    if ($scope.origin === 'employee') {
-                                                                        $location.path('/home').search(
-                                                                                {
-                                                                                    'id': $scope.menuId,
-                                                                                    'templateId': $scope.id
-                                                                                }
-                                                                        );
-                                                                    } else {
-                                                                        $location.path('/home').search(
-                                                                                {'id': $scope.menuId}
-                                                                        );
-                                                                    }
-                                                                } else {
-                                                                    $location.path('/home');
-                                                                }
+                                                                $scope.executeURL();
                                                             }
 
                                                             $scope.error = null;
@@ -467,6 +489,43 @@ angular.module('Type')
                                 return "glyphicon glyphicon-collapse-down";//"info";
                             } else {
                                 return "glyphicon glyphicon-collapse-up";
+                            }
+                        };
+
+                        $scope.removeTemplate = function (type) {
+                            $modal.open({
+                                backdrop: true,
+                                templateUrl: '../modules/template/type/templates/deletetype.html',
+                                controller: 'ModalDeleteTypeCtrl',
+                                resolve: {
+                                    parentScope: function () {
+                                        return $scope;
+                                    },
+                                    type: function () {
+                                        return type;
+                                    },
+                                    token: function () {
+                                        return $rootScope.globals.currentUser.access_token;
+                                    }
+                                }
+                            });
+                        };
+
+                        $scope.deleteTemplate = function (id, cascade, token, callback) {
+                            if (id) {
+                                TypeService.deleteTemplate(
+                                        token,
+                                        id,
+                                        cascade,
+                                        function (response) {
+                                            // token auth error
+                                            if (response.error_description) {
+                                                $scope.error = response.error_description + ". Please logout!";
+                                            } else {
+                                                callback();
+                                            }
+                                        }
+                                );
                             }
                         };
 

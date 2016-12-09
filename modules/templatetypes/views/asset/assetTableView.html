@@ -15,24 +15,9 @@
                 <span style="cursor: pointer;" data-toggle="tooltip" title="Expand/Collapse {{type.name}}" ng-click="type.newCollapse = !type.newCollapse">{{type.name}}</span> 
             </div>
             <div class="col-xs-3 text-right">
-                <span style="cursor:pointer;" ng-show="!type.newCollapse" class="dropdown" dropdown>
-                    <span href="#" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">
-                        <span class="caret"></span>
-                    </span>
-                    <ul class="dropdown-menu" role="menu">    
-                        <li style="cursor:pointer;">
-                            <a ng-click="editType(type.id, 'asset')">
-                                <span class="glyphicon glyphicon-edit"></span>
-                                &nbsp;Edit
-                            </a>
-                        </li>
-                        <li style="cursor:pointer;">
-                            <a ng-click="removeType(type)">
-                                <span class="glyphicon glyphicon-remove-sign"></span>
-                                &nbsp;Delete
-                            </a>
-                        </li>
-                    </ul>
+                <span style="cursor:pointer;" ng-click="editType(type.id, 'asset')">
+                    <span class="glyphicon glyphicon-edit"></span>
+                    &nbsp;Edit
                 </span>
                 &nbsp;
                 <span>

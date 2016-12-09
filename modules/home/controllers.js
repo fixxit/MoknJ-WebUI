@@ -11,6 +11,8 @@ angular.module('Home')
                         $scope.types = {};
                         $scope.selectedType = null;
                         $scope.selectedResource = null;
+                        $scope.sortType = ''; // set the default sort type
+                        $scope.sortReverse = false;  // set the default sort order
 
                         $scope.urls = {
                             'user': '#/user',
@@ -44,6 +46,16 @@ angular.module('Home')
                                     'hidden': '#/hidden_template?menuId=' + id,
                                     'link': '#/link?menuId=' + id
                                 };
+                            }
+                        };
+
+                        $scope.setFilter = function (detail) {
+                            if (detail == $scope.sortType) {
+                                $scope.sortReverse = !$scope.sortReverse;
+                                $scope.sortType = detail;
+                            } else {
+                                $scope.sortReverse = false;
+                                $scope.sortType = detail;
                             }
                         };
 
@@ -240,24 +252,6 @@ angular.module('Home')
                                         }
                                     }
                             );
-                        };
-
-                        $scope.deleteTemplate = function (id, cascade, token, callback) {
-                            if (id) {
-                                HomeService.deleteTemplate(
-                                        token,
-                                        id,
-                                        cascade,
-                                        function (response) {
-                                            // token auth error
-                                            if (response.error_description) {
-                                                $scope.error = response.error_description + ". Please logout!";
-                                            } else {
-                                                callback();
-                                            }
-                                        }
-                                );
-                            }
                         };
 
                         $scope.loadMenus = function () {
@@ -457,25 +451,6 @@ angular.module('Home')
                             });
                         };
 
-                        $scope.removeType = function (type) {
-                            $modal.open({
-                                backdrop: true,
-                                templateUrl: '../modules/home/templates/deletetype.html',
-                                controller: 'ModalDeleteTypeCtrl',
-                                resolve: {
-                                    parentScope: function () {
-                                        return $scope;
-                                    },
-                                    type: function () {
-                                        return type;
-                                    },
-                                    token: function () {
-                                        return $rootScope.globals.currentUser.access_token;
-                                    }
-                                }
-                            });
-                        };
-
                         $scope.assignAsset = function (asset, name) {
                             $modal.open({
                                 backdrop: true,
@@ -565,6 +540,15 @@ angular.module('Home')
                                 return "list-group-item active"
                             } else {
                                 return "list-group-item";
+                            }
+                        };
+
+
+                        $scope.isFilterdResource = function (resource) {
+                            if (resource === $scope.selectedResource) {
+                                return "glyphicon glyphicon-filter"
+                            } else {
+                                return "";
                             }
                         };
 

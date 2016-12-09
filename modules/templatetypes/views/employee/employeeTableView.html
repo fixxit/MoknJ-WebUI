@@ -1,5 +1,5 @@
-<div class="container-fluid" >
-    <div class="panel-group">
+<div class="panel panel-primary">
+    <div class="table-responsive">
         <div collapse="newCollapse">
             <div class="col-sm-2">
                 <h4>Employees</h4>
@@ -13,6 +13,7 @@
                                    ng-class="isSelectedResource(resource)" 
                                    ng-click="selectResource(resource)">
                                     {{resource.firstName}}&nbsp;{{resource.surname}}
+                                    &nbsp;<span ng-class="isFilterdResource(resource)"></span>
                                 </a>
                             </div>
                         </div>
@@ -25,18 +26,16 @@
                     <div class="DivWithScroll">
                         <div ng-repeat="type in types" class="list-group">
                             <div ng-show='type.templateType === modules.employee.module'>
-                                <span style="cursor:pointer;" ng-class="isSelectedType(type)"  ng-click="setType(type)">
-                                    <span class="caret"></span>
+                                <span style="cursor:pointer;" ng-class="isSelectedType(type)" ng-click="setType(type)">
+                                    <span class="glyphicon glyphicon-chevron-right"></span>
                                     &nbsp;{{type.name}}
                                 </span>
                                 <div ng-show="type.newCollapse">     
-                                    <a style="cursor:pointer;"  class="list-group-item" ng-click="editType(type.id, 'employee')">
-                                        <span class="glyphicon glyphicon-edit"></span>
-                                        &nbsp;Edit Template
-                                    </a>
-                                    <a style="cursor:pointer;"  class="list-group-item" ng-click="removeType(type)">
-                                        <span class="glyphicon glyphicon-remove-sign"></span>
-                                        &nbsp;Delete Template
+                                    <a class="list-group-item">
+                                        <span style="cursor:pointer;" ng-click="editType(type.id, 'employee')">
+                                            <span class="glyphicon glyphicon-edit"></span>
+                                            &nbsp;Edit Template
+                                        </span>
                                     </a>
                                 </div>
                             </div>
@@ -49,12 +48,14 @@
                     <span style="cursor:pointer;" ng-show="selectedType" class="badge" ng-click="newEmploye(selectedType.id)">
                         <span class="glyphicon glyphicon-new-window"></span>
                         &nbsp;New&nbsp;
-                        <span ng-show="selectedResource">"{{selectedResource.firstName}}&nbsp;{{selectedResource.surname}}"</span>
+                        <span ng-show="selectedResource">
+                            "{{selectedResource.firstName}}&nbsp;{{selectedResource.surname}}"
+                        </span>
                     </span>
                     {{selectedType.name}} 
                     <span ng-show="selectedType" class="badge">{{filterData.length}}</span>
                 </h4>
-                <div class="panel panel-default" ng-show="selectedType" >
+                <div class="panel panel-default" ng-show="selectedType">
                     <div class="DivToScroll">
                         <input type="text" class="form-control" placeholder="Search" ng-model="search"/>
                         <div class="DivWithScroll">
@@ -64,13 +65,32 @@
                                         <th>&nbsp;</th>
                                         <th>&nbsp;</th>
                                         <th>&nbsp;</th>
-                                        <th ng-repeat="detail in selectedType.details">{{detail.name}}</th>
-                                        <th>Employee</th>
-                                        <th>Last Modified</th>
+                                        <th ng-repeat="detail in selectedType.details">
+                                            {{detail.name}}
+                                        </th>
+                                        <th>
+                                            <span style="cursor: pointer;" ng-click="setFilter('linkedResource')">
+                                                Employee
+                                                <span ng-show="sortType === 'linkedResource' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                                                <span ng-show="sortType === 'linkedResource' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                                            </span>    
+                                        </th>
+                                        <th>
+                                            <span style="cursor: pointer;" ng-click="setFilter('lastModifiedDate')">
+                                                Last Modified
+                                                <span ng-show="sortType === 'lastModifiedDate' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                                                <span ng-show="sortType === 'lastModifiedDate' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                                            </span>   
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>  
-                                    <tr ng-repeat="employee in filterData = (selectedType.employees| filter :search | filter:{ resourceId : selectedResource.id })" ng-class="isEven($index)" >
+                                    <tr ng-repeat="employee in filterData = (
+                                                selectedType.employees
+                                                | orderBy :sortType :sortReverse
+                                                | filter :search 
+                                                | filter:{ resourceId : selectedResource.id }
+                                                )" ng-class="isEven($index)" >
                                         <td style="width: 25px; cursor: pointer;">
                                             <span data-toggle="tooltip" title="Remove {{selectedType.name}}" ng-click="removeEmployee(employee, selectedType.name, selectedType.id)" class="glyphicon glyphicon-remove"></span>
                                         <td style="width: 25px; cursor: pointer;">

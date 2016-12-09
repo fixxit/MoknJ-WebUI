@@ -69,14 +69,6 @@ angular.module('Home')
                                     callback);
                         };
 
-                        service.deleteTemplate = function (token, id, cascade, callback) {
-                            ApiHomeCall.process(
-                                    'type/delete/' + id + '?access_token='
-                                    + token + '&cascade=' + cascade,
-                                    null,
-                                    callback);
-                        };
-
                         service.getAllAssetForType = function (token, templateId, menuId, callback) {
                             ApiHomeCall.process(
                                     'asset/get/all/' + templateId +

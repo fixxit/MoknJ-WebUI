@@ -50,7 +50,6 @@ angular.module('Type')
                             ApiTypeCall.process('type/add?access_token=' + token,
                                     item,
                                     callback);
-
                         };
 
                         service.getAllTemplates = function (token, callback) {
@@ -92,9 +91,13 @@ angular.module('Type')
                         };
 
                         service.delete = function (token, id, callback) {
-                            ApiTypeCall.process('type/delete/' + id
-                                    + '?access_token=' + token
-                                    + '&cascade=' + true,
+                            service.deleteTemplate(token, id, true, callback);
+                        };
+
+                        service.deleteTemplate = function (token, id, cascade, callback) {
+                            ApiTypeCall.process(
+                                    'type/delete/' + id + '?access_token='
+                                    + token + '&cascade=' + cascade,
                                     null,
                                     callback);
                         };

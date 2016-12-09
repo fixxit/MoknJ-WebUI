@@ -17,8 +17,7 @@
         <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a ng-if='menuId' href="#/home?id={{menuId}}&templateId={{id}}"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
-                    <a ng-if='!menuId' href="#/home"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
+                    <a style="cursor: pointer;" ng-click="executeURL()"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
                 </li>
             </ul>
         </div>
@@ -256,7 +255,7 @@
                             (templates| filterMultiple:[search] : pagination)" 
                     ng-class="isEven($index)">
                     <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="edit template" ng-click="editTemplate(template)" class="glyphicon glyphicon-edit"></span></td>
-                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="delete template" ng-click="deleteTemplete(template)" class="glyphicon glyphicon-remove"></span></td>
+                    <td style="width: 25px; cursor: pointer;"><span data-toggle="tooltip" title="delete template" ng-click="removeTemplate(template)" class="glyphicon glyphicon-remove"></span></td>
                     <td>{{template.name}}</td>
                     <td>{{template.templateType}}</td>
                     <td><span ng-repeat="detail in template.details">{{detail.name}},&nbsp;</span></td>
