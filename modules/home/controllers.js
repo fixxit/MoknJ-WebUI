@@ -21,7 +21,8 @@ angular.module('Home')
                             'create_menu_asset': '#/menu?new=true&type=GBL_MT_ASSET',
                             'template': '#/type',
                             'hidden': '#/hidden_template',
-                            'link': '#/link'
+                            'link': '#/link',
+                            'employee_link': '#/employee_link'
                         };
 
                         $scope.modules = {
@@ -44,18 +45,19 @@ angular.module('Home')
                                     'create_menu_asset': '#/menu?new=true&type=GBL_MT_ASSET&menuId=' + id,
                                     'template': '#/type?menuId=' + id,
                                     'hidden': '#/hidden_template?menuId=' + id,
-                                    'link': '#/link?menuId=' + id
+                                    'link': '#/link?menuId=' + id,
+                                    'employee_link': '#/employee_link?menuId=' + id
                                 };
                             }
                         };
 
-                        $scope.setFilter = function (detail) {
-                            if (detail == $scope.sortType) {
-                                $scope.sortReverse = !$scope.sortReverse;
-                                $scope.sortType = detail;
+                        $scope.setFilter = function (detail, type) {
+                            if (detail === type.sortType) {
+                                type.sortReverse = !type.sortReverse;
+                                type.sortType = detail;
                             } else {
-                                $scope.sortReverse = false;
-                                $scope.sortType = detail;
+                                type.sortReverse = false;
+                                type.sortType = detail;
                             }
                         };
 
@@ -108,7 +110,7 @@ angular.module('Home')
                                     values.push(entry);
                                 });
                             }
-                        }
+                        };
 
                         $scope.getModuleDetails = function (type, response) {
                             if (response) {
@@ -244,7 +246,7 @@ angular.module('Home')
                                                 $scope.resources = response.resources;
                                                 // Checks if the resource was selected.
                                                 angular.forEach($scope.resources, function (resource) {
-                                                    if ($scope.resourceId == resource.id) {
+                                                    if ($scope.resourceId === resource.id) {
                                                         $scope.selectedResource = resource;
                                                     }
                                                 });
@@ -293,7 +295,7 @@ angular.module('Home')
                                                         // filter all or only on type 
                                                         // depending on if typeId
                                                         // is set
-                                                        if ($scope.templateId == type.id) {
+                                                        if ($scope.templateId === type.id) {
                                                             $scope.selectedType = type;
                                                             $scope.selectedType.newCollapse = true;
                                                         }
@@ -393,6 +395,17 @@ angular.module('Home')
 
                         $scope.viewAudit = function (id, name) {
                             $location.path('/link').search({'assetId': id, 'name': name, 'menuId': $scope.id});
+                        };
+
+                        $scope.viewEmployeeAudit = function (templateId, id, name) {
+                            $location.path('/employee_link').search(
+                                    {
+                                        'id': templateId,
+                                        'employeeId': id,
+                                        'name': name,
+                                        'menuId': $scope.id
+                                    }
+                            );
                         };
 
                         $scope.removeAsset = function (asset, name, typeId) {
@@ -520,7 +533,7 @@ angular.module('Home')
 
                         $scope.isSelectedType = function (type) {
                             if (type === $scope.selectedType) {
-                                return "list-group-item active"
+                                return "list-group-item active";
                             } else {
                                 return "list-group-item";
                             }
@@ -537,7 +550,7 @@ angular.module('Home')
 
                         $scope.isSelectedResource = function (resource) {
                             if (resource === $scope.selectedResource) {
-                                return "list-group-item active"
+                                return "list-group-item active";
                             } else {
                                 return "list-group-item";
                             }
@@ -546,7 +559,7 @@ angular.module('Home')
 
                         $scope.isFilterdResource = function (resource) {
                             if (resource === $scope.selectedResource) {
-                                return "glyphicon glyphicon-filter"
+                                return "glyphicon glyphicon-filter";
                             } else {
                                 return "";
                             }

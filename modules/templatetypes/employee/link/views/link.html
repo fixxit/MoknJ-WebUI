@@ -17,19 +17,20 @@
         <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a ng-if='menuId' href="#/home?id={{menuId}}"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
-                    <a ng-if='!menuId' href="#/home"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
+                    <a style="cursor: pointer;" ng-click="executeURL()"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<div ng-show="error" class="alert alert-danger">{{error}}</div>
-<div ng-show="success" class="alert alert-success">{{success}}</div>
+<div class="container-fluid bg-3">
+    <div ng-show="error && !success" class="alert alert-danger">{{error}}</div>
+    <div ng-show="success && !error" class="alert alert-success">{{success}}</div>
+</div>
 
 <div class="container-fluid">
-    <div ng-show="links.length" class="panel panel-primary">
+    <div ng-show="employeeLinks.length" class="panel panel-primary">
         <div class="panel-heading">
             <span class="glyphicon glyphicon-search"></span>
             &nbsp;Search
@@ -54,23 +55,21 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>Direction</th>
-                    <th>Date</th>
+                    <th>Action</th>
+                    <th>Type</th>
+                    <th>Changes</th>
                     <th>Employee</th>
-                    <th>Asset</th>
-                    <th>User</th>
+                    <th>Created By</th>
                     <th>Created Date</th>
                 </tr>
             </thead>
             <tbody>       
-                <tr ng-repeat="link in filterData = (links| filterMultiple:[search] : pagination)" 
+                <tr ng-repeat="link in filterData = (employeeLinks| filterMultiple:[search] : pagination)" 
                     ng-class="isEven($index)">
-                    <td>
-                        {{link.checkedDir}}
-                    </td>
-                    <td>{{link.date}}</td>
-                    <td>{{link.linkedResource}}</td>
-                    <td>{{link.display}}</td>
+                    <td>{{link.actionValue}}</td>
+                    <td>{{link.template}}</td>
+                    <td>{{link.changes}}</td>
+                    <td>{{link.user}}</td>
                     <td>{{link.createdBy}}</td>
                     <td>{{link.createdDate}}</td>
                 </tr>

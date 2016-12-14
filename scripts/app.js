@@ -1,18 +1,15 @@
-/* global restlayerAPI_URL */
-
 'use strict';
-
 // declare modules
 angular.module('Authentication', ['ui.bootstrap']);
-angular.module('Home', ['ui.bootstrap', 'ngAnimate']);
+angular.module('Home', ['ui.bootstrap', 'ngAnimate', 'chart.js']);
 angular.module('Menu', ['ui.bootstrap', 'ngAnimate']);
 angular.module('Type', ['ui.bootstrap', 'ngAnimate']);
 angular.module('Asset', ['ui.bootstrap', 'ngAnimate']);
-angular.module('Employee', ['ui.bootstrap', 'ngAnimate']);
-angular.module('User', ['ui.bootstrap', 'ngAnimate']);
 angular.module('Link', ['ui.bootstrap', 'ngAnimate']);
+angular.module('Employee', ['ui.bootstrap', 'ngAnimate']);
+angular.module('EmployeeLink', ['ui.bootstrap', 'ngAnimate']);
+angular.module('User', ['ui.bootstrap', 'ngAnimate']);
 angular.module('Template', ['ui.bootstrap', 'ngAnimate']);
-
 // new modles copme here
 angular.module('FixxitAssetTrackerUI', [
     'Authentication',
@@ -21,6 +18,7 @@ angular.module('FixxitAssetTrackerUI', [
     'Type',
     'Asset',
     'Employee',
+    'EmployeeLink',
     'User',
     'Link',
     'Template',
@@ -65,6 +63,11 @@ angular.module('FixxitAssetTrackerUI', [
                     templateUrl: 'modules/templatetypes/asset/link/views/link.html'
                 })
 
+                .when('/employee_link', {
+                    controller: 'EmployeeLinkController',
+                    templateUrl: 'modules/templatetypes/employee/link/views/link.html'
+                })
+
                 .when('/asset', {
                     controller: 'AssetController',
                     templateUrl: 'modules/templatetypes/asset/new/views/asset.html'
@@ -77,7 +80,6 @@ angular.module('FixxitAssetTrackerUI', [
 
                 .otherwise({redirectTo: '/login'});
     }])
-
         .run(['$rootScope', '$location', '$cookieStore', '$http', 'AuthenticationService',
             function ($rootScope, $location, $cookieStore, $http, AuthenticationService) {
 

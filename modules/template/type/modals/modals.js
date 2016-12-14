@@ -1,6 +1,4 @@
-'use strict';
-
-angular.module('Home').controller('ModalDeleteTypeCtrl',
+angular.module('Type').controller('ModalDeleteTypeCtrl',
         function ($scope, $modalInstance, parentScope, type, token) {
             $scope.name = type.name;
             $scope.cascade = false;

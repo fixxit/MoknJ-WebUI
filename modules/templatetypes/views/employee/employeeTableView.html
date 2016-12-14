@@ -1,4 +1,11 @@
 <div class="panel panel-primary">
+    <div class="panel-heading" class="panel-heading">
+        <span ng-if="selectedType.loading">
+            <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+            &nbsp;
+        </span> 
+        <span>{{name}}</span> 
+    </div>
     <div class="table-responsive">
         <div collapse="newCollapse">
             <div class="col-sm-2">
@@ -68,17 +75,17 @@
                                             {{detail.name}}
                                         </th>
                                         <th>
-                                            <span style="cursor: pointer;" ng-click="setFilter('linkedResource')">
+                                            <span style="cursor: pointer;" ng-click="setFilter('linkedResource', type)">
                                                 Employee
-                                                <span ng-show="sortType === 'linkedResource' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                                                <span ng-show="sortType === 'linkedResource' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                                                <span ng-show="type.sortType === 'linkedResource' && !type.sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                                                <span ng-show="type.sortType === 'linkedResource' && type.sortReverse" class="glyphicon glyphicon-chevron-up"></span>
                                             </span>    
                                         </th>
                                         <th>
-                                            <span style="cursor: pointer;" ng-click="setFilter('lastModifiedDate')">
+                                            <span style="cursor: pointer;" ng-click="setFilter('lastModifiedDate', type)">
                                                 Last Modified
-                                                <span ng-show="sortType === 'lastModifiedDate' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                                                <span ng-show="sortType === 'lastModifiedDate' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                                                <span ng-show="type.sortType === 'lastModifiedDate' && !type.sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                                                <span ng-show="type.sortType === 'lastModifiedDate' && type.sortReverse" class="glyphicon glyphicon-chevron-up"></span>
                                             </span>   
                                         </th>
                                     </tr>
@@ -86,7 +93,7 @@
                                 <tbody>  
                                     <tr ng-repeat="employee in type.filterData = (
                                                     type.employees
-                                                    | orderBy :sortType :sortReverse
+                                                    | orderBy :type.sortType :type.sortReverse
                                                 | filter:type.search 
                                                 | filter:{ resourceId : selectedResource.id }
                                                 )" ng-class="isEven($index)" >
@@ -96,7 +103,7 @@
                                             <span data-toggle="tooltip" title="Edit {{type.name}}" ng-click="editEmployee(employee.typeId, employee.id)" class="glyphicon glyphicon-edit"></span>
                                         </td>
                                         <td style="width: 25px; cursor: pointer;">
-                                            <span data-toggle="tooltip" title="View {{type.name}} Audit" ng-click="viewAudit(employee.id, type.name)" class="glyphicon glyphicon-eye-open"></span>
+                                            <span data-toggle="tooltip" title="View {{type.name}} Audit" ng-click="viewEmployeeAudit(type.id, employee.id, type.name)" class="glyphicon glyphicon-eye-open"></span>
                                         </td>
                                         <td ng-repeat="value in employee.details">
                                             <span ng-if="value.type === 'GBL_INPUT_MON_TYPE'" ><span ng-if="value.value" class="glyphicon glyphicon-euro"></span>{{value.value| currency: ""}}</span>

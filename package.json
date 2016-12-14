@@ -15,8 +15,11 @@
         "angular-route": "1.5.8",
         "angular-cookies": "1.5.8",
         "angular-ui-bootstrap": "0.13.4",
-        "angular-animate" : "1.5.8",
+        "angular-animate": "1.5.8",
+        "angular-chart.js": "1.1.1",
         "express": "4.14.0",
+        "chart.js": "2.4.0",
+        "uglify-js": "2.7.5",
         "bootstrap": "3.3.1",
         "serve-favicon": "2.3.2"
     }

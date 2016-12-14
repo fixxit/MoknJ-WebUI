@@ -33,19 +33,19 @@ angular.module('Link')
 
                         service.allLinkForAssetId = function (token, id, callback) {
                             ApiLinkCall.process(
-                                    'link/all/' + id + '/asset?access_token=' + token,
+                                    'link/asset/all/' + id + '/asset?access_token=' + token,
                                     callback);
                         };
 
                         service.allLinkForResourceId = function (token, id, callback) {
                             ApiLinkCall.process(
-                                    'link/all/' + id + '/resource?access_token=' + token,
+                                    'link/asset/all/' + id + '/resource?access_token=' + token,
                                     callback);
                         };
 
                         service.allLink = function (token, callback) {
                             ApiLinkCall.process(
-                                    'link/all/?access_token=' + token,
+                                    'link/asset/all/?access_token=' + token,
                                     callback);
                         };
 
