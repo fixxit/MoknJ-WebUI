@@ -55,16 +55,54 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>Action</th>
-                    <th>Type</th>
-                    <th>Changes</th>
-                    <th>Employee</th>
-                    <th>Created By</th>
-                    <th>Created Date</th>
+                    <th>
+                        <span style="cursor: pointer;" ng-click="setFilter('actionValue')">
+                            Action
+                            <span ng-show="sortType === 'actionValue' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                            <span ng-show="sortType === 'actionValue' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                        </span>
+                    </th>
+                    <th>
+                        <span style="cursor: pointer;" ng-click="setFilter('template')">
+                            Type
+                            <span ng-show="sortType === 'template' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                            <span ng-show="sortType === 'template' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                        </span>
+                    </th>
+                    <th>
+                        <span style="cursor: pointer;" ng-click="setFilter('changes')">
+                            Changes
+                            <span ng-show="sortType === 'changes' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                            <span ng-show="sortType === 'changes' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                        </span>
+                    </th>
+                    <th> 
+                        <span style="cursor: pointer;" ng-click="setFilter('user')">
+                            Employee
+                            <span ng-show="sortType === 'user' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                            <span ng-show="sortType === 'user' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                        </span>
+                    </th>
+                    <th>
+                        <span style="cursor: pointer;" ng-click="setFilter('createdBy')">
+                            Created By
+                            <span ng-show="sortType === 'createdBy' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                            <span ng-show="sortType === 'createdBy' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                        </span>
+                    </th>
+                    <th>
+                        <span style="cursor: pointer;" ng-click="setFilter('createdDate')">
+                            Created Date
+                            <span ng-show="sortType === 'createdDate' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                            <span ng-show="sortType === 'createdDate' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                        </span>
+                    </th>
                 </tr>
             </thead>
             <tbody>       
-                <tr ng-repeat="link in filterData = (employeeLinks| filterMultiple:[search] : pagination)" 
+                <tr ng-repeat="link in filterData = (employeeLinks
+                                    | orderBy :sortType :sortReverse
+                            | filterMultiple:[search] : pagination)" 
                     ng-class="isEven($index)">
                     <td>{{link.actionValue}}</td>
                     <td>{{link.template}}</td>

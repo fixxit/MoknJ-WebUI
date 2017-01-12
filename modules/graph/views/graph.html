@@ -1,0 +1,233 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed" aria-expanded="true">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">
+                <img src="../../../images/logo.png" style="display: inline-block;width:25px;">
+                <span class="badge"style="display: inline-block; font-size:16px;">MoknJ</span>&nbsp;
+                <span style="display: inline-block; font-size:16px;">{{name}}</span>
+            </a>
+        </div>
+
+        <div class="navbar-collapse collapse in" collapse="isCollapsed" aria-expanded="true">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a style="cursor: pointer;" ng-click="executeURL()"><span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp;back</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid bg-3">
+    <div ng-show="error && !success" class="alert alert-danger">{{error}}</div>
+    <div ng-show="success && !error" class="alert alert-success">{{success}}</div>
+</div>
+
+<div class="container-fluid bg-3">
+    <div class="panel panel-primary">
+        <div data-toggle="tooltip" title="Expand/Collapse New/Update" style="cursor: pointer;" class="panel-heading" ng-click="newCollapse = !newCollapse">
+            <span ng-class="isExpanded()"></span>
+            <span ng-if="loading">
+                <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+                &nbsp;
+            </span>
+
+            <span ng-if="!id">New Graph</span>
+            <span ng-if="id">Update Graph</span>
+        </div>
+        <form name="form" ng-submit="submit()" role="form">
+            <div collapse="newCollapse" class="container-fluid bg-3">
+                <div class="row">
+                    <span>&nbsp;</span>
+                </div> 
+
+                <div class="form-group">
+                    <label for="typename">Title</label>
+                    <i class="fa fa-key"></i>
+                    <input type="text" name="name" id="name" class="form-control" ng-model="graph.name" required />
+                    <span ng-show="form.name.$dirty && form.name.$error.required" class="help-block">Graph name is required</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Menu</label>
+                    <select class="form-control" ng-model="graph.menuId"
+                            ng-options="menu.id as menu.name for menu in menus">
+                        <option value="">Select a Menu</option>
+                    </select>
+                </div>
+
+                <div class="form-group" ng-show="graph.menuId">
+                    <label>Template</label>
+                    <select class="form-control" ng-model="graph.templateId"
+                            ng-options="type.id as type.name for type in types">
+                        <option value="">Select a template</option>
+                    </select>
+                </div>
+
+                <div class="form-group" ng-show="graph.templateId">
+                    <label>Focus (data set grouping)</label>
+                    <select class="form-control" ng-model="graph.graphFocus"
+                            ng-options="focus.enumName as focus.displayValue for focus in graphFocuses">
+                        <option value="">Select a focus</option>
+                    </select>
+                </div>
+
+                <div class="form-group" ng-show="graph.graphFocus === 'GBL_FOCUS_FREE_FIELD'">
+                    <label>Free field (data set grouping)</label>
+                    <select class="form-control" ng-model="graph.freefieldId"
+                            ng-options="field.id as field.name for field in templateFields">
+                        <option value="">Select a free field</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Graph Type</label>
+                    <select class="form-control" ng-model="graph.graphType" 
+                            ng-options="type.enumName as type.name for type in graphTypes">
+                        <option value="">Select a graph type</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>View (x-axis groups) with date caveat</label>
+                    <select class="form-control" ng-model="graph.graphView"
+                            ng-options="view.enumName as view.displayName for view in graphViews">
+                        <option value="">Select a view</option>
+                    </select>
+                </div>
+
+                <div ng-if="datepickerOptions === dateOptions.year" class="form-group">
+                    <label>"N" Year Value</label>
+                    <p class="input-group">              
+                        <input type="text" name="date" id="date" class="form-control" 
+                               datepicker-popup="{{dateOptions.year.format}}" 
+                               datepicker-options="{{dateOptions.year}}"
+                               ng-model="graph.graphDate" 
+                               is-open="datepickerOptions.open" 
+                               close-text="Close" required data-readonly/>                           
+                        <span class="input-group-btn">
+                            <button type="button" 
+                                    class="btn btn-default" 
+                                    ng-click="openCal($event)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                        </span>
+                    </p> 
+                </div>
+
+                <div ng-if="datepickerOptions === dateOptions.month" class="form-group">
+                    <label>"N" Month Value</label>
+                    <p class="input-group">              
+                        <input type="text" name="date" id="date" class="form-control" 
+                               datepicker-popup="{{dateOptions.month.format}}" 
+                               datepicker-options="{{dateOptions.month}}"
+                               ng-model="graph.graphDate" 
+                               is-open="datepickerOptions.open" 
+                               close-text="Close" required data-readonly/>                           
+                        <span class="input-group-btn">
+                            <button type="button" 
+                                    class="btn btn-default" 
+                                    ng-click="openCal($event)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                        </span>
+                    </p> 
+                </div>
+
+                <div ng-if="datepickerOptions === dateOptions.normal" class="form-group">
+                    <label>"N" Date Value</label>
+                    <p class="input-group">              
+                        <input type="text" name="date" id="date" class="form-control" 
+                               datepicker-popup="{{dateOptions.normal.format}}" 
+                               datepicker-options="{{dateOptions.normal}}"
+                               ng-model="graph.graphDate" 
+                               is-open="datepickerOptions.open" 
+                               close-text="Close" required data-readonly/>                           
+                        <span class="input-group-btn">
+                            <button type="button" 
+                                    class="btn btn-default" 
+                                    ng-click="openCal($event)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                        </span>
+                    </p> 
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" ng-if="!id" class="btn btn-primary">Submit</button>
+                    <button type="submit" ng-if="id" ng-show="selectIndex == null" class="btn btn-primary">Update</button>
+                    <button type="button" ng-if="!id" ng-click="reset(true)" ng-disabled="dataLoading" class="btn btn-danger">reset</button>     
+                    <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+                </div>
+
+                <div class="row">
+                    <span>&nbsp;</span>
+                </div> 
+            </div> 
+        </form>
+    </div>
+</div>
+<div class="container-fluid bg-3"  ng-show='!new'>
+    <div class="table-responsive panel panel-primary">
+        <div class="panel-heading">
+            <span ng-if="loading">
+                <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+                &nbsp;
+            </span> 
+            <span>
+                <span class="glyphicon glyphicon-list"></span>
+                &nbsp;Graph's 
+                <span class="badge">{{pagination.searchSize}}</span>
+            </span>
+        </div>
+        <div class="input-group-addon">
+            <search-menus input-value="search" page-value="pagination"/>
+        </div>  
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>Name</th>
+                    <th>Menu</th>
+                    <th>Template</th>
+                    <th>Type</th>
+                    <th>View</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>       
+                <tr ng-repeat="savedGraph in filterData =
+                            (savedGraphs| filterMultiple:[search]:pagination)" 
+                    ng-class="isEven($index)">
+                    <td style="width:25px; cursor:pointer;"><span data-toggle="tooltip" title="Edit Graph" ng-click="editGraph(savedGraph)" class="glyphicon glyphicon-edit"></span></td>
+                    <td style="width:25px; cursor:pointer;"><span data-toggle="tooltip" title="Remove Graph" ng-click="removeGraph(savedGraph)" class="glyphicon glyphicon-remove"></span></td>
+                    <td>{{savedGraph.name}}</td>
+                    <td>{{savedGraph.menu}}</td>
+                    <td>{{savedGraph.template}}</td>
+                    <td>{{savedGraph.type}}</td>
+                    <td>{{savedGraph.view}}</td>
+                    <td>{{savedGraph.formatedDate}}</td>
+                </tr>
+                <tr class="active text-center" ng-if="!filterData.length"><td colspan="8">No Graph Entries Found</td></tr> 
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <pagination
+                total-items="pagination.searchSize" 
+                ng-model="pagination.currentPage"  
+                class="pagination-sm" 
+                boundary-links="true" rotate="false"
+                items-per-page="pagination.itemsPerPage">      
+            </pagination> 
+        </div> 
+    </div>
+</div>

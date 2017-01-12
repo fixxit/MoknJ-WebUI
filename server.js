@@ -16,7 +16,7 @@ var min_options = {
         join_vars: true,
         drop_console: true
     }
-}
+};
 // =============================================================================
 // ============================== Core Minify ==================================
 // =============================================================================
@@ -133,7 +133,7 @@ var asset_min_js = uglify.minify([
     __dirname + '/modules/templatetypes/asset/new/services.js',
     __dirname + '/modules/templatetypes/asset/new/controllers.js',
     __dirname + '/modules/templatetypes/asset/new/directives/directives.js',
-    __dirname + '/modules/templatetypes/asset/unassign/controllers.js',
+    __dirname + '/modules/templatetypes/asset/unassign/controllers.js'
 ], min_options);
 
 // Employee Module

@@ -4,6 +4,24 @@ angular.module('Home')
         .controller('HomeController',
                 ['$scope', '$rootScope', '$location', 'HomeService', '$modal',
                     function ($scope, $rootScope, $location, HomeService, $modal) {
+                        $scope.colors = [
+                            {
+                                backgroundColor: "rgba(159,204,0, 0.2)",
+                                pointBackgroundColor: "rgba(159,204,0, 1)",
+                                pointHoverBackgroundColor: "rgba(159,204,0, 0.8)",
+                                borderColor: "rgba(159,204,0, 1)",
+                                pointBorderColor: '#fff',
+                                pointHoverBorderColor: "rgba(159,204,0, 1)"
+                            }, "rgba(250,109,33,0.5)", "#9a9a9a", "rgb(233,177,69)"
+                        ];
+
+                        $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
+                        $scope.series = ['In', 'Out'];
+                        $scope.data = [
+                            [65, 59, 80, 81, 56, 55, 40], // in
+                            [28, 48, 40, 19, 86, 27, 90] // out
+                        ];
+
                         $scope.id = $location.search().id ? $location.search().id : null;
                         $scope.templateId = $location.search().templateId ? $location.search().templateId : null;
                         $scope.resourceId = $location.search().resourceId ? $location.search().resourceId : null;
@@ -19,10 +37,12 @@ angular.module('Home')
                             'menu': '#/menu',
                             'create_menu_employee': '#/menu?new=true&type=GBL_MT_EMPLOYEE',
                             'create_menu_asset': '#/menu?new=true&type=GBL_MT_ASSET',
+                            'graph': ' #/graph',
                             'template': '#/type',
                             'hidden': '#/hidden_template',
                             'link': '#/link',
-                            'employee_link': '#/employee_link'
+                            'employee_link': '#/employee_link',
+                            'display_home_graphs': '../modules/graph/views/displaygraph.html'
                         };
 
                         $scope.modules = {
@@ -43,6 +63,7 @@ angular.module('Home')
                                     'menu': '#/menu?menuId=' + id,
                                     'create_menu_employee': '#/menu?new=true&type=GBL_MT_EMPLOYEE&menuId=' + id,
                                     'create_menu_asset': '#/menu?new=true&type=GBL_MT_ASSET&menuId=' + id,
+                                    'graph': ' #/graph?menuId=' + id,
                                     'template': '#/type?menuId=' + id,
                                     'hidden': '#/hidden_template?menuId=' + id,
                                     'link': '#/link?menuId=' + id,
@@ -328,6 +349,60 @@ angular.module('Home')
                             );
                         };
 
+                        $scope.loadGraph = function (id) {
+                            HomeService.getGraphForID(
+                                    $rootScope.globals.currentUser.access_token,
+                                    id,
+                                    function (response) {
+                                        console.log("Graph : " + JSON.stringify(response));
+                                        // token auth error
+                                        if (response.error_description) {
+                                            $scope.error = response.error_description + ". Please logout!";
+                                        } else {
+                                            if (response.graphData) {
+                                                $scope.graphData = response.graphData;
+                                            }
+                                        }
+                                    }
+                            );
+                        };
+
+
+                        $scope.loadAllGraphs = function () {
+                            HomeService.getAllGraphs(
+                                    $rootScope.globals.currentUser.access_token,
+                                    function (response) {
+
+                                        // token auth error
+                                        if (response.error_description) {
+                                            $scope.error = response.error_description + ". Please logout!";
+                                        } else {
+                                            if (response.allGraphsData) {
+                                                $scope.barCharts = response.allGraphsData["chart-bar"];
+                                                $scope.lineCharts = response.allGraphsData["chart-line"];
+                                                $scope.horzCharts = response.allGraphsData["chart-horizontal-bar"];
+                                                $scope.pieCharts = response.allGraphsData["chart-pie"];
+//                                                angular.forEach($scope.lineCharts, function (graphData) {
+//                                                    console.log("chart-line graphData : " + JSON.stringify(graphData));
+//                                                });
+//                                                
+//                                                angular.forEach($scope.barCharts, function (graphData) {
+//                                                    console.log("chart-bar graphData : " + JSON.stringify(graphData));
+//                                                });
+//                                                
+//                                                angular.forEach($scope.horzCharts, function (graphData) {
+//                                                    console.log("chart-horizontal-bar graphData : " + JSON.stringify(graphData));
+//                                                });
+//                                                
+//                                                angular.forEach($scope.pieCharts, function (graphData) {
+//                                                    console.log("pie graphData : " + JSON.stringify(graphData));
+//                                                });
+                                            }
+                                        }
+                                    }
+                            );
+                        };
+
                         $scope.loadPage = function (typeId) {
                             $scope.loadMenus();
                             $scope.loadAllResources();
@@ -335,6 +410,7 @@ angular.module('Home')
                                 $scope.setURLs($scope.id);
                                 $scope.loadTemplateForMenu(typeId);
                             }
+                            $scope.loadAllGraphs();
                         };
 
                         // check if even for row odd and even colors

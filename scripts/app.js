@@ -9,7 +9,9 @@ angular.module('Link', ['ui.bootstrap', 'ngAnimate']);
 angular.module('Employee', ['ui.bootstrap', 'ngAnimate']);
 angular.module('EmployeeLink', ['ui.bootstrap', 'ngAnimate']);
 angular.module('User', ['ui.bootstrap', 'ngAnimate']);
+angular.module('Graph', ['ui.bootstrap', 'ngAnimate']);
 angular.module('Template', ['ui.bootstrap', 'ngAnimate']);
+angular.module('Settings', []);
 // new modles copme here
 angular.module('FixxitAssetTrackerUI', [
     'Authentication',
@@ -20,7 +22,9 @@ angular.module('FixxitAssetTrackerUI', [
     'Employee',
     'EmployeeLink',
     'User',
+    'Graph',
     'Link',
+    'Settings',
     'Template',
     'ngRoute',
     'ngCookies'
@@ -56,6 +60,11 @@ angular.module('FixxitAssetTrackerUI', [
                 .when('/user', {
                     controller: 'UserController',
                     templateUrl: 'modules/user/views/user.html'
+                })
+
+                .when('/graph', {
+                    controller: 'GraphController',
+                    templateUrl: 'modules/graph/views/graph.html'
                 })
 
                 .when('/link', {

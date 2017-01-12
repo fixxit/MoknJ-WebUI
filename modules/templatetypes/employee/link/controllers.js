@@ -16,6 +16,18 @@ angular.module('EmployeeLink')
                             'url': '/home',
                             'return_parms': null
                         };
+                        $scope.sortType = ''; // set the default sort type
+                        $scope.sortReverse = false;  // set the default sort order
+
+                        $scope.setFilter = function (sortType) {
+                            if ($scope.sortType === sortType) {
+                                $scope.sortReverse = !$scope.sortReverse;
+                                $scope.sortType = sortType;
+                            } else {
+                                $scope.sortReverse = false;
+                                $scope.sortType = sortType;
+                            }
+                        };
 
                         // logic for navigation between pages...
                         $scope.initialiseUrlParms = function () {

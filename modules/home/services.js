@@ -126,6 +126,22 @@ angular.module('Home')
                                     null,
                                     callback);
                         };
+                        
+                        
+                        service.getGraphForID = function (token, id, callback) {
+                            ApiHomeCall.process(
+                                    'graph/get/data/' + id + '?access_token=' + token,
+                                    null,
+                                    callback);
+                        };
+                        
+                        
+                        service.getAllGraphs = function (token, callback) {
+                            ApiHomeCall.process(
+                                    'graph/all/data?access_token=' + token,
+                                    null,
+                                    callback);
+                        };
 
                         return service;
                     }]);
