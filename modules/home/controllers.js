@@ -4,24 +4,6 @@ angular.module('Home')
         .controller('HomeController',
                 ['$scope', '$rootScope', '$location', 'HomeService', '$modal',
                     function ($scope, $rootScope, $location, HomeService, $modal) {
-                        $scope.colors = [
-                            {
-                                backgroundColor: "rgba(159,204,0, 0.2)",
-                                pointBackgroundColor: "rgba(159,204,0, 1)",
-                                pointHoverBackgroundColor: "rgba(159,204,0, 0.8)",
-                                borderColor: "rgba(159,204,0, 1)",
-                                pointBorderColor: '#fff',
-                                pointHoverBorderColor: "rgba(159,204,0, 1)"
-                            }, "rgba(250,109,33,0.5)", "#9a9a9a", "rgb(233,177,69)"
-                        ];
-
-                        $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-                        $scope.series = ['In', 'Out'];
-                        $scope.data = [
-                            [65, 59, 80, 81, 56, 55, 40], // in
-                            [28, 48, 40, 19, 86, 27, 90] // out
-                        ];
-
                         $scope.id = $location.search().id ? $location.search().id : null;
                         $scope.templateId = $location.search().templateId ? $location.search().templateId : null;
                         $scope.resourceId = $location.search().resourceId ? $location.search().resourceId : null;
@@ -367,12 +349,10 @@ angular.module('Home')
                             );
                         };
 
-
                         $scope.loadAllGraphs = function () {
                             HomeService.getAllGraphs(
                                     $rootScope.globals.currentUser.access_token,
                                     function (response) {
-
                                         // token auth error
                                         if (response.error_description) {
                                             $scope.error = response.error_description + ". Please logout!";
@@ -382,21 +362,9 @@ angular.module('Home')
                                                 $scope.lineCharts = response.allGraphsData["chart-line"];
                                                 $scope.horzCharts = response.allGraphsData["chart-horizontal-bar"];
                                                 $scope.pieCharts = response.allGraphsData["chart-pie"];
-//                                                angular.forEach($scope.lineCharts, function (graphData) {
-//                                                    console.log("chart-line graphData : " + JSON.stringify(graphData));
-//                                                });
-//                                                
-//                                                angular.forEach($scope.barCharts, function (graphData) {
-//                                                    console.log("chart-bar graphData : " + JSON.stringify(graphData));
-//                                                });
-//                                                
-//                                                angular.forEach($scope.horzCharts, function (graphData) {
-//                                                    console.log("chart-horizontal-bar graphData : " + JSON.stringify(graphData));
-//                                                });
-//                                                
-//                                                angular.forEach($scope.pieCharts, function (graphData) {
-//                                                    console.log("pie graphData : " + JSON.stringify(graphData));
-//                                                });
+                                                $scope.polarCharts = response.allGraphsData["chart-polar-area"];
+                                                $scope.radarCharts = response.allGraphsData["chart-radar"];
+                                                $scope.options = {legend: {display: true}};
                                             }
                                         }
                                     }
@@ -604,7 +572,6 @@ angular.module('Home')
                                     $scope.selectedType.newCollapse = true;
                                 }
                             }
-
                         };
 
                         $scope.isSelectedType = function (type) {
@@ -614,7 +581,6 @@ angular.module('Home')
                                 return "list-group-item";
                             }
                         };
-
 
                         $scope.selectResource = function (resource) {
                             if (resource === $scope.selectedResource) {
@@ -631,7 +597,6 @@ angular.module('Home')
                                 return "list-group-item";
                             }
                         };
-
 
                         $scope.isFilterdResource = function (resource) {
                             if (resource === $scope.selectedResource) {

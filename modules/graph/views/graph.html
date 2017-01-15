@@ -78,11 +78,13 @@
                     </select>
                 </div>
 
-                <div class="form-group" ng-show="graph.graphFocus === 'GBL_FOCUS_FREE_FIELD'">
+                <div class="form-group" ng-show="graph.menuId
+                            && graph.templateId
+                            && graph.graphFocus === 'GBL_FOCUS_FREE_FIELD'">
                     <label>Free field (data set grouping)</label>
                     <select class="form-control" ng-model="graph.freefieldId"
                             ng-options="field.id as field.name for field in templateFields">
-                        <option value="">Select a free field</option>
+                        <option value="">Select a free drop down field</option>
                     </select>
                 </div>
 
@@ -95,10 +97,26 @@
                 </div>
 
                 <div class="form-group">
-                    <label>View (x-axis groups) with date caveat</label>
+                    <label>View (x-axis groups) with date rule</label>
                     <select class="form-control" ng-model="graph.graphView"
                             ng-options="view.enumName as view.displayName for view in graphViews">
                         <option value="">Select a view</option>
+                    </select>
+                </div>
+
+                <div class="form-group" ng-show="graph.templateId">
+                    <label>Date caveat</label>
+                    <select class="form-control" ng-model="graph.graphDateType"
+                            ng-options="date.enumName as date.displayName for date in graphDates">
+                        <option value="">Select a date filter</option>
+                    </select>
+                </div>
+
+                <div class="form-group" ng-show="graph.menuId && graph.templateId && graph.graphDateType === 'GBL_FOCUS_FREE_FIELD'">
+                    <label>Free field (data set grouping)</label>
+                    <select class="form-control" ng-model="graph.freeDateFieldId"
+                            ng-options="field.id as field.name for field in templateDateFields">
+                        <option value="">Select a free date field</option>
                     </select>
                 </div>
 
@@ -139,7 +157,7 @@
                         </span>
                     </p> 
                 </div>
-
+                
                 <div ng-if="datepickerOptions === dateOptions.normal" class="form-group">
                     <label>"N" Date Value</label>
                     <p class="input-group">              

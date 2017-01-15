@@ -1,43 +1,145 @@
-<div class="row">
-    <div ng-repeat="line in lineCharts" class="col-sm-4">
-        <h3 class="text-center">{{line.graphTitle}}</h3>
-        <canvas class="chart chart-line" 
-                chart-colors="colors" 
-                chart-data="line.graphData" 
-                chart-labels="line.xlabels" 
-                height="100px" legend="true" 
-                chart-series="line.ylabels"></canvas>
-    </div>
-
-    <div ng-repeat="bar in barCharts" class="col-sm-4">
-        <h3 class="text-center">{{bar.graphTitle}}</h3>
-        <canvas class="chart chart-bar" 
-                chart-colors="colors" 
-                chart-data="bar.graphData" 
-                chart-labels="bar.xlabels" 
-                height="100px" legend="true" 
-                chart-series="bar.ylabels"></canvas>
-    </div>
-
-    <div ng-repeat="horz in horzCharts" class="col-sm-4">
-        <h3 class="text-center">{{horz.graphTitle}}</h3>
-        <canvas class="chart chart-horizontal-bar" 
-                chart-colors="colors" 
-                chart-data="horz.graphData" 
-                chart-labels="horz.xlabels" 
-                height="100px" legend="true" 
-                chart-series="horz.ylabels"></canvas>
-    </div>
-
-    <div ng-repeat="pie in pieCharts" class="col-sm-4">
-        <h3 class="text-center">{{pie.graphTitle}}</h3>
-        <canvas class="chart chart-pie" 
-                chart-colors="colors" 
-                chart-data="pie.graphData" 
-                chart-labels="pie.xlabels" 
-                height="100px" legend="true" 
-                chart-series="pie.ylabels"></canvas>
+<div class="container-fluid" ng-if="barCharts">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Bar Charts</div>
+        <div class="panel-body">
+            <div ng-repeat="bar in barCharts" class="col-sm-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{bar.graphTitle}}</div>
+                    <div class="panel-body">
+                        <canvas class="chart chart-bar" 
+                                chart-colors="colors" 
+                                chart-data="bar.graphData" 
+                                chart-labels="bar.xlabels" 
+                                legend="true" 
+                                chart-series="bar.ylabels"
+                                chart-options="options"
+                                height="100px">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
+<div class="container-fluid" ng-if="lineCharts">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Line Charts</div>
+        <div class="panel-body">
+            <div ng-repeat="line in lineCharts" class="col-sm-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{line.graphTitle}}</div>
+                    <div class="panel-body">
+                        <canvas class="chart chart-line" 
+                                chart-colors="colors" 
+                                chart-data="line.graphData" 
+                                chart-labels="line.xlabels" 
+                                legend="true" 
+                                chart-series="line.ylabels"
+                                chart-options="options"
+                                height="100px">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="container-fluid" ng-if="horzCharts">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Horizontal Bar Charts</div>
+        <div class="panel-body">
+            <div ng-repeat="horz in horzCharts" class="col-sm-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{horz.graphTitle}}</div>
+                    <div class="panel-body">
+                        <canvas class="chart chart-horizontal-bar" 
+                                chart-colors="colors" 
+                                chart-data="horz.graphData" 
+                                chart-labels="horz.xlabels" 
+                                legend="true" 
+                                chart-series="horz.ylabels"
+                                chart-options="options"
+                                height="100px">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" ng-if="radarCharts">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Radar Charts</div>
+        <div class="panel-body">
+            <div ng-repeat="radar in radarCharts" class="col-sm-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{radar.graphTitle}}</div>
+                    <div class="panel-body">
+                        <canvas class="chart chart-radar" 
+                                chart-colors="colors" 
+                                chart-data="radar.graphData" 
+                                chart-labels="radar.xlabels" 
+                                legend="true" 
+                                chart-series="radar.ylabels"
+                                chart-options="options"
+                                height="100px">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" ng-if="pieCharts">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Pie Charts</div>
+        <div class="panel-body">
+            <div ng-repeat="pie in pieCharts" class="col-sm-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{pie.graphTitle}}</div>
+                    <div class="panel-body">
+                        <div ng-repeat="data in pie.graphData">
+                            <canvas class="chart chart-pie" 
+                                    chart-colors="colors" 
+                                    chart-data="data" 
+                                    chart-labels="pie.xlabels" 
+                                    chart-options="options"
+                                    height="75px">
+                            </canvas>
+                            <h4 class="text-center">{{"Grouped by " + pie.ylabels[$index]}}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" ng-if="polarCharts">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Polar Charts</div>
+        <div class="panel-body">
+            <div ng-repeat="polar in polarCharts" class="col-sm-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{polar.graphTitle}}</div>
+                    <div class="panel-body">
+                        <div ng-repeat="data in polar.graphData">
+                            <canvas class="chart chart-polar-area" 
+                                    chart-colors="colors" 
+                                    chart-data="data"
+                                    chart-labels="polar.xlabels" 
+                                    chart-options="options"
+                                    height="100px">
+                            </canvas>
+                            <h4 class="text-center">{{"Grouped by " + polar.ylabels[$index]}}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

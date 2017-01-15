@@ -60,7 +60,6 @@ angular.module('Home')
                                     callback);
                         };
 
-
                         service.getMenu = function (token, id, callback) {
                             ApiHomeCall.process(
                                     'menu/get/' + id +
@@ -101,7 +100,7 @@ angular.module('Home')
 
                         service.addLink = function (token, payload, callback) {
                             ApiHomeCall.process(
-                                    'link/add?access_token=' + token,
+                                    'link/asset/add?access_token=' + token,
                                     payload,
                                     callback);
                         };
@@ -127,14 +126,12 @@ angular.module('Home')
                                     callback);
                         };
                         
-                        
                         service.getGraphForID = function (token, id, callback) {
                             ApiHomeCall.process(
                                     'graph/get/data/' + id + '?access_token=' + token,
                                     null,
                                     callback);
                         };
-                        
                         
                         service.getAllGraphs = function (token, callback) {
                             ApiHomeCall.process(

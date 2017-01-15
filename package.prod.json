@@ -1,11 +1,11 @@
 {
-  "name": "fixxitassettracckergui",
-  "version": "1.0.0",
-  "author": "Riaan Schoeman",
-  "license": "ISC",
-  "description": "fixxit asset traccker gui",
-  "private": true,
-  "engine": {
+    "name": "fixxitassettracckergui",
+    "version": "1.0.0",
+    "author": "Riaan Schoeman",
+    "license": "ISC",
+    "description": "fixxit asset traccker gui",
+    "private": true,
+    "engine": {
         "node": "*",
         "npm": "*"
     },
@@ -13,20 +13,21 @@
     "scripts": {
         "start": "node --use_strict server.js"
     },
-  "directories": {
+    "directories": {
         "lib": "js/"
     },
     "files": [
         "index.html",
         "view/"
     ],
-  "dependencies": {
+    "dependencies": {
         "angular": "1.5.8",
         "angular-route": "1.5.8",
         "angular-cookies": "1.5.8",
         "angular-ui-bootstrap": "0.13.4",
         "angular-animate": "1.5.8",
         "angular-chart.js": "1.1.1",
+        "angular-chartjs-directive": "1.0.0",
         "express": "4.14.0",
         "chart.js": "2.4.0",
         "uglify-js": "2.7.5",

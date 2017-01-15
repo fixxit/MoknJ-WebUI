@@ -18,6 +18,10 @@ angular.module('Graph')
                             TypeService.getTemplateFields(token, id, callback);
                         };
 
+                        service.getTempDateFields = function (token, id, callback) {
+                            TypeService.getTemplateDateFields(token, id, callback);
+                        };
+
                         service.getGraphTypes = function (token, callback) {
                             SettingsCall.process(
                                     'graph/types?access_token=' + token,
@@ -53,6 +57,12 @@ angular.module('Graph')
                                     callback);
                         };
 
+                        service.getGraphDateTypes = function (token, callback) {
+                            SettingsCall.process(
+                                    'graph/datetypes?access_token=' + token,
+                                    null,
+                                    callback);
+                        };
 
                         service.deleteGraph = function (token, id, callback) {
                             SettingsCall.process(

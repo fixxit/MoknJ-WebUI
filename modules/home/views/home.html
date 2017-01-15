@@ -20,7 +20,7 @@
                     </a>
                     <ul class="dropdown-menu" role="menu">   
                         <li ng-repeat="menu in menus| filter:{menuType:'GBL_MT_ASSET'}">
-                            <a ng-if='menu.id !== id' href="#/home?id={{menu.id}}">{{menu.name}}</a>
+                            <a href="#/home?id={{menu.id}}">{{menu.name}}</a>
                         </li>
                         <li ng-show="!menus.length">
                             <a>No Menu's mapped</a>
@@ -43,7 +43,7 @@
                     </a>
                     <ul class="dropdown-menu" role="menu">   
                         <li ng-repeat="menu in menus| filter:{menuType:'GBL_MT_EMPLOYEE'}">
-                            <a ng-if='menu.id !== id' href="#/home?id={{menu.id}}">{{menu.name}}</a>
+                            <a href="#/home?id={{menu.id}}">{{menu.name}}</a>
                         </li>
                         <li ng-show="!menus.length">
                             <a>No Menu's mapped</a>

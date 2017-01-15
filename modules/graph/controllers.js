@@ -11,6 +11,7 @@ angular.module('Graph')
                         $scope.resetDate = true;
                         $scope.graph = null;
 
+
                         $scope.pagination = {};
                         // logic for navigation between pages...
                         $scope.urlScope = {
@@ -53,6 +54,7 @@ angular.module('Graph')
                             $scope.loadGraphTypes();
                             $scope.loadGraphViews();
                             $scope.loadSavedGraphs();
+                            $scope.loadGraphDateTypes();
 
                             $scope.loading = false;
                         };
@@ -265,6 +267,22 @@ angular.module('Graph')
                             );
                         };
 
+                        $scope.loadGraphDateTypes = function () {
+                            GraphService.getGraphDateTypes(
+                                    $rootScope.globals.currentUser.access_token,
+                                    function (response) {
+                                        // token auth error
+                                        if (response.error_description) {
+                                            $scope.error = response.error_description + ". Please logout!";
+                                        } else {
+                                            if (response.graphDates) {
+                                                $scope.graphDates = response.graphDates;
+                                            }
+                                        }
+                                    }
+                            );
+                        };
+
                         $scope.loadGraphFocus = function (id) {
                             GraphService.getGraphFocuses(
                                     $rootScope.globals.currentUser.access_token,
@@ -301,6 +319,23 @@ angular.module('Graph')
                             );
                         };
 
+                        $scope.loadTemplateDateFields = function (id) {
+                            GraphService.getTempDateFields(
+                                    $rootScope.globals.currentUser.access_token,
+                                    id,
+                                    function (response) {
+                                        // token auth error
+                                        if (response.error_description) {
+                                            $scope.error = response.error_description + ". Please logout!";
+                                        } else {
+                                            console.log("Template Fields : " + JSON.stringify(response));
+                                            if (response.fields) {
+                                                $scope.templateDateFields = response.fields;
+                                            }
+                                        }
+                                    }
+                            );
+                        };
 
                         // check if even for row odd and even colors
                         $scope.isEven = function (value) {
@@ -381,8 +416,10 @@ angular.module('Graph')
 
                         // Change state watches for dropdown values.
 
+
                         $scope.$watch('graph.menuId', function () {
-                            if ($scope.graph && $scope.graph.menuId) {
+                            if ($scope.graph
+                                    && $scope.graph.menuId) {
                                 $scope.reloadTemplates(function (types) {
                                     $scope.filterTemplate(types);
                                 });
@@ -392,13 +429,34 @@ angular.module('Graph')
                         $scope.$watch('graph.templateId', function () {
                             if ($scope.graph && $scope.graph.templateId) {
                                 $scope.loadGraphFocus($scope.graph.templateId);
+                                if ($scope.graph.graphFocus
+                                        && $scope.graph.graphFocus === "GBL_FOCUS_FREE_FIELD") {
+                                    $scope.loadTemplateFields($scope.graph.templateId)
+                                }
+
+                                if ($scope.graph.graphDateType
+                                        && $scope.graph.graphDateType === "GBL_FOCUS_FREE_FIELD") {
+                                    $scope.loadTemplateDateFields($scope.graph.templateId);
+                                }
                             }
                         });
 
                         $scope.$watch('graph.graphFocus', function () {
-                            if ($scope.graph && $scope.graph.graphFocus) {
+                            if ($scope.graph
+                                    && $scope.graph.graphFocus
+                                    && $scope.graph.templateId) {
                                 if ($scope.graph.graphFocus === "GBL_FOCUS_FREE_FIELD") {
                                     $scope.loadTemplateFields($scope.graph.templateId);
+                                }
+                            }
+                        });
+
+                        $scope.$watch('graph.graphDateType', function () {
+                            if ($scope.graph
+                                    && $scope.graph.graphDateType
+                                    && $scope.graph.templateId) {
+                                if ($scope.graph.graphDateType === "GBL_FOCUS_FREE_FIELD") {
+                                    $scope.loadTemplateDateFields($scope.graph.templateId);
                                 }
                             }
                         });

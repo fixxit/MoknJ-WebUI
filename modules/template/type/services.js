@@ -29,15 +29,21 @@ angular.module('Type')
                                     null,
                                     callback);
                         };
-                        
+
                         service.getType = function (token, id, callback) {
                             SettingsCall.process('type/get/' + id + '?access_token=' + token,
                                     null,
                                     callback);
                         };
-                        
+
                         service.getTemplateFields = function (token, id, callback) {
-                            SettingsCall.process('type/template/' + id + '/fields?access_token=' + token,
+                            SettingsCall.process('type/template/dropdown/' + id + '/fields?access_token=' + token,
+                                    null,
+                                    callback);
+                        };
+
+                        service.getTemplateDateFields = function (token, id, callback) {
+                            SettingsCall.process('type/template/date/' + id + '/fields?access_token=' + token,
                                     null,
                                     callback);
                         };
