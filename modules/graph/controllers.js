@@ -54,7 +54,6 @@ angular.module('Graph')
                             $scope.loadGraphTypes();
                             $scope.loadGraphViews();
                             $scope.loadSavedGraphs();
-                            $scope.loadGraphDateTypes();
 
                             $scope.loading = false;
                         };
@@ -267,9 +266,10 @@ angular.module('Graph')
                             );
                         };
 
-                        $scope.loadGraphDateTypes = function () {
+                        $scope.loadGraphDateTypes = function (id) {
                             GraphService.getGraphDateTypes(
                                     $rootScope.globals.currentUser.access_token,
+                                    id,
                                     function (response) {
                                         // token auth error
                                         if (response.error_description) {
@@ -429,9 +429,11 @@ angular.module('Graph')
                         $scope.$watch('graph.templateId', function () {
                             if ($scope.graph && $scope.graph.templateId) {
                                 $scope.loadGraphFocus($scope.graph.templateId);
+                                $scope.loadGraphDateTypes($scope.graph.templateId);
+
                                 if ($scope.graph.graphFocus
                                         && $scope.graph.graphFocus === "GBL_FOCUS_FREE_FIELD") {
-                                    $scope.loadTemplateFields($scope.graph.templateId)
+                                    $scope.loadTemplateFields($scope.graph.templateId);
                                 }
 
                                 if ($scope.graph.graphDateType

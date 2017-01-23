@@ -40,7 +40,7 @@ angular.module('EmployeeLink')
 
                         service.allEmployeeLink = function (token, callback) {
                             ApiEmployeeLinkCall.process(
-                                    'link/employee/all/?access_token=' + token,
+                                    'link/employee/all?access_token=' + token,
                                     callback);
                         };
 

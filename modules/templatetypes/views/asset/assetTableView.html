@@ -1,35 +1,34 @@
 <div class="row">
     <div class="table-responsive panel panel-primary">
         <div class="panel-heading container-fluid panel-container"> 
-            <div class="col-xs-3 text-left">
-                <span ng-if="type.loading">
+            <span class="pull-left">
+                <span ng-show="type.loading">
                     <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
                     &nbsp;
-                </span> 
+                </span>
                 &nbsp;
-                <span style="cursor:pointer;" ng-click="newAsset(type.id)" data-toggle="tooltip" title="New {{type.name}}">
-                    <span class="glyphicon glyphicon-new-window"></span>&nbsp;New&nbsp;&nbsp;
-                </span>
-            </div>
-            <div class="col-xs-6 text-center">
+                <span style="cursor: pointer;" ng-click="type.newCollapse = !type.newCollapse" ng-class="isCollapsed(type.newCollapse)"></span>
+                &nbsp;
                 <span style="cursor: pointer;" data-toggle="tooltip" title="Expand/Collapse {{type.name}}" ng-click="type.newCollapse = !type.newCollapse">{{type.name}}</span> 
-            </div>
-            <div class="col-xs-3 text-right">
-                <span style="cursor:pointer;" ng-click="editType(type.id, 'asset')">
-                    <span class="glyphicon glyphicon-edit"></span>
-                    &nbsp;Edit
-                </span>
                 &nbsp;
                 <span>
                     <span class="badge">in:{{type.checkedIn}}</span>
                     <span class="badge">out:{{type.checkedOut}}</span>
                     <span class="badge">total:{{type.searchSize}}</span>
                 </span>
-                &nbsp;
-                <span data-toggle="tooltip" title="Expand/Collapse {{type.name}}" style="cursor: pointer;" ng-click="type.newCollapse = !type.newCollapse">
-                    <span ng-class="isCollapsed(type.newCollapse)"></span>
+            </span>
+
+            <span class="pull-right">
+                <span style="cursor:pointer;" ng-click="newAsset(type.id)" data-toggle="tooltip" title="New {{type.name}}">
+                    <span class="glyphicon glyphicon-new-window"></span>&nbsp;New&nbsp;
                 </span>
-            </div>
+
+                <span style="cursor:pointer;" ng-click="editType(type.id, 'asset')">
+                    <span class="glyphicon glyphicon-edit"></span>&nbsp;Edit&nbsp;
+                </span>
+                &nbsp;
+                &nbsp;
+            </span>
         </div>
         <div collapse="type.newCollapse">
             <div class="input-group-addon" ng-if="type.assets.length > 1" >      

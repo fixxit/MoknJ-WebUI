@@ -57,9 +57,9 @@ angular.module('Graph')
                                     callback);
                         };
 
-                        service.getGraphDateTypes = function (token, callback) {
+                        service.getGraphDateTypes = function (token, id, callback) {
                             SettingsCall.process(
-                                    'graph/datetypes?access_token=' + token,
+                                    'graph/datetypes/' + id + '?access_token=' + token,
                                     null,
                                     callback);
                         };

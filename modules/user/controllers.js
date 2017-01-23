@@ -10,9 +10,38 @@ angular.module('User')
                         $scope.resourceId = $location.search().resourceId;
                         $scope.resource = {};
                         $scope.pagination = {};
+                        // Access list 
+                        // reason for data design is so it is easy to use two way
+                        // data bind.
+                        $scope.access = [
+                            {
+                                id: '',
+                                name: '',
+                                rights: [
+                                    {
+                                        enumName: '',
+                                        displayName: '',
+                                        value: ''
+                                    }
+                                ],
+                                templates: [
+                                    {
+                                        id: '',
+                                        name: '',
+                                        rights: [
+                                            {
+                                                enumName: '',
+                                                displayName: '',
+                                                value: ''
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ];
 
                         if ($scope.resourceId) {
-                            $scope.resource.id = resourceId;
+                            $scope.resource.id = $scope.resourceId;
                         }
 
                         $scope.loadPage = function (id) {
@@ -22,6 +51,7 @@ angular.module('User')
                             }
 
                             $scope.getAuthorities();
+                            $scope.getMenus();
 
                             UserService.all($rootScope.globals.currentUser.access_token,
                                     function (response) {
@@ -89,6 +119,9 @@ angular.module('User')
                                                 } else {
                                                     $scope.success = 'Successfully update employee';
                                                 }
+
+                                                $scope.addAccess(response.resource.id);
+
                                                 $scope.loadPage();
                                                 // Reset all data
                                                 $scope.reset();
@@ -103,6 +136,258 @@ angular.module('User')
                                     }
                             );
                         };
+
+                        // scans access list and checks the main check box of menu
+                        // or template if a certain right is repeated.
+                        $scope.rescanAccess = function () {
+                            if ($scope.access) {
+                                var maxMenuCount = $scope.access.length;
+                                angular.forEach($scope.rights, function (search_right) {
+                                    var rightsCount = 0;
+                                    angular.forEach($scope.access, function (menu) {
+                                        // template all
+                                        if (menu.templates) {
+                                            var maxTemplateCount = menu.templates.length;
+
+                                            var templateCount = 0;
+                                            angular.forEach(menu.templates, function (template) {
+                                                angular.forEach(template.rights, function (page_right) {
+                                                    if (search_right.enumName === page_right.enumName) {
+                                                        if (page_right.value) {
+                                                            templateCount = templateCount + 1;
+                                                        }
+                                                    }
+                                                });
+                                            });
+
+                                            if (maxTemplateCount === templateCount) {
+                                                angular.forEach(menu.rights, function (page_right) {
+                                                    if (search_right.enumName === page_right.enumName) {
+                                                        page_right.value = true;
+
+                                                    }
+                                                });
+                                                rightsCount = rightsCount + 1;
+                                            } else {
+                                                angular.forEach(menu.rights, function (page_right) {
+                                                    if (search_right.enumName === page_right.enumName) {
+                                                        page_right.value = false;
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+
+                                    if (maxMenuCount === rightsCount) {
+                                        search_right.value = true;
+                                    } else {
+                                        search_right.value = false;
+                                    }
+                                });
+                            }
+                        };
+
+                        // Adds all access for certain right
+                        $scope.addAllForMenu = function (enumName) {
+                            if ($scope.access) {
+                                var value = false;
+                                if ($scope.rights) {
+                                    angular.forEach($scope.rights, function (page_right) {
+                                        if (enumName === page_right.enumName) {
+                                            value = page_right.value;
+                                        }
+                                    });
+                                }
+                                angular.forEach($scope.access, function (menu) {
+                                    // template all
+                                    angular.forEach(menu.rights, function (page_right) {
+                                        if (enumName === page_right.enumName) {
+                                            page_right.value = value;
+                                        }
+                                    });
+                                    if (menu.templates) {
+                                        angular.forEach(menu.templates, function (template) {
+                                            angular.forEach(template.rights, function (page_right) {
+                                                if (enumName === page_right.enumName) {
+                                                    page_right.value = value;
+                                                }
+                                            });
+                                        });
+                                    }
+                                });
+                            }
+                        };
+                        // Adds all access for menu and right
+                        $scope.addAllForTemplate = function (menuId, enumName) {
+                            if ($scope.access) {
+                                angular.forEach($scope.access, function (menu) {
+                                    if (menu.id === menuId) {
+
+                                        var value = false;
+                                        angular.forEach(menu.rights, function (page_right) {
+                                            if (enumName === page_right.enumName) {
+                                                value = page_right.value;
+                                            }
+                                        });
+
+                                        // template all
+                                        if (menu.templates) {
+                                            angular.forEach(menu.templates, function (template) {
+                                                angular.forEach(template.rights, function (page_right) {
+                                                    if (enumName === page_right.enumName) {
+                                                        page_right.value = value;
+                                                    }
+                                                });
+                                            });
+                                        }
+                                    }
+                                });
+                                $scope.rescanAccess();
+                            }
+                        };
+
+                        // ah shit here are some weird ass wack code son!
+                        // Used to generate access array, reason for this is
+                        // so you can easily handel two way data bind on the
+                        // access rights.
+                        $scope.generateAccessArray = function (menus, rights) {
+                            if (menus) {
+                                var accMenus = [];
+                                angular.forEach(menus, function (menu) {
+                                    var accMenu = {};
+                                    accMenu.id = menu.id;
+                                    accMenu.name = menu.name;
+                                    accMenu.rights = [];
+                                    angular.forEach(rights, function (right) {
+                                        var accRight = {};
+                                        accRight.displayName = right.displayName;
+                                        accRight.enumName = right.enumName;
+                                        accRight.value = false;
+                                        accMenu.rights.push(accRight);
+                                    });
+
+                                    accMenu.templates = [];
+                                    if (menu.templates) {
+                                        var accTemps = [];
+                                        angular.forEach(menu.templates, function (template) {
+                                            var accTemp = {};
+                                            accTemp.id = template.id;
+                                            accTemp.name = template.name;
+                                            var accRights = [];
+                                            angular.forEach(rights, function (right) {
+                                                var accRight = {};
+                                                accRight.displayName = right.displayName;
+                                                accRight.enumName = right.enumName;
+                                                accRight.value = false;
+                                                accRights.push(accRight);
+                                            });
+                                            accTemp.rights = accRights;
+                                            accTemps.push(accTemp);
+                                        });
+                                        accMenu.templates = accTemps;
+                                    }
+                                    accMenus.push(accMenu);
+                                });
+
+                                $scope.access = accMenus;
+                            }
+                        };
+
+                        /// Adds the access to the api
+                        $scope.addAccess = function (userId) {
+                            var accessRules = [];
+                            angular.forEach($scope.access, function (menu) {
+                                if (menu.templates) {
+                                    // loop menu structure
+                                    angular.forEach(menu.templates, function (template) {
+                                        var access = {
+                                            menuId: menu.id,
+                                            templateId: template.id,
+                                            userId: userId,
+                                            rights: []};
+                                        // add all rights which are true
+                                        angular.forEach(template.rights, function (right) {
+                                            if (right.value) {
+                                                access.rights.push(right.enumName);
+                                            }
+                                        });
+                                        // checks if the  rights list is null
+                                        if (access.rights.length > 0) {
+                                            accessRules.push(access);
+                                        }
+                                    });
+                                }
+                            });
+
+                            console.log("accessRules : " + JSON.stringify(accessRules));
+                            // sends the access to api
+                            UserService.addAccess(
+                                    $rootScope.globals.currentUser.access_token,
+                                    userId,
+                                    accessRules,
+                                    function (response) {
+                                        if (response.error_description) {
+                                            $scope.success = null;
+                                            $scope.error = response.error_description + ". Please contact your administrator.";
+                                        } else {
+                                            $scope.error = null;
+                                            $scope.success = response.error_description;
+                                        }
+                                    });
+                        };
+
+
+                        // Used to generate access array, reason for this is
+                        // so you can easily handel two way data bind on the
+                        // access rights.
+                        $scope.populateAccessList = function (access) {
+                            console.log("access : " + JSON.stringify(access));
+                            if ($scope.access) {
+                                angular.forEach($scope.access, function (menu) {
+                                    var menuId = menu.id;
+                                    if (menuId === access.menuId) {
+                                        if (menu.templates) {
+                                            angular.forEach(menu.templates, function (template) {
+                                                var templateId = template.id;
+                                                if (templateId === access.templateId) {
+                                                    angular.forEach(template.rights, function (page_right) {
+                                                        angular.forEach(access.rights, function (acc_right) {
+                                                            if (acc_right === page_right.enumName) {
+                                                                page_right.value = true;
+                                                            }
+                                                        });
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        };
+
+                        //Gets the access list for a user
+                        $scope.getAccessList = function (id) {
+                            UserService.getAccessList(
+                                    $rootScope.globals.currentUser.access_token,
+                                    id,
+                                    function (response) {
+                                        // token auth error
+                                        if (response.error_description) {
+                                            $scope.success = null;
+                                            if ("Access is denied" !== response.error_description) {
+                                                $scope.error = response.error_description;
+                                            }
+                                        } else {
+                                            if (response.accessRules) {
+                                                angular.forEach(response.accessRules, function (access) {
+                                                    $scope.populateAccessList(access);
+                                                });
+                                            }
+                                        }
+                                    }
+                            );
+                        };
+
 
                         // check if even for row odd and even colors
                         $scope.isEven = function (value) {
@@ -120,6 +405,15 @@ angular.module('User')
                                 return "glyphicon glyphicon-remove";
                             }
                         };
+
+                        $scope.isCollapsedClass = function (newCollapse) {
+                            if (newCollapse) {
+                                return "glyphicon glyphicon-collapse-up";
+                            } else {
+                                return "glyphicon glyphicon-expand";
+                            }
+                        };
+
 
                         $scope.reset = function (messages) {
                             $scope.resource = {};
@@ -176,7 +470,48 @@ angular.module('User')
                                                 });
                                                 auth.value = value;
                                             });
+                                            $scope.getAccessList(id);
                                             $scope.newCollapse = true;
+                                        }
+                                    }
+                            );
+                        };
+
+                        $scope.getMenus = function () {
+                            UserService.getAllMenus(
+                                    $rootScope.globals.currentUser.access_token,
+                                    function (response) {
+                                        // token auth error
+                                        if (response.error_description) {
+                                            $scope.success = null;
+                                            if ("Access is denied" !== response.error_description) {
+                                                $scope.error = response.error_description;
+                                            }
+                                        } else {
+                                            if (response.menus) {
+                                                $scope.menus = response.menus;
+                                                $scope.getRights($scope.menus);
+                                            }
+                                        }
+                                    }
+                            );
+                        };
+
+                        $scope.getRights = function (menus) {
+                            UserService.allRights(
+                                    $rootScope.globals.currentUser.access_token,
+                                    function (response) {
+                                        // token auth error
+                                        if (response.error_description) {
+                                            $scope.success = null;
+                                            if ("Access is denied" !== response.error_description) {
+                                                $scope.error = response.error_description;
+                                            }
+                                        } else {
+                                            if (response.rights) {
+                                                $scope.rights = response.rights;
+                                                $scope.generateAccessArray(menus, $scope.rights);
+                                            }
                                         }
                                     }
                             );

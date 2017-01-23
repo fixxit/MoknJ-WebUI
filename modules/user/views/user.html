@@ -82,13 +82,64 @@
                         <div class="form-group">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <label for="datatype">Access rights</label>
+                                    <label for="datatype">MoknJ API Access rights</label>
                                 </div> 
                                 <div class="container-fluid">
                                     <div class="checkbox" ng-repeat="auth in authorities">    
-                                        <label data-toggle="tooltip" title="{{auth.name}}s">
+                                        <label data-toggle="tooltip" title="{{auth.name}}">
                                             <input type="checkbox" ng-model="auth.value"/>{{auth.name}}
                                         </label> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <label style="cursor: pointer;" ng-click="rightsCollapsed = !rightsCollapsed">
+                                        <span style="cursor: pointer;" ng-class="isCollapsedClass(rightsCollapsed)"></span>
+                                        &nbsp;Page Access rights
+                                    </label>
+                                    &nbsp;
+                                    <span ng-repeat="right in rights" class="pull-right">
+                                        <label data-toggle="tooltip" title="{{right.displayName}} ">
+                                            <input type="checkbox" ng-model="right.value" ng-click="addAllForMenu(right.enumName)"/>&nbsp;{{right.displayName}}&nbsp;
+                                        </label> 
+                                    </span>
+                                </div> 
+                                <div class="container-fluid" collapse="!rightsCollapsed">
+                                    <div class="row">
+                                        <span>&nbsp;</span>
+                                    </div> 
+                                    <div ng-repeat="menu in access">    
+                                        <div class="form-group">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <span style="cursor: pointer;" ng-click="menu.collapsed = !menu.collapsed">
+                                                        <span style="cursor: pointer;" ng-class="isCollapsedClass(menu.collapsed)"></span>
+                                                        &nbsp;
+                                                        {{menu.name}}
+                                                    </span>
+                                                    &nbsp;
+                                                    <span ng-repeat="right in menu.rights" class="pull-right">
+                                                        <label data-toggle="tooltip" title="{{right.displayName}} ">
+                                                            <input type="checkbox" ng-model="right.value" ng-click="addAllForTemplate(menu.id, right.enumName)"/>&nbsp;{{right.displayName}}&nbsp;
+                                                        </label> 
+                                                    </span>
+                                                </div> 
+                                                <div collapse="!menu.collapsed" class="container-fluid bg-3">
+                                                    <div class="checkbox" ng-repeat="template in menu.templates">    
+                                                        {{template.name}}
+                                                        <span ng-repeat="right in template.rights" class="pull-right">
+                                                            <label data-toggle="tooltip" title="{{right.displayName}}">
+                                                                <input type="checkbox" ng-model="right.value" ng-click="rescanAccess()"/>{{right.displayName}}&nbsp;
+                                                            </label> 
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
