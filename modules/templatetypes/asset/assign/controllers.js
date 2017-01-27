@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('Home').controller('ModalAssignAssetCtrl',
-        function ($scope, $modalInstance, parentScope, HomeService, asset, name, token) {
+        function ($scope, $modalInstance, parentScope, HomeService, asset, name, token, menuId) {
             $scope.name = 'Check ' + name + " Out";
             $scope.asset = asset;
             $scope.resources = [];
@@ -85,7 +85,11 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                     // this setting of the resource is required for refreshAsset
                     // method which is called by the addLink.
                     asset.resourceId = $scope.resource.id;
-                    HomeService.addLink(token, $scope.link,
+                    HomeService.addLink(
+                            token,
+                            $scope.link,
+                            menuId,
+                            asset.typeId,
                             function (response) {
                                 if (response) {
                                     if (response.error_description) {

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('Home').controller('ModalRemoveLinkCtrl',
-        function ($scope, $modalInstance, parentScope, HomeService, asset, name, token) {
+        function ($scope, $modalInstance, parentScope, HomeService, asset, name, token, menuId) {
             $scope.name = 'Check ' + name + " In";
 
             $scope.ok = function () {
@@ -13,7 +13,11 @@ angular.module('Home').controller('ModalRemoveLinkCtrl',
                     'checked': false
                 };
 
-                HomeService.addLink(token, $scope.link,
+                HomeService.addLink(
+                        token,
+                        $scope.link,
+                        menuId,
+                        asset.typeId,
                         function (response) {
                             if (response) {
                                 if (response.error_description) {

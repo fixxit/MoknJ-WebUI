@@ -368,7 +368,7 @@ angular.module('Home')
                                                 $scope.pieCharts = response.allGraphsData["chart-pie"];
                                                 $scope.polarCharts = response.allGraphsData["chart-polar-area"];
                                                 $scope.radarCharts = response.allGraphsData["chart-radar"];
-                                                $scope.options = {legend: {display: true}};
+                                               // $scope.options = {legend: {display: true}};
                                             }
                                         }
                                     }
@@ -478,6 +478,9 @@ angular.module('Home')
                                     },
                                     typeId: function () {
                                         return typeId;
+                                    },
+                                    menuId: function () {
+                                        return $scope.id;
                                     }
                                 }
                             });
@@ -506,6 +509,9 @@ angular.module('Home')
                                     },
                                     typeId: function () {
                                         return typeId;
+                                    },
+                                    menuId: function () {
+                                        return $scope.id;
                                     }
                                 }
                             });
@@ -532,6 +538,9 @@ angular.module('Home')
                                     },
                                     token: function () {
                                         return $rootScope.globals.currentUser.access_token;
+                                    },
+                                    menuId: function () {
+                                        return $scope.id;
                                     }
                                 }
                             });
@@ -557,6 +566,9 @@ angular.module('Home')
                                     },
                                     token: function () {
                                         return $rootScope.globals.currentUser.access_token;
+                                    },
+                                    menuId: function () {
+                                        return $scope.id;
                                     }
                                 }
                             });

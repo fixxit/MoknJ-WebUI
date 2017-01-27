@@ -136,6 +136,7 @@ angular.module('Asset')
                                 if (!missingValue) {
                                     AssetService.save(
                                             $rootScope.globals.currentUser.access_token,
+                                            $scope.menuId,
                                             id,
                                             $scope.type,
                                             function (response) {

@@ -60,9 +60,9 @@ angular.module('Asset')
                                     callback);
                         };
 
-                        service.save = function (token, id, data, callback) {
+                        service.save = function (token, menuId, id, data, callback) {
                             ApiAssetCall.process(
-                                    'asset/add/' + id + '?access_token=' + token,
+                                    'asset/add/' + menuId + '/' + id + '?access_token=' + token,
                                     data,
                                     callback);
                         };

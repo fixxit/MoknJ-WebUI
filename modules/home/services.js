@@ -44,23 +44,24 @@ angular.module('Home')
                                     callback);
                         };
 
-                        service.deleteAsset = function (token, payload, callback) {
+                        service.deleteAsset = function (token, menuId, payload, callback) {
                             SettingsCall.process(
-                                    'asset/delete/?access_token=' + token,
+                                    'asset/delete/' + menuId + '?access_token=' + token,
                                     payload,
                                     callback);
                         };
 
-                        service.deleteEmployee = function (token, payload, callback) {
+                        service.deleteEmployee = function (token, menuId, payload, callback) {
                             SettingsCall.process(
-                                    'employee/delete/?access_token=' + token,
+                                    'employee/delete/' + menuId + '?access_token=' + token,
                                     payload,
                                     callback);
                         };
 
-                        service.addLink = function (token, payload, callback) {
+                        service.addLink = function (token, payload, menuId, templateId, callback) {
                             SettingsCall.process(
-                                    'link/asset/add?access_token=' + token,
+                                    'link/asset/' + menuId + '/' + templateId
+                                    + '/add?access_token=' + token,
                                     payload,
                                     callback);
                         };
@@ -72,9 +73,9 @@ angular.module('Home')
                                     callback);
                         };
 
-                        service.save = function (token, id, data, callback) {
+                        service.save = function (token, menuId, id, data, callback) {
                             SettingsCall.process(
-                                    'asset/add/' + id + '?access_token=' + token,
+                                    'asset/add/' + menuId + '/' + id + '?access_token=' + token,
                                     data,
                                     callback);
                         };

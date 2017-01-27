@@ -20,9 +20,9 @@ angular.module('Employee')
                                     callback);
                         };
 
-                        service.save = function (token, id, data, callback) {
+                        service.save = function (token, menuId, id, data, callback) {
                             SettingsCall.process(
-                                    'employee/add/' + id + '?access_token=' + token,
+                                    'employee/add/' + menuId + '/' + id + '?access_token=' + token,
                                     data,
                                     callback);
                         };

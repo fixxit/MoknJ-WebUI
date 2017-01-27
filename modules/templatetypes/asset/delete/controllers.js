@@ -2,12 +2,15 @@
 
 angular.module('Home').controller('ModalDeleteAssetCtrl',
         function ($scope, $modalInstance, parentScope, HomeService,
-                asset, name, token, typeId) {
+                asset, name, token, typeId, menuId) {
             $scope.name = name;
             $scope.message = "Are you sure you want to delete this asset ?";
 
             $scope.ok = function () {
-                HomeService.deleteAsset(token, asset,
+                HomeService.deleteAsset(
+                        token,
+                        menuId,
+                        asset,
                         function (response) {
                             if (response) {
                                 if (response.error_description) {
