@@ -187,18 +187,22 @@ angular.module('Home')
                         };
 
                         // remove employee by index from employees
-                        $scope.removeEmployeeFromTemplate = function (typeId, remove) {
-                            angular.forEach($scope.types, function (type) {
-                                if (type.id === typeId) {
-                                    var index = 0;
-                                    angular.forEach(type.employees, function (employee) {
-                                        if (employee.id === remove.id) {
-                                            type.employees.splice(index, 1);
-                                        }
-                                        index = index + 1;
-                                    });
-                                }
-                            });
+                        $scope.removeEmployeeFromTemplate = function (typeId, remove, message) {
+                            if (message) {
+                                $scope.error = message;
+                            } else {
+                                angular.forEach($scope.types, function (type) {
+                                    if (type.id === typeId) {
+                                        var index = 0;
+                                        angular.forEach(type.employees, function (employee) {
+                                            if (employee.id === remove.id) {
+                                                type.employees.splice(index, 1);
+                                            }
+                                            index = index + 1;
+                                        });
+                                    }
+                                });
+                            }
                         };
 
                         $scope.formatDate = function (date) {
@@ -378,7 +382,6 @@ angular.module('Home')
                                 $scope.setURLs($scope.id);
                                 $scope.loadTemplateForMenu(typeId);
                             }
-                            $scope.loadAllGraphs();
                         };
 
                         // check if even for row odd and even colors

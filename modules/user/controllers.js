@@ -318,8 +318,6 @@ angular.module('User')
                                     });
                                 }
                             });
-
-                            console.log("accessRules : " + JSON.stringify(accessRules));
                             // sends the access to api
                             UserService.addAccess(
                                     $rootScope.globals.currentUser.access_token,
@@ -341,7 +339,6 @@ angular.module('User')
                         // so you can easily handel two way data bind on the
                         // access rights.
                         $scope.populateAccessList = function (access) {
-                            console.log("access : " + JSON.stringify(access));
                             if ($scope.access) {
                                 angular.forEach($scope.access, function (menu) {
                                     var menuId = menu.id;
@@ -382,6 +379,7 @@ angular.module('User')
                                                 angular.forEach(response.accessRules, function (access) {
                                                     $scope.populateAccessList(access);
                                                 });
+                                                $scope.rescanAccess();
                                             }
                                         }
                                     }
@@ -425,6 +423,9 @@ angular.module('User')
                             angular.forEach($scope.authorities, function (auth) {
                                 auth.value = false;
                             });
+
+                            // reset all sessiom memory realted to menu and access
+                            $scope.getMenus();
                         };
 
                         $scope.cancel = function () {
@@ -432,6 +433,8 @@ angular.module('User')
                             $scope.reset();
                             $scope.success = null;
                             $scope.error = null;
+                            // reset all sessiom memory realted to menu and access
+                            $scope.getMenus();
                         };
 
                         $scope.deletResource = function (resource, callback) {
@@ -449,6 +452,9 @@ angular.module('User')
                         };
 
                         $scope.editResource = function (id) {
+                            if ($scope.rights && $scope.menus) {
+                                $scope.generateAccessArray($scope.menus, $scope.rights);
+                            }
                             $scope.resourceId = id;
                             UserService.get(
                                     $rootScope.globals.currentUser.access_token,

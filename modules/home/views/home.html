@@ -158,6 +158,6 @@
         </div>
     </div>
     <div ng-if='!id'>        
-         <div ng-include='urls.display_home_graphs' class="col-sm-12"></div>
+        <div ng-init="loadAllGraphs()" ng-include='urls.display_home_graphs' class="col-sm-12"></div>
     </div>
 </div>

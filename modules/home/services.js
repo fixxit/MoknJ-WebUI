@@ -1,67 +1,27 @@
 'use strict';
 
 angular.module('Home')
-        .factory('ApiHomeCall',
-                ['$http',
-                    function ($http) {
-                        var service = {};
-                        service.process = function (url, payload, callback) {
-                            $http.get("../settings.json").success(
-                                    function (response) {
-                                        if (payload) {
-                                            $http({
-                                                method: 'POST',
-                                                url: response.api_url + url,
-                                                data: JSON.stringify(payload),
-                                                headers: {
-                                                    'Content-Type': 'application/json'
-                                                }
-                                            }).success(function (response) {
-                                                callback(response);
-                                            }).error(function (response) {
-                                                callback(response);
-                                            });
-                                        } else {
-                                            $http.post(response.api_url + url)
-                                                    .success(
-                                                            function (response) {
-                                                                callback(response);
-                                                            })
-                                                    .error(
-                                                            function (response) {
-                                                                callback(response);
-                                                            }
-                                                    );
-                                        }
-                                    }
-                            );
-                        };
-
-                        return service;
-                    }]);
-
-angular.module('Home')
         .factory('HomeService',
-                ['ApiHomeCall',
-                    function (ApiHomeCall) {
+                ['SettingsCall',
+                    function (SettingsCall) {
                         var service = {};
 
                         service.getAllTypes = function (token, callback) {
-                            ApiHomeCall.process(
+                            SettingsCall.process(
                                     'type/all?access_token=' + token,
                                     null,
                                     callback);
                         };
 
                         service.getAllMenus = function (token, callback) {
-                            ApiHomeCall.process(
+                            SettingsCall.process(
                                     'menu/all?access_token=' + token,
                                     null,
                                     callback);
                         };
 
                         service.getMenu = function (token, id, callback) {
-                            ApiHomeCall.process(
+                            SettingsCall.process(
                                     'menu/get/' + id +
                                     '?access_token=' + token,
                                     null,
@@ -69,7 +29,7 @@ angular.module('Home')
                         };
 
                         service.getAllAssetForType = function (token, templateId, menuId, callback) {
-                            ApiHomeCall.process(
+                            SettingsCall.process(
                                     'asset/get/all/' + templateId +
                                     '/' + menuId + '?access_token=' + token,
                                     null,
@@ -77,7 +37,7 @@ angular.module('Home')
                         };
 
                         service.getAllEmployeeForType = function (token, templateId, menuId, callback) {
-                            ApiHomeCall.process(
+                            SettingsCall.process(
                                     'employee/get/all/' + templateId +
                                     '/' + menuId + '?access_token=' + token,
                                     null,
@@ -85,56 +45,56 @@ angular.module('Home')
                         };
 
                         service.deleteAsset = function (token, payload, callback) {
-                            ApiHomeCall.process(
+                            SettingsCall.process(
                                     'asset/delete/?access_token=' + token,
                                     payload,
                                     callback);
                         };
 
                         service.deleteEmployee = function (token, payload, callback) {
-                            ApiHomeCall.process(
+                            SettingsCall.process(
                                     'employee/delete/?access_token=' + token,
                                     payload,
                                     callback);
                         };
 
                         service.addLink = function (token, payload, callback) {
-                            ApiHomeCall.process(
+                            SettingsCall.process(
                                     'link/asset/add?access_token=' + token,
                                     payload,
                                     callback);
                         };
 
                         service.all = function (token, callback) {
-                            ApiHomeCall.process(
-                                    'resource/get/all?access_token=' + token,
+                            SettingsCall.process(
+                                    'resource/get/employee/all?access_token=' + token,
                                     null,
                                     callback);
                         };
 
                         service.save = function (token, id, data, callback) {
-                            ApiHomeCall.process(
+                            SettingsCall.process(
                                     'asset/add/' + id + '?access_token=' + token,
                                     data,
                                     callback);
                         };
 
                         service.getResource = function (token, id, callback) {
-                            ApiHomeCall.process(
+                            SettingsCall.process(
                                     'resource/get/' + id + '?access_token=' + token,
                                     null,
                                     callback);
                         };
-                        
+
                         service.getGraphForID = function (token, id, callback) {
-                            ApiHomeCall.process(
+                            SettingsCall.process(
                                     'graph/get/data/' + id + '?access_token=' + token,
                                     null,
                                     callback);
                         };
-                        
+
                         service.getAllGraphs = function (token, callback) {
-                            ApiHomeCall.process(
+                            SettingsCall.process(
                                     'graph/all/data?access_token=' + token,
                                     null,
                                     callback);

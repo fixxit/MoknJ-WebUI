@@ -83,14 +83,13 @@ angular.module('Template')
                                     $rootScope.globals.currentUser.access_token,
                                     type.id,
                                     function (response) {
-                                        if (response) {
+                                        console.log("response : " + JSON.stringify(response));
+                                        if (!response.success) {
                                             if (response.error_description) {
                                                 $scope.error = response.error_description + ". Please logout!";
-                                            } else {
-                                                callback(response.success, response.message);
                                             }
                                         } else {
-                                            $scope.error = "Invalid server response";
+                                            callback(response.success, response.message);
                                         }
                                     }
                             );
@@ -102,14 +101,13 @@ angular.module('Template')
                                     $rootScope.globals.currentUser.access_token,
                                     type.id,
                                     function (response) {
-                                        if (response) {
+                                        console.log("response : " + JSON.stringify(response));
+                                        if (!response.success) {
                                             if (response.error_description) {
                                                 $scope.error = response.error_description + ". Please logout!";
-                                            } else {
-                                                callback(response.success, response.message);
                                             }
                                         } else {
-                                            $scope.error = "Invalid server response";
+                                            callback(response.success, response.message);
                                         }
                                     }
                             );

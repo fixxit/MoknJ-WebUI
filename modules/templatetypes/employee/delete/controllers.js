@@ -16,7 +16,7 @@ angular.module('Home').controller('ModalDeleteEmployeeCtrl',
                                     if (response.success) {
                                         parentScope.removeEmployeeFromTemplate(typeId, employee);
                                     } else {
-                                        $scope.message = response.message;
+                                        parentScope.removeEmployeeFromTemplate(typeId, employee, response.message);
                                     }
                                 }
                             } else {
