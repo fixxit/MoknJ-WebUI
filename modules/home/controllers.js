@@ -368,7 +368,7 @@ angular.module('Home')
                                                 $scope.pieCharts = response.allGraphsData["chart-pie"];
                                                 $scope.polarCharts = response.allGraphsData["chart-polar-area"];
                                                 $scope.radarCharts = response.allGraphsData["chart-radar"];
-                                               // $scope.options = {legend: {display: true}};
+                                                $scope.options = {legend: {display: true}};
                                             }
                                         }
                                     }

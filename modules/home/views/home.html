@@ -19,10 +19,10 @@
                         Asset Menu&nbsp;<span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">   
-                        <li ng-repeat="menu in menus| filter:{menuType:'GBL_MT_ASSET'}">
+                        <li ng-repeat="menu in assetMenus = (menus| filter:{menuType:'GBL_MT_ASSET'})">
                             <a href="#/home?id={{menu.id}}">{{menu.name}}</a>
                         </li>
-                        <li ng-show="!menus.length">
+                        <li ng-show="(assetMenus.length === 0)">
                             <a>No Menu's mapped</a>
                         </li>
                         <li role="separator" class="divider"></li>
@@ -42,10 +42,10 @@
                         Employee Menu&nbsp;<span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">   
-                        <li ng-repeat="menu in menus| filter:{menuType:'GBL_MT_EMPLOYEE'}">
+                        <li ng-repeat="menu in empMenus = (menus| filter:{menuType:'GBL_MT_EMPLOYEE'})">
                             <a href="#/home?id={{menu.id}}">{{menu.name}}</a>
                         </li>
-                        <li ng-show="!menus.length">
+                        <li ng-show="(empMenus.length === 0)">
                             <a>No Menu's mapped</a>
                         </li>
                         <li role="separator" class="divider"></li>
