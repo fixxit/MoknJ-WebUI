@@ -8,7 +8,7 @@
 * Node.js (latest)
 * npm (latest)
 
-# Technologies #
+# Technology Stack #
 * angular: 1.5.8 
 * angular-route: 1.5.8 
 * angular-cookies : 1.5.8 
@@ -22,6 +22,5 @@
 * bootstrap : 3.3.1 
 * serve-favicon : 2.3.2 
 
-
-
+</br>
 ![adaf618b41bd6115994554eb6698ccbd.gif](https://bitbucket.org/repo/Ak89LL/images/3116565472-adaf618b41bd6115994554eb6698ccbd.gif)
