@@ -1,5 +1,6 @@
 # MoknJ UI #
-[Click here for more info](https://bitbucket.org/fixxitprofessionalservices/moknjapi)
+* Node.js web application 
+* [Click here for more info](https://bitbucket.org/fixxitprofessionalservices/moknjapi)
 
 # Live Link #
 [Live](assetmanagergui-fixxhr.rhcloud.com)
