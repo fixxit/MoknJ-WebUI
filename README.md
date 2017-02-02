@@ -1,3 +1,6 @@
+# Live Link #
+[Live](assetmanagergui-fixxhr.rhcloud.com)
+
 # MoknJ UI #
 [Click here for more info](https://bitbucket.org/fixxitprofessionalservices/moknjapi)
 
