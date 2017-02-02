@@ -1,5 +1,5 @@
-# MoknJ API #
-[MoknJ](https://bitbucket.org/fixxitprofessionalservices/fixxassettrackerapi/overview)
+# MoknJ UI #
+[Click here for more info](https://bitbucket.org/fixxitprofessionalservices/moknjapi)
 
 # Requirements #
 * Node.js (latest)
