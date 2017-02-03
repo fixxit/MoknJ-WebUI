@@ -29,4 +29,7 @@
 ![adaf618b41bd6115994554eb6698ccbd.gif](https://bitbucket.org/repo/Ak89LL/images/3116565472-adaf618b41bd6115994554eb6698ccbd.gif)
 
 #  #
+### Who do I talk to? ###
+Riaan Schoeman (Devin Alrighty) (riaan.schoeman@fixx.it)
+
 Note that this is pure html and javascript app. Also note that my javascript skills are somewhat rusty when i created this app. So if you know how to improve this gui I would encourage you to do so.
