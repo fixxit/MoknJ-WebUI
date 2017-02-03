@@ -5,7 +5,7 @@
 ![2032.gif](https://bitbucket.org/repo/Ak89LL/images/1615879524-2032.gif)
 
 # Live Link #
-[Live](assetmanagergui-fixxhr.rhcloud.com)
+[I am alive](assetmanagergui-fixxhr.rhcloud.com)
 
 # Requirements #
 * Node.js (latest)
