@@ -23,5 +23,7 @@
 * bootstrap : 3.3.1 
 * serve-favicon : 2.3.2 
 
+Note that this is pure html and javascript app. Also note that my javascript skills are somewhat rusty when i created this app. So if you know how to improve this gui I would encourage you to do so. 
+
 #  #
 ![adaf618b41bd6115994554eb6698ccbd.gif](https://bitbucket.org/repo/Ak89LL/images/3116565472-adaf618b41bd6115994554eb6698ccbd.gif)
