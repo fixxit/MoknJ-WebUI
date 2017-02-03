@@ -2,6 +2,8 @@
 * This is a Node.js web application. It is only gui layer so, no connection is made to the mango db :+1: 
 * [MoknJ API Link](https://bitbucket.org/fixxitprofessionalservices/moknjapi)
 
+![2032.gif](https://bitbucket.org/repo/Ak89LL/images/1615879524-2032.gif)
+
 # Live Link #
 [Live](assetmanagergui-fixxhr.rhcloud.com)
 
@@ -23,8 +25,6 @@
 * bootstrap : 3.3.1 
 * serve-favicon : 2.3.2 
 
-
-![2032.gif](https://bitbucket.org/repo/Ak89LL/images/1615879524-2032.gif)
 
 #  #
 ### Who do I talk to? ###
