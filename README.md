@@ -32,4 +32,4 @@
 ### Who do I talk to? ###
 Riaan Schoeman (Devin Alrighty) (riaan.schoeman@fixx.it)
 
-Note that this is pure html and javascript app. Also note that my javascript skills are somewhat rusty when i created this app. So if you know how to improve this gui I would encourage you to do so.
+Note that this is pure html and javascript app. Also note that my javascript skills are somewhat rusty when I created this app. So if you know how to improve this GUI, I would encourage you to do so.
