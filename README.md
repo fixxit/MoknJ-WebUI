@@ -1,6 +1,6 @@
 # MoknJ UI #
 * This is a Node.js web application. It is only gui layer so, no connection is made to the mango db :+1: 
-* [MoknJ API Link](https://bitbucket.org/fixxitprofessionalservices/moknjapi)
+* [MoknJ API Link](https://github.com/fixxit/MoknJ)
 
 ![2032.gif](https://bitbucket.org/repo/Ak89LL/images/1615879524-2032.gif)
 
