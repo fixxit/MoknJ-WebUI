@@ -1,5 +1,5 @@
 # MoknJ UI #
-* This is a Node.js web application. It is only gui layer so, no connection is made to the mango db :+1: 
+* This is a Node.js web application. It is only a gui layer so... No connection is made to the mango db :+1: 
 * [MoknJ API Link](https://github.com/fixxit/MoknJ)
 
 ![2032.gif](https://github.com/fixxit/MoknJ/blob/master/images/1615879524-2032.gif?raw=true)
@@ -21,7 +21,6 @@
 * uglify-js : 2.7.5 
 * bootstrap : 3.3.1 
 * serve-favicon : 2.3.2 
-
 
 #  #
 ### Who do I talk to? ###
