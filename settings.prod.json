@@ -1,5 +1,0 @@
-{
-    "api_url": "http://assetmanagerapi-fixxhr.rhcloud.com/FixxITAssetTracker/",
-    "auth_user": "fixx-trusted-client",
-    "auth_psw": "fixx_secret"
-}

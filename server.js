@@ -1,3 +1,5 @@
+/* global __dirname */
+
 var express = require('express');
 var favicon = require('serve-favicon');
 var uglify = require("uglify-js");
