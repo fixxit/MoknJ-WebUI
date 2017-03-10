@@ -2,6 +2,8 @@
 * This is a Node.js web application. It is only gui layer so, no connection is made to the mango db :+1: 
 * [MoknJ API Link](https://github.com/fixxit/MoknJ)
 
+![2032.gif](https://github.com/fixxit/MoknJ/blob/master/images/1615879524-2032.gif?raw=true)
+
 # Requirements #
 * Node.js (latest)
 * npm (latest)
