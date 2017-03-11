@@ -1,7 +1,7 @@
 {
-  "name": "moknjgui",
+  "name": "moknjui",
   "description": "MoknJ GUI Application",
-  "license": "",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
   "author": "Riaan Schoeman",
   "version": "0.0.1",
   "engine": {
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:fixxitprofessionalservices/moknjui.git"
+    "url": "git@github.com:fixxit/MoknJ-WebUI.git"
   },
   "main": "server.js",
   "scripts": {
