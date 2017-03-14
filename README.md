@@ -23,7 +23,7 @@
 * serve-favicon : 2.3.2 
 
 # Setup # 
-Main root contains a settings.json file, make sure that it points to your web server instance of moknj
+Main root contains a settings.json file, make sure that it points to your web server instance of moknj api
 ```
 {
     "api_url": "http://localhost:8084/FixxITMoknj/",
@@ -31,7 +31,7 @@ Main root contains a settings.json file, make sure that it points to your web se
     "auth_psw": "fixx_secret"
 }
 ```
-Also note the auth user and auth psw these should be defined on your server app moknj api (security.api), make sure the match
+Also note the auth user and auth psw these should be defined on your server app moknj api (security.api), make sure they match
 ```
 security.client = fixx-trusted-client
 security.secret = fixx_secret
@@ -46,10 +46,10 @@ events.js:160
 
 Error: listen EACCES 0.0.0.0:80
 ```
-
-assign new port number in server.js
+Main root contains server.js assign new port see below example
 ```
-var port = process.env.PORT || 80;
+
+var port = process.env.PORT || 8087;
 app.listen(port, function () {
     console.log("Listening on " + port);
 });
