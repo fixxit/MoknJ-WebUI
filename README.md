@@ -31,10 +31,26 @@ Main root contains a settings.json file, make sure that it points to your web se
     "auth_psw": "fixx_secret"
 }
 ```
-Also note the auth user and auth psw these should be defined on your server app moknj api (security.api), make sure they match
+Also note the admin_auth user and auth_psw these should be defined on your server app moknj api (MoknJ/src/main/java/application.yml), make sure they match (security.client, security.secret)
+
 ```
-security.client = fixx-trusted-client
-security.secret = fixx_secret
+environment: 
+system:
+    db: moknj
+    url: localhost
+    port: 27017
+    username: 
+    password: 
+admin:
+    user: fixxit
+    pass: fix!2
+security:
+    realm: FIXX_OAUTH_REALM
+    client: fixx-trusted-client
+    secret: fixx_secret
+    tokenValiditySeconds: 72000
+    refreshTokenValiditySeconds: 72000
+    resourceId: fixx_rest_api
 ```
 
 # Debugging #
