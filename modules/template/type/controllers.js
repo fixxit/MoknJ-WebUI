@@ -125,7 +125,7 @@ angular.module('Type')
                                         $scope.loading = false;
                                     }
                             );
-                        }
+                        };
 
                         $scope.editTemplate = function (template) {
                             $scope.loading = true;
@@ -146,6 +146,7 @@ angular.module('Type')
                                 } else {
                                     if (loadpageResponse.fieldTypes) {
                                         $scope.types = loadpageResponse.fieldTypes;
+                                        
                                         if ($scope.id) {
                                             TypeService.getType(
                                                     $rootScope.globals.currentUser.access_token,

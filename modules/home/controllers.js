@@ -267,6 +267,7 @@ angular.module('Home')
                             HomeService.getAllMenus(
                                     $rootScope.globals.currentUser.access_token,
                                     function (response) {
+                                        console.log("response : " + JSON.stringify(response));
                                         // token auth error
                                         if (response.error_description) {
                                             $scope.error = response.error_description + ". Please logout!";

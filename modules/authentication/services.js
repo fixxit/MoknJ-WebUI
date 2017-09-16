@@ -3,25 +3,21 @@
 angular.module('Authentication')
         .factory('ApiAuthenticationCall',
                 ['$http', 'Base64',
-                    function ($http, Base64) {
+                    function ($http) {
                         var service = {};
                         service.process = function (url, callback) {
-                            $http.get("../settings.json").success(
-                                    function (response) {
-                                        $http({
-                                            method: 'POST',
-                                            url: response.api_url + url,
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                                'Authorization': 'Basic ' + Base64.encode(response.auth_user + ':' + response.auth_psw)
-                                            }
-                                        }).success(function (response) {
-                                            callback(response);
-                                        }).error(function (response) {
-                                            callback(response);
-                                        });
-                                    }
-                            );
+                            $http({
+                                method: 'POST',
+                                url: "/api",
+                                headers: {
+                                    'apiUrl': url,
+                                    'Content-Type': 'application/json'
+                                }
+                            }).success(function (response) {
+                                callback(response);
+                            }).error(function (response) {
+                                callback(response);
+                            });
                         };
 
                         return service;

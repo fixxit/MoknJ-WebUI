@@ -8,35 +8,43 @@ angular.module('Settings')
                     function ($http) {
                         var service = {};
                         service.process = function (url, payload, callback) {
-                            $http.get("../settings.json").success(
-                                    function (response) {
-                                        if (payload) {
-                                            $http({
-                                                method: 'POST',
-                                                url: response.api_url + url,
-                                                data: JSON.stringify(payload),
-                                                headers: {
-                                                    'Content-Type': 'application/json'
-                                                }
-                                            }).success(function (response) {
-                                                callback(response);
-                                            }).error(function (response) {
-                                                callback(response);
-                                            });
-                                        } else {
-                                            $http.post(response.api_url + url)
-                                                    .success(
-                                                            function (response) {
-                                                                callback(response);
-                                                            })
-                                                    .error(
-                                                            function (response) {
-                                                                callback(response);
-                                                            }
-                                                    );
-                                        }
-                                    }
-                            );
+                            if (payload) {
+                                service.complexHttpCall(url, payload, callback);
+                            } else {
+                                service.simpleHttpCall(url, callback);
+                            }
+                        };
+
+                        service.complexHttpCall = function (url, payload, callback) {
+                            $http({
+                                method: 'POST',
+                                url: "/api",
+                                data: JSON.stringify(payload),
+                                headers: {
+                                    'apiUrl': url,
+                                    'Content-Type': 'application/json'
+                                }
+                            }).success(function (response) {
+                                callback(response);
+                            }).error(function (response) {
+                                callback(response);
+                            });
+                        };
+
+                        service.simpleHttpCall = function (url, callback) {
+                            $http({
+                                method: 'POST',
+                                url: "/api",
+                                headers: {
+                                    'apiUrl': url,
+                                    'Content-Type': 'application/json'
+                                }
+                            }).success(function (response) {
+                                callback(response);
+                            }).error(function (response) {
+                                callback(response);
+                            });
+
                         };
 
                         return service;

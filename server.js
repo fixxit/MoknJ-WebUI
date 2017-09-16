@@ -1,197 +1,80 @@
 /* global __dirname */
-
 var express = require('express');
 var favicon = require('serve-favicon');
-var uglify = require("uglify-js");
-var fs = require('fs');
 var app = express();
+var bodyParser = require('body-parser');
+var router = express.Router();
+var path = require('path');
+var http = require('http');
 
-var min_options = {
-    mangle: false,
-    compress: {
-        sequences: true,
-        dead_code: true,
-        conditionals: true,
-        booleans: true,
-        unused: true,
-        if_return: true,
-        join_vars: true,
-        drop_console: true
-    }
-};
 // =============================================================================
-// ============================== Core Minify ==================================
-// =============================================================================
-// authentication
-var authentication_min_js = uglify.minify([
-    __dirname + '/modules/authentication/services.js',
-    __dirname + '/modules/authentication/controllers.js'
-], min_options);
+// configure app to use bodyParser()
+// this will let us get the data from a POST
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
-// Home 
-var home_min_js = uglify.minify([
-    __dirname + '/modules/home/services.js',
-    __dirname + '/modules/home/controllers.js',
-    __dirname + '/modules/home/filters/filters.js',
-    __dirname + '/modules/home/directives/directives.js'
-], min_options);
-
-// Menu 
-var menu_min_js = uglify.minify([
-    __dirname + '/modules/menu/services.js',
-    __dirname + '/modules/menu/controllers.js',
-    __dirname + '/modules/menu/modals/modals.js',
-    __dirname + '/modules/menu/filters/filters.js',
-    __dirname + '/modules/menu/directives/directives.js'
-], min_options);
-
-// Template
-var template_min_js = uglify.minify([
-    __dirname + '/modules/template/type/services.js',
-    __dirname + '/modules/template/type/controllers.js',
-    __dirname + '/modules/template/type/modals/modals.js',
-    __dirname + '/modules/template/hidden/controllers.js'
-], min_options);
-
-// User
-var user_min_js = uglify.minify([
-    __dirname + '/modules/user/services.js',
-    __dirname + '/modules/user/controllers.js'
-], min_options);
-
-// Authentication min file
-fs.writeFile(
-        __dirname + '/modules/authentication/min/authentication.min.js',
-        authentication_min_js.code,
-        function (err) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("Script generated and saved:", 'authentication.min.js');
-            }
-        }
-);
-
-// Home min file
-fs.writeFile(
-        __dirname + '/modules/home/min/home.min.js',
-        home_min_js.code,
-        function (err) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("Script generated and saved:", 'home.min.js');
-            }
-        }
-);
-
-// Menu min file
-fs.writeFile(
-        __dirname + '/modules/menu/min/menu.min.js',
-        menu_min_js.code,
-        function (err) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("Script generated and saved:", 'menu.min.js');
-            }
-        }
-);
-
-// Template min file
-fs.writeFile(
-        __dirname + '/modules/template/min/template.min.js',
-        template_min_js.code,
-        function (err) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("Script generated and saved:", 'template.min.js');
-            }
-        }
-);
-
-// User min file
-fs.writeFile(
-        __dirname + '/modules/user/min/user.min.js',
-        user_min_js.code,
-        function (err) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("Script generated and saved:", 'user.min.js');
-            }
-        }
-);
-// =============================================================================
-// ============================== Modules Minify ===============================
-// =============================================================================
-// Asset Module
-var asset_min_js = uglify.minify([
-    __dirname + '/modules/templatetypes/asset/assign/controllers.js',
-    __dirname + '/modules/templatetypes/asset/delete/controllers.js',
-    __dirname + '/modules/templatetypes/asset/link/services.js',
-    __dirname + '/modules/templatetypes/asset/link/controllers.js',
-    __dirname + '/modules/templatetypes/asset/new/services.js',
-    __dirname + '/modules/templatetypes/asset/new/controllers.js',
-    __dirname + '/modules/templatetypes/asset/new/directives/directives.js',
-    __dirname + '/modules/templatetypes/asset/unassign/controllers.js'
-], min_options);
-
-// Employee Module
-var employee_min_js = uglify.minify([
-    __dirname + '/modules/templatetypes/employee/new/services.js',
-    __dirname + '/modules/templatetypes/employee/new/controllers.js',
-    __dirname + '/modules/templatetypes/employee/delete/controllers.js',
-    __dirname + '/modules/templatetypes/employee/link/controllers.js',
-    __dirname + '/modules/templatetypes/employee/link/services.js'
-], min_options);
-
-
-// User min file
-fs.writeFile(
-        __dirname + '/modules/templatetypes/asset/min/asset.min.js',
-        asset_min_js.code,
-        function (err) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("Script generated and saved:", 'asset.min.js');
-            }
-        }
-);
-
-// Employee min file
-fs.writeFile(
-        __dirname + '/modules/templatetypes/employee/min/employee.min.js',
-        employee_min_js.code,
-        function (err) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("Script generated and saved:", 'employee.min.js');
-            }
-        }
-);
-// =============================================================================
 app.use(favicon(__dirname + '/images/favicon.ico'));
+// when localhost is called always route to index..
 app.get('/', function (req, res, next) {
+    console.log('all gets : ' + JSON.stringify(req.params));
     console.log("Getting home page : " + __dirname + '/index.html');
     res.sendFile(__dirname + '/index.html');
 });
 
-/* serves all the static files */
-app.get(/^(.+)$/, function (req, res) {
-    console.log('static file request : ' + JSON.stringify(req.params));
-    res.sendFile(__dirname + req.params[0]);
+var port = process.env.PORT || 8081;
+var settings = require('./settings.json');
+//Routes all api calls to happen on the server which then executes the call to api
+router.post('/', function (req, res) {
+    var basicAuth = new Buffer(settings.auth_user + ':' + settings.auth_psw).toString('base64');
+
+    console.log(`Request Header:' ${JSON.stringify(req.headers)}`);
+    console.log('all post : ' + JSON.stringify(req.body));
+    console.log('basicAuth : ' + basicAuth);
+    console.log(`request URL:' ${settings.api_path + req.headers.apiurl}`);
+
+    var options = {
+        host: settings.api_url,
+        port: settings.api_port,
+        path: settings.api_path + req.headers.apiurl,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + basicAuth
+        }
+    };
+
+    const request = http.request(options, (response) => {
+        console.log(`STATUS: ${response.statusCode}`);
+        console.log(`HEADERS: ${JSON.stringify(response.headers)}`);
+        response.setEncoding('utf8');
+        response.on('data', function (body) {
+            console.log(body);
+            res.send(body);
+        });
+        response.on('end', () => {
+            console.log('No more data in response.');
+        });
+    });
+
+    request.on('error', (e) => {
+        console.error(`problem with request: ${e.message}`);
+        res.send(e);
+    });
+
+    // write data to request body
+    request.write(JSON.stringify(req.body));
+    request.end();
 });
 
-app.post('/', function (req, res, next) {
-    // Handle the post for this route
-});
+// REGISTER OUR STATIC ROUTES -------------------------------
+app.use('/node_modules', express.static(path.join(__dirname + '/node_modules')));
+app.use('/scripts', express.static(path.join(__dirname + '/scripts')));
+app.use('/modules', express.static(path.join(__dirname + '/modules')));
+app.use('/stylesheet', express.static(path.join(__dirname + '/stylesheet')));
+app.use('/images', express.static(path.join(__dirname + '/images')));
+// all of our routes will be prefixed with /api
+app.use('/api', router);
 
-var port = process.env.PORT || 80;
 app.listen(port, function () {
     console.log("Listening on " + port);
 });
-
