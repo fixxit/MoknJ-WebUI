@@ -3,5 +3,6 @@
     "api_port": "8080",
     "api_path": "/moknjapi/",
     "auth_user": "fixx-trusted-client",
-    "auth_psw": "fixx_secret"
+    "auth_psw": "fixx_secret",
+    "gui_port": "8081"
 }

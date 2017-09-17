@@ -5,7 +5,6 @@ angular.module('Home')
                 ['SettingsCall',
                     function (SettingsCall) {
                         var service = {};
-
                         service.getAllTypes = function (token, callback) {
                             SettingsCall.process(
                                     'type/all?access_token=' + token,
