@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('Home').controller('ModalDeleteAssetCtrl',
-        function ($scope, $modalInstance, parentScope, HomeService,
+        function ($scope, $uibModalInstance, parentScope, HomeService,
                 asset, name, token, typeId, menuId) {
             $scope.name = name;
             $scope.message = "Are you sure you want to delete this asset ?";
@@ -27,11 +27,11 @@ angular.module('Home').controller('ModalDeleteAssetCtrl',
                             }
                         }
                 );
-                $modalInstance.close();
+                $uibModalInstance.close();
             };
 
 
             $scope.cancel = function () {
-                $modalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss('cancel');
             };
         });

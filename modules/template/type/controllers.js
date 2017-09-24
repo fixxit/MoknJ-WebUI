@@ -2,8 +2,8 @@
 
 angular.module('Type')
         .controller('TypeController',
-                ['$scope', '$rootScope', '$location', 'TypeService', '$modal',
-                    function ($scope, $rootScope, $location, TypeService, $modal) {
+                ['$scope', '$rootScope', '$location', 'TypeService', '$uibModal',
+                    function ($scope, $rootScope, $location, TypeService, $uibModal) {
                         // Retrieve all field detail data types via type service
                         // REST controller method types /fields
                         $scope.id = $location.search().id;
@@ -494,7 +494,7 @@ angular.module('Type')
                         };
 
                         $scope.removeTemplate = function (type) {
-                            $modal.open({
+                            $uibModal.open({
                                 backdrop: true,
                                 templateUrl: '../modules/template/type/templates/deletetype.html',
                                 controller: 'ModalDeleteTypeCtrl',

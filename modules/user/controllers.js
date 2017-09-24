@@ -2,8 +2,8 @@
 
 angular.module('User')
         .controller('UserController',
-                ['$scope', '$rootScope', '$location', 'UserService', '$modal',
-                    function ($scope, $rootScope, $location, UserService, $modal) {
+                ['$scope', '$rootScope', '$location', 'UserService', '$uibModal',
+                    function ($scope, $rootScope, $location, UserService, $uibModal) {
                         $scope.menuId = $location.search().menuId ? $location.search().menuId : null;
                         $scope.isCollapsed = false;
                         $scope.containerCollapsed = false;
@@ -554,7 +554,7 @@ angular.module('User')
                         };
 
                         $scope.removeResource = function (resource) {
-                            $modal.open({
+                            $uibModal.open({
                                 backdrop: true,
                                 templateUrl: '../modules/user/templates/deleteuser.html',
                                 controller: 'ModalDeleteResourceCtrl',
@@ -579,7 +579,7 @@ angular.module('User')
                     }]);
 
 angular.module('User').controller('ModalDeleteResourceCtrl',
-        function ($scope, $modalInstance, parentScope, resource) {
+        function ($scope, $uibModalInstance, parentScope, resource) {
             $scope.name = resource.firstName + ' ' + resource.surname;
             $scope.accept = false;
             $scope.errorMessage = false;
@@ -592,7 +592,7 @@ angular.module('User').controller('ModalDeleteResourceCtrl',
                         function (success, message) {
                             if (success) {
                                 parentScope.removeFromList(resource);
-                                $modalInstance.close();
+                                $uibModalInstance.close();
                             } else {
                                 $scope.errorMessage = true;
                                 $scope.message = message;
@@ -602,7 +602,7 @@ angular.module('User').controller('ModalDeleteResourceCtrl',
             };
 
             $scope.cancel = function () {
-                $modalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss('cancel');
             };
         });
 

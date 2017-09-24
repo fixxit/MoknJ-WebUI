@@ -1,5 +1,5 @@
 angular.module('Graph').controller('ModalDeleteGraphCtrl',
-        function ($scope, $modalInstance, parentScope, graph) {
+        function ($scope, $uibModalInstance, parentScope, graph) {
             $scope.name = graph.name;
             $scope.errorMessage = false;
             $scope.message = '';
@@ -10,7 +10,7 @@ angular.module('Graph').controller('ModalDeleteGraphCtrl',
                         function (success, message) {
                             if (success) {
                                 parentScope.removeFromList(graph);
-                                $modalInstance.close();
+                                $uibModalInstance.close();
                             } else {
                                 $scope.errorMessage = true;
                                 $scope.message = message;
@@ -20,6 +20,6 @@ angular.module('Graph').controller('ModalDeleteGraphCtrl',
             };
 
             $scope.cancel = function () {
-                $modalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss('cancel');
             };
         });

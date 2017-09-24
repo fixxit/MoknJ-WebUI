@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('Home').controller('ModalRemoveLinkCtrl',
-        function ($scope, $modalInstance, parentScope, HomeService, asset, name, token, menuId) {
+        function ($scope, $uibModalInstance, parentScope, HomeService, asset, name, token, menuId) {
             $scope.name = 'Check ' + name + " In";
 
             $scope.ok = function () {
@@ -25,7 +25,7 @@ angular.module('Home').controller('ModalRemoveLinkCtrl',
                                 } else {
                                     if (response.success) {
                                         parentScope.refreshAsset(asset, false);
-                                        $modalInstance.close();
+                                        $uibModalInstance.close();
                                     } else {
                                         $scope.message = response.message;
                                     }
@@ -38,7 +38,7 @@ angular.module('Home').controller('ModalRemoveLinkCtrl',
             };
 
             $scope.cancel = function () {
-                $modalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss('cancel');
             };
 
             $scope.openDatePickers = [];

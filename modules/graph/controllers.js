@@ -2,8 +2,8 @@
 
 angular.module('Graph')
         .controller('GraphController',
-                ['$scope', '$rootScope', '$location', 'GraphService', '$modal',
-                    function ($scope, $rootScope, $location, GraphService, $modal) {
+                ['$scope', '$rootScope', '$location', 'GraphService', '$uibModal',
+                    function ($scope, $rootScope, $location, GraphService, $uibModal) {
                         $scope.id = $location.search().id ? $location.search().id : null;
                         $scope.menuId = $location.search().menuId ? $location.search().menuId : null;
                         $scope.origin = $location.search().origin ? $location.search().origin : null;
@@ -125,7 +125,7 @@ angular.module('Graph')
                         };
 
                         $scope.removeGraph = function (graph) {
-                            $modal.open({
+                            $uibModal.open({
                                 backdrop: true,
                                 templateUrl: '../modules/graph/templates/delete.html',
                                 controller: 'ModalDeleteGraphCtrl',

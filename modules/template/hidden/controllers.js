@@ -2,8 +2,8 @@
 
 angular.module('Template')
         .controller('TemplateController',
-                ['$scope', '$rootScope', 'TypeService', '$modal', '$location',
-                    function ($scope, $rootScope, TypeService, $modal, $location) {
+                ['$scope', '$rootScope', 'TypeService', '$uibModal', '$location',
+                    function ($scope, $rootScope, TypeService, $uibModal, $location) {
                         $scope.menuId = $location.search().menuId ? $location.search().menuId : null;
                         $scope.pagination = {};
 
@@ -47,7 +47,7 @@ angular.module('Template')
                         };
 
                         $scope.deleteTemplete = function (type) {
-                            $modal.open({
+                            $uibModal.open({
                                 backdrop: true,
                                 templateUrl: '../modules/template/hidden/templates/deletetemplate.html',
                                 controller: 'ModalDeleteTemplateCtrl',
@@ -63,7 +63,7 @@ angular.module('Template')
                         };
 
                         $scope.unhideTemplate = function (type) {
-                            $modal.open({
+                            $uibModal.open({
                                 backdrop: true,
                                 templateUrl: '../modules/template/hidden/templates/unhidetemplate.html',
                                 controller: 'ModalUnhideTemplateCtrl',
@@ -117,7 +117,7 @@ angular.module('Template')
                     }]);
 
 angular.module('Template').controller('ModalDeleteTemplateCtrl',
-        function ($scope, $modalInstance, parentScope, type) {
+        function ($scope, $uibModalInstance, parentScope, type) {
             $scope.name = type.name;
             $scope.accept = false;
             $scope.errorMessage = false;
@@ -128,7 +128,7 @@ angular.module('Template').controller('ModalDeleteTemplateCtrl',
                 $scope.dataLoading = true;
                 parentScope.delete(type, function (success, message) {
                     if (success) {
-                        $modalInstance.close();
+                        $uibModalInstance.close();
                         parentScope.loadPage();
                     } else {
                         $scope.error = message;
@@ -138,13 +138,13 @@ angular.module('Template').controller('ModalDeleteTemplateCtrl',
             };
 
             $scope.cancel = function () {
-                $modalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss('cancel');
             };
         });
 
 
 angular.module('Template').controller('ModalUnhideTemplateCtrl',
-        function ($scope, $modalInstance, parentScope, type) {
+        function ($scope, $uibModalInstance, parentScope, type) {
             $scope.name = type.name;
             $scope.accept = false;
             $scope.errorMessage = false;
@@ -155,7 +155,7 @@ angular.module('Template').controller('ModalUnhideTemplateCtrl',
                 $scope.dataLoading = true;
                 parentScope.unhide(type, function (success, message) {
                     if (success) {
-                        $modalInstance.close();
+                        $uibModalInstance.close();
                         parentScope.loadPage();
                     } else {
                         $scope.error = message;
@@ -166,7 +166,7 @@ angular.module('Template').controller('ModalUnhideTemplateCtrl',
             };
 
             $scope.cancel = function () {
-                $modalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss('cancel');
             };
         });
 

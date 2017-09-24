@@ -520,9 +520,12 @@ angular.module('Home')
                             });
                         };
 
+                        $scope.animationsEnabled = true;
+
                         $scope.assignAsset = function (asset, name) {
                             $uibModal.open({
                                 backdrop: true,
+                                animation: $scope.animationsEnabled,
                                 templateUrl: '../modules/templatetypes/asset/assign/linkasset.html',
                                 controller: 'ModalAssignAssetCtrl',
                                 size: 'lg',

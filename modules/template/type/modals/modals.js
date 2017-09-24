@@ -1,5 +1,5 @@
 angular.module('Type').controller('ModalDeleteTypeCtrl',
-        function ($scope, $modalInstance, parentScope, type, token) {
+        function ($scope, $uibModalInstance, parentScope, type, token) {
             $scope.name = type.name;
             $scope.cascade = false;
 
@@ -8,12 +8,12 @@ angular.module('Type').controller('ModalDeleteTypeCtrl',
                 parentScope.deleteTemplate(type.id, $scope.cascade, token,
                         function () {
                             parentScope.loadPage();
-                            $modalInstance.close();
+                            $uibModalInstance.close();
                         }
                 );
             };
 
             $scope.cancel = function () {
-                $modalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss('cancel');
             };
         });
