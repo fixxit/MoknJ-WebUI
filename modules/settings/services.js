@@ -23,10 +23,10 @@ angular.module('Settings').factory(
                             'apiUrl': url,
                             'Content-Type': 'application/json'
                         }
-                    }).success((response) => {
-                        callback(response);
-                    }).error((response) => {
-                        callback(response);
+                    }).then((response) => {
+                        callback(response.data);
+                    }, (error) => {
+                        callback(error.data);
                     });
                 };
 
@@ -38,10 +38,10 @@ angular.module('Settings').factory(
                             'apiUrl': url,
                             'Content-Type': 'application/json'
                         }
-                    }).success((response) => {
-                        callback(response);
-                    }).error((response) => {
-                        callback(response);
+                    }).then((response) => {
+                        callback(response.data);
+                    }, (error) => {
+                        callback(error.data);
                     });
 
                 };
