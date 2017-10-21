@@ -2,8 +2,8 @@
 
 angular.module('Menu')
         .controller('MenuController',
-                ['$scope', '$rootScope', '$location', 'MenuService', '$modal',
-                    function ($scope, $rootScope, $location, MenuService, $modal) {
+                ['$scope', '$rootScope', '$location', 'MenuService', '$uibModal',
+                    function ($scope, $rootScope, $location, MenuService, $uibModal) {
                         $scope.menuId = $location.search().menuId ? $location.search().menuId : null;
                         $scope.new = $location.search().new ? $location.search().new : null;
                         $scope.type = $location.search().type ? $location.search().type : null;
@@ -275,7 +275,7 @@ angular.module('Menu')
                         };
 
                         $scope.removeMenu = function (menu) {
-                            $modal.open({
+                            $uibModal.open({
                                 backdrop: true,
                                 templateUrl: '../modules/menu/templates/deletemenu.html',
                                 controller: 'ModalDeleteMenuCtrl',

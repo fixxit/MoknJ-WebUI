@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('Menu').controller('ModalDeleteMenuCtrl',
-        function ($scope, $modalInstance, parentScope, menu) {
+        function ($scope, $uibModalInstance, parentScope, menu) {
             $scope.name = menu.name;
             $scope.accept = false;
             $scope.errorMessage = false;
@@ -14,7 +14,7 @@ angular.module('Menu').controller('ModalDeleteMenuCtrl',
                         function (success, message) {
                             if (success) {
                                 parentScope.removeFromList(menu);
-                                $modalInstance.close();
+                                $uibModalInstance.close();
                             } else {
                                 $scope.errorMessage = true;
                                 $scope.message = message;
@@ -24,6 +24,6 @@ angular.module('Menu').controller('ModalDeleteMenuCtrl',
             };
 
             $scope.cancel = function () {
-                $modalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss('cancel');
             };
         });

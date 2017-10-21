@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('Home').controller('ModalAssignAssetCtrl',
-        function ($scope, $modalInstance, parentScope, HomeService, asset, name, token, menuId) {
+        function ($scope, $uibModalInstance, parentScope, HomeService, asset, name, token, menuId) {
             $scope.name = 'Check ' + name + " Out";
             $scope.asset = asset;
             $scope.resources = [];
@@ -97,7 +97,7 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
                                     } else {
                                         if (response.success) {
                                             parentScope.refreshAsset(asset, true);
-                                            $modalInstance.close();
+                                            $uibModalInstance.close();
                                         } else {
                                             $scope.message = response.message;
                                         }
@@ -139,6 +139,6 @@ angular.module('Home').controller('ModalAssignAssetCtrl',
             };
 
             $scope.cancel = function () {
-                $modalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss('cancel');
             };
         });

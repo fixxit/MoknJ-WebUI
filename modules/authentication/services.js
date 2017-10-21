@@ -3,9 +3,9 @@
 angular.module('Authentication')
         .factory('ApiAuthenticationCall',
                 ['$http', 'Base64',
-                    function ($http) {
+                    ($http) => {
                         var service = {};
-                        service.process = function (url, callback) {
+                        service.process = (url, callback) => {
                             $http({
                                 method: 'POST',
                                 url: "/api",
@@ -13,30 +13,29 @@ angular.module('Authentication')
                                     'apiUrl': url,
                                     'Content-Type': 'application/json'
                                 }
-                            }).success(function (response) {
-                                callback(response);
-                            }).error(function (response) {
-                                callback(response);
+                            }).then((response) => {
+                                callback(response.data);
+                            }, (error) => {
+                                callback(error.data);
                             });
                         };
-
                         return service;
                     }]);
 
 angular.module('Authentication')
         .factory('AuthenticationService',
                 ['Base64', '$http', '$cookieStore', '$rootScope', 'ApiAuthenticationCall',
-                    function (Base64, $http, $cookieStore, $rootScope, ApiAuthenticationCall) {
+                    (Base64, $http, $cookieStore, $rootScope, ApiAuthenticationCall) => {
                         var service = {};
                         // SETS BASIC AUTH PARMS                 
-                        service.Login = function (username, password, callback) {
+                        service.Login = (username, password, callback) => {
                             ApiAuthenticationCall.process(
                                     'oauth/token?grant_type=password&username=' + username + '&password=' + password,
                                     callback);
                         };
 
-                        service.SetCredentials = function (username, password, access_token,
-                                refresh_token, expires_in) {
+                        service.SetCredentials = (username, password, access_token,
+                                refresh_token, expires_in) => {
                             var now = new Date();
                             var expiresValue = new Date(now);
                             expiresValue.setSeconds(now.getSeconds() + expires_in);
@@ -56,7 +55,7 @@ angular.module('Authentication')
                             $http.defaults.headers.common['Authorization'] = 'Basic ' + Base64.encode($rootScope.auth_user + ':' + $rootScope.auth_psw);
                         };
 
-                        service.ClearCredentials = function () {
+                        service.ClearCredentials = () => {
                             $rootScope.globals = {};
                             $cookieStore.remove('globals');
                             $http.defaults.headers.common.Authorization = 'Basic ';
@@ -65,11 +64,11 @@ angular.module('Authentication')
                         return service;
                     }])
 
-        .factory('Base64', function () {
+        .factory('Base64', () => {
             var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
             return {
-                encode: function (input) {
+                encode: (input) => {
                     var output = "";
                     var chr1, chr2, chr3 = "";
                     var enc1, enc2, enc3, enc4 = "";
@@ -102,7 +101,7 @@ angular.module('Authentication')
 
                     return output;
                 },
-                decode: function (input) {
+                decode: (input) => {
                     var output = "";
                     var chr1, chr2, chr3 = "";
                     var enc1, enc2, enc3, enc4 = "";

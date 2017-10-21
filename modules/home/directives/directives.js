@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('Home').directive('globalTypeSearch', function () {
+angular.module('Home').directive('globalTypeSearch', () => {
     return {
         restrict: 'EA',
         template: '<input type="text" class="form-control" placeholder="Search here" ng-model="inputValue" />',
@@ -8,11 +8,11 @@ angular.module('Home').directive('globalTypeSearch', function () {
             inputValue: '=',
             types: '='
         },
-        link: function (scope) {
-            scope.$watch('inputValue', function (newValue, oldValue) {
+        link: (scope) => {
+            scope.$watch('inputValue', (newValue, oldValue) => {
                 if (newValue) {
                     if (newValue !== oldValue) {
-                        angular.forEach(scope.types, function (type) {
+                        angular.forEach(scope.types, (type) => {
                             type.currentPage = 1;
                         });
                     }
@@ -23,7 +23,7 @@ angular.module('Home').directive('globalTypeSearch', function () {
 });
 
 
-angular.module('Home').directive('typeSearch', function () {
+angular.module('Home').directive('typeSearch', () => {
     return {
         restrict: 'EA',
         template: '<input type="text" class="form-control" placeholder="Search here" ng-model="inputValue" />',
@@ -31,8 +31,8 @@ angular.module('Home').directive('typeSearch', function () {
             inputValue: '=',
             type: '='
         },
-        link: function (scope) {
-            scope.$watch('inputValue', function (newValue, oldValue) {
+        link: (scope) => {
+            scope.$watch('inputValue', (newValue, oldValue) => {
                 if (newValue) {
                     if (newValue !== oldValue) {
                         scope.type.currentPage = 1;

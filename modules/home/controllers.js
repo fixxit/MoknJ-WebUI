@@ -2,8 +2,8 @@
 
 angular.module('Home')
         .controller('HomeController',
-                ['$scope', '$rootScope', '$location', 'HomeService', '$modal',
-                    function ($scope, $rootScope, $location, HomeService, $modal) {
+                ['$scope', '$rootScope', '$location', 'HomeService', '$uibModal',
+                    function ($scope, $rootScope, $location, HomeService, $uibModal) {
                         $scope.id = $location.search().id ? $location.search().id : null;
                         $scope.templateId = $location.search().templateId ? $location.search().templateId : null;
                         $scope.resourceId = $location.search().resourceId ? $location.search().resourceId : null;
@@ -13,17 +13,19 @@ angular.module('Home')
                         $scope.selectedResource = null;
                         $scope.sortType = ''; // set the default sort type
                         $scope.sortReverse = false;  // set the default sort order
-
+                        $scope.isNavCollapsed = true;
+                        $scope.isCollapsed = false;
+                        $scope.isCollapsedHorizontal = false;
                         $scope.urls = {
-                            'user': '#/user',
-                            'menu': '#/menu',
-                            'create_menu_employee': '#/menu?new=true&type=GBL_MT_EMPLOYEE',
-                            'create_menu_asset': '#/menu?new=true&type=GBL_MT_ASSET',
-                            'graph': ' #/graph',
-                            'template': '#/type',
-                            'hidden': '#/hidden_template',
-                            'link': '#/link',
-                            'employee_link': '#/employee_link',
+                            'user': '#!/user',
+                            'menu': '#!/menu',
+                            'create_menu_employee': '#!/menu?new=true&type=GBL_MT_EMPLOYEE',
+                            'create_menu_asset': '#!/menu?new=true&type=GBL_MT_ASSET',
+                            'graph': ' #!/graph',
+                            'template': '#!/type',
+                            'hidden': '#!/hidden_template',
+                            'link': '#!/link',
+                            'employee_link': '#!/employee_link',
                             'display_home_graphs': '../modules/graph/views/displaygraph.html'
                         };
 
@@ -41,15 +43,15 @@ angular.module('Home')
                         $scope.setURLs = function (id) {
                             if (id) {
                                 $scope.urls = {
-                                    'user': '#/user?menuId=' + id,
-                                    'menu': '#/menu?menuId=' + id,
-                                    'create_menu_employee': '#/menu?new=true&type=GBL_MT_EMPLOYEE&menuId=' + id,
-                                    'create_menu_asset': '#/menu?new=true&type=GBL_MT_ASSET&menuId=' + id,
-                                    'graph': ' #/graph?menuId=' + id,
-                                    'template': '#/type?menuId=' + id,
-                                    'hidden': '#/hidden_template?menuId=' + id,
-                                    'link': '#/link?menuId=' + id,
-                                    'employee_link': '#/employee_link?menuId=' + id
+                                    'user': '#!/user?menuId=' + id,
+                                    'menu': '#!/menu?menuId=' + id,
+                                    'create_menu_employee': '#!/menu?new=true&type=GBL_MT_EMPLOYEE&menuId=' + id,
+                                    'create_menu_asset': '#!/menu?new=true&type=GBL_MT_ASSET&menuId=' + id,
+                                    'graph': ' #!/graph?menuId=' + id,
+                                    'template': '#!/type?menuId=' + id,
+                                    'hidden': '#!/hidden_template?menuId=' + id,
+                                    'link': '#!/link?menuId=' + id,
+                                    'employee_link': '#!/employee_link?menuId=' + id
                                 };
                             }
                         };
@@ -457,7 +459,7 @@ angular.module('Home')
                         };
 
                         $scope.removeAsset = function (asset, name, typeId) {
-                            $modal.open({
+                            $uibModal.open({
                                 backdrop: true,
                                 templateUrl: '../modules/templatetypes/asset/delete/deleteasset.html',
                                 controller: 'ModalDeleteAssetCtrl',
@@ -488,7 +490,7 @@ angular.module('Home')
                         };
 
                         $scope.removeEmployee = function (employee, name, typeId) {
-                            $modal.open({
+                            $uibModal.open({
                                 backdrop: true,
                                 templateUrl: '../modules/templatetypes/employee/delete/deleteemployee.html',
                                 controller: 'ModalDeleteEmployeeCtrl',
@@ -518,9 +520,12 @@ angular.module('Home')
                             });
                         };
 
+                        $scope.animationsEnabled = true;
+
                         $scope.assignAsset = function (asset, name) {
-                            $modal.open({
+                            $uibModal.open({
                                 backdrop: true,
+                                animation: $scope.animationsEnabled,
                                 templateUrl: '../modules/templatetypes/asset/assign/linkasset.html',
                                 controller: 'ModalAssignAssetCtrl',
                                 size: 'lg',
@@ -548,7 +553,7 @@ angular.module('Home')
                         };
 
                         $scope.removeLink = function (asset, name) {
-                            $modal.open({
+                            $uibModal.open({
                                 backdrop: true,
                                 templateUrl: '../modules/templatetypes/asset/unassign/removelink.html',
                                 controller: 'ModalRemoveLinkCtrl',
