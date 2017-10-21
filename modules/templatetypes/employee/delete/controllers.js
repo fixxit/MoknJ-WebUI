@@ -5,7 +5,6 @@ angular.module('Home').controller('ModalDeleteEmployeeCtrl',
                 employee, name, token, typeId, menuId) {
             $scope.name = name;
             $scope.message = "Are you sure you want to delete this record ?";
-
             $scope.ok = function () {
                 HomeService.deleteEmployee(
                         token,
