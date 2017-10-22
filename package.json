@@ -1,47 +1,13 @@
 {
-  "name": "moknjui",
-  "description": "MoknJ GUI Application",
-  "license": "http://www.apache.org/licenses/LICENSE-2.0",
-  "author": "Riaan Schoeman",
-  "version": "0.0.1",
-  "engine": {
-    "node": "*",
-    "npm": "*"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:fixxit/MoknJ-WebUI.git"
-  },
-  "main": "server.js",
-  "scripts": {
+  "name": "moknjui", "description": "MoknJ GUI Application", "license": "http://www.apache.org/licenses/LICENSE-2.0", "author": "Riaan Schoeman", "version": "0.0.1", "engine": {
+    "node": "*", "npm": "*"
+  }, "repository": {
+    "type": "git", "url": "git@github.com:fixxit/MoknJ-WebUI.git"
+  }, "main": "server.js", "scripts": {
     "start": "node --use_strict server.js"
-  },
-  "devDependencies": {
-    "angular": "1.6.6",
-    "angular-animate": "1.6.6",
-    "angular-chart.js": "1.1.1",
-    "angular-chartjs-directive": "1.0.0",
-    "angular-cookies": "1.6.6",
-    "angular-route": "1.6.6",
-    "angular-ui-bootstrap": "2.5.0",
-    "bootstrap": "3.3.7",
-    "chart.js": "2.4.0",
-    "express": "4.14.0",
-    "serve-favicon": "2.3.2",
-    "body-parser": "~1.0.1"
-    },
-  "dependencies": {
-    "angular": "1.6.6",
-    "angular-animate": "1.6.6",
-    "angular-chart.js": "1.1.1",
-    "angular-chartjs-directive": "1.0.0",
-    "angular-cookies": "1.6.6",
-    "angular-route": "1.6.6",
-    "angular-ui-bootstrap": "2.5.0",
-    "bootstrap": "3.3.7",
-    "chart.js": "2.4.0",
-    "express": "4.14.0",
-    "serve-favicon": "2.3.2",
-    "body-parser": "~1.0.1"
+  }, "devDependencies": {
+    "angular": "1.6.6", "angular-animate": "1.6.6", "angular-sanitize": "1.6.6", "angular-chart.js": "1.1.1", "angular-chartjs-directive": "1.0.0", "angular-cookies": "1.6.6", "angular-route": "1.6.6", "angular-ui-bootstrap": "2.5.0", "bootstrap": "3.3.7", "chart.js": "2.4.0", "express": "4.14.0", "serve-favicon": "2.3.2", "body-parser": "~1.0.1"
+    }, "dependencies": {
+    "angular": "1.6.6", "angular-animate": "1.6.6", "angular-sanitize": "1.6.6", "angular-chart.js": "1.1.1", "angular-chartjs-directive": "1.0.0", "angular-cookies": "1.6.6", "angular-route": "1.6.6", "angular-ui-bootstrap": "2.5.0", "bootstrap": "3.3.7", "chart.js": "2.4.0", "express": "4.14.0", "serve-favicon": "2.3.2", "body-parser": "~1.0.1"
   }
 }

@@ -1,7 +1,7 @@
 'use strict';
 // declare modules
 angular.module('Authentication', ['ui.bootstrap']);
-angular.module('Home', ['ui.bootstrap', 'ngAnimate', 'chart.js']);
+angular.module('Home', ['ui.bootstrap', 'ngAnimate', 'chart.js', 'ngSanitize']);
 angular.module('Menu', ['ui.bootstrap', 'ngAnimate']);
 angular.module('Type', ['ui.bootstrap', 'ngAnimate']);
 angular.module('Asset', ['ui.bootstrap', 'ngAnimate']);
