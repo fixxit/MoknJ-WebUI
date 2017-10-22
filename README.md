@@ -9,18 +9,21 @@
 * npm (latest)
 
 # Technology Stack #
-* angular: 1.5.8 
-* angular-route: 1.5.8 
-* angular-cookies : 1.5.8 
-* angular-ui-bootstrap : 0.13.4 
-* angular-animate : 1.5.8 
-* angular-chart.js : 1.1.1 
-* angular-chartjs-directive : 1.0.0 
-* express : 4.14.0 
-* chart.js : 2.4.0 
-* uglify-js : 2.7.5 
-* bootstrap : 3.3.1 
-* serve-favicon : 2.3.2 
+```
+    "angular": "1.6.6",
+    "angular-animate": "1.6.6",
+    "angular-sanitize": "1.6.6",
+    "angular-chart.js": "1.1.1",
+    "angular-chartjs-directive": "1.0.0",
+    "angular-cookies": "1.6.6",
+    "angular-route": "1.6.6",
+    "angular-ui-bootstrap": "2.5.0",
+    "bootstrap": "3.3.7",
+    "chart.js": "2.4.0",
+    "express": "4.14.0",
+    "serve-favicon": "2.3.2",
+    "body-parser": "~1.0.1"
+ ```   
 
 # Setup # 
 Main root contains a settings.json file, make sure that it points to your web server instance of moknj api
